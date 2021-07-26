@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.fragments.PeerListFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/peerList"
+            android:layout_width="410dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/peerGroupTab" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/peerGroupTab"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/peersFragToolbar">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/Sel_Guardians"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardians" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/Sel_Protected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Protected" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/peersFragToolbar"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:background="#069789"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Peers"
+            app:titleTextColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"
+            android:foreground="@android:drawable/ic_popup_sync"
+            app:layout_constraintBottom_toTopOf="@+id/peerGroupTab"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">guardiancamera_wifi</string>
+    <string name="currentUser"> </string>
+
+    <string name="TITLE_APP"> Lazyboy\'s\nGuardianCam </string>
+    <string name="STAT_CAM_CONNECTED"> Camera Connected </string>
+    <string name="STAT_CAM_DISCONNECTED"> Camera Disconnected </string>
+    <string name="STAT_SERVER_CONNECTED"> Server\nConnected </string>
+    <string name="STAT_SERVER_DISCONNECTED"> Server\nDisconnected </string>
+    <string name="STAT_CAM_RECORDING"> Idle </string>
+    <string name="STAT_CAM_IDLE"> Recording </string>
+    <string name="STAT_EXT_CAM"> Wifi\nCamera</string>
+    <string name="STAT_PHONE"> Phone\nCamera</string>
+
+    <string name="INDEX_LOGIN_METHOD"> Login Method </string>
+    <string name="LOGIN_GOOGLE"> GOOGLE </string>
+    <string name="LOGIN_KAKAO"> KAKAO </string>
+
+    <string name="PREFIX_HTTP">http://</string>
+    <string name="MAIN_SERVER_URL">www.lazyboyindustries.com</string>
+    <string name="MAIN_SERVER_IP">49.50.172.17</string>
+    <string name="MAIN_SERVER_IP_SIM">10.0.2.2</string>
+    <string name="STREAMING_SERVER_IP">49.50.172.17</string>
+
+    <string name="HOTSPOT_HOST_IP">192.168.43.1</string>
+    <string name="HOTSPOT_DEVICE_IP">192.168.43.74</string>
+
+    <string name="MENU_START_CAPTURE"> Start </string>
+    <string name="MENU_STOP_CAPTURE"> Stop </string>
+    <string name="MENU_HOME"> Home </string>
+    <string name="MENU_WATCH_STREAM"> Watch </string>
+    <string name="MENU_LIST_PEERS"> Friends</string>
+    <string name="MENU_SETTINGS"> Settings </string>
+
+    <string name="FORMAT_LABEL"> Formats </string>
+    <string name="SAVE_SETTING_LABEL"> SAVE </string>
+
+    <string name="MODE_LABEL"> Capture \n Mode </string>
+    <string name="MODE_EXTERNAL"> External Camera </string>
+    <string name="MODE_PHONE"> Phone </string>
+
+    <string name="LOGS_LABEL"> Logs </string>
+
+
+    <string-array name="WIFI_VIDEO_RESOLUTIONS">
+        <item name="RESOLUTION_QCIF">QCIF(320 X 240)</item>
+        <item name="RESOLUTION_VGA">VGA(640 X 480)</item>
+        <item name="RESOLUTION_SVGA">SVGA(800 X 600)</item>
+        <item name="RESOLUTION_HD">HD(1280 X 720)</item>
+        <item name="RESOLUTION_FULLHD">FULL HD(1920 X 1080)</item>
+    </string-array>
+
+
+    <string-array name="WIFI_VIDEO_FORMATS">
+        <item name="FORMAT_MJPEG">MJPEG</item>
+        <item name="FORMAT_RGB565">RGB565</item>
+    </string-array>
+
+
+    <string-array name="WIFI_VIDEO_SOURCES">
+        <item>Guardian Camera</item>
+        <item>Phone Camera</item>
+    </string-array>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">
+        Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_rtmp_test">RtmpTest</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+
+</resources>

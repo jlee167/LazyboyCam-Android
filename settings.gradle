@@ -1,0 +1,2 @@
+rootProject.name='guardiancamera_wifi'
+include ':app'
