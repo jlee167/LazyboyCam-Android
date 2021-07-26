@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.models;
+package com.example.guardiancamera_wifi.legacy;
 
 public class JpegFrame {
 
