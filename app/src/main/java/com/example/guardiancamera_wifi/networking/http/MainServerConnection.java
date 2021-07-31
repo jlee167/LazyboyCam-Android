@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.guardiancamera_wifi.configs.Addresses;
 import com.example.guardiancamera_wifi.models.LazyWebPeers;
 import com.example.guardiancamera_wifi.R;
 import com.example.guardiancamera_wifi.models.LazyWebUser;
@@ -227,8 +228,8 @@ public class MainServerConnection {
         URL authServerUrl;
         HttpURLConnection httpConn;
 
-        authServerUrl = new URL(appContext.getString(R.string.PREFIX_HTTP)
-                + appContext.getString(R.string.MAIN_SERVER_URL)
+        authServerUrl = new URL(Addresses.PREFIX_HTTP
+                + Addresses.MAIN_SERVER_URL
                 + uri);
 
         boolean outputEnabled = method.equals(HttpConnection.POST) || method.equals(HttpConnection.PUT);
@@ -284,16 +285,16 @@ public class MainServerConnection {
             List<String> cookie = header.get("Set-Cookie");
             for (int i = 0; i < cookie.size(); i++) {
                 cookieManager.getCookieStore().add(
-                        URI.create(appContext.getString(R.string.PREFIX_HTTP)
-                                + appContext.getString(R.string.MAIN_SERVER_URL)),
+                        URI.create(Addresses.PREFIX_HTTP
+                                + Addresses.MAIN_SERVER_URL),
                         HttpCookie.parse(cookie.get(i)).get(0)
                 );
             }
             session_enabled = true;
             COOKIES = TextUtils.join(
                     ";",
-                    cookieManager.getCookieStore().get(URI.create(appContext.getString(R.string.PREFIX_HTTP)
-                            + appContext.getString(R.string.MAIN_SERVER_URL))));
+                    cookieManager.getCookieStore().get(URI.create(Addresses.PREFIX_HTTP
+                            + Addresses.MAIN_SERVER_URL)));
         } else {
             session_enabled = false;
         }

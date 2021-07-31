@@ -12,11 +12,12 @@ import android.os.Process;
 import androidx.annotation.Nullable;
 
 import com.example.guardiancamera_wifi.R;
+import com.example.guardiancamera_wifi.configs.Addresses;
 import com.example.guardiancamera_wifi.configs.VideoConfig;
 import com.example.guardiancamera_wifi.configs.EmergencyStream;
 import com.example.guardiancamera_wifi.networking.http.HttpConnection;
 import com.example.guardiancamera_wifi.networking.http.StreamingURI;
-import com.example.guardiancamera_wifi.configs.WifiCameraProtocol;
+import com.example.guardiancamera_wifi.networking.socket.WifiCameraProtocol;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,7 +79,7 @@ public class EmergencyService extends Service {
             try {
                 /* Prepare TCP socket to wifi camera */
                 listenerServerSocket = new ServerSocket();
-                listenerServerSocket.bind(new InetSocketAddress(getString(R.string.HOTSPOT_HOST_IP), 8001));
+                listenerServerSocket.bind(new InetSocketAddress(Addresses.HOTSPOT_HOST_IP, 8001));
                 listenerSocket = listenerServerSocket.accept();
                 ostream = listenerSocket.getOutputStream();
                 istream = new BufferedInputStream(listenerSocket.getInputStream());
@@ -262,7 +263,7 @@ public class EmergencyService extends Service {
                     StreamingURI.URI_EMERGENCY,
                     new JSONObject(),
                     HttpConnection.POST,
-                    getString(R.string.STREAMING_SERVER_IP)
+                    Addresses.STREAMING_SERVER_IP
                 )
         );
     }
@@ -274,7 +275,7 @@ public class EmergencyService extends Service {
                     StreamingURI.URI_EMERGENCY,
                     new JSONObject(),
                     HttpConnection.DELETE,
-                    getString(R.string.STREAMING_SERVER_IP)
+                        Addresses.STREAMING_SERVER_IP
                 )
         );
     }
@@ -285,7 +286,7 @@ public class EmergencyService extends Service {
                     StreamingURI.URI_STREAM,
                     data,
                     HttpConnection.POST,
-                    getString(R.string.STREAMING_SERVER_IP)
+                        Addresses.STREAMING_SERVER_IP
                 )
         );
     }
@@ -296,7 +297,7 @@ public class EmergencyService extends Service {
                     StreamingURI.URI_STREAM,
                     new JSONObject(),
                     HttpConnection.DELETE,
-                    getString(R.string.STREAMING_SERVER_IP)
+                        Addresses.STREAMING_SERVER_IP
                 )
         );
     }

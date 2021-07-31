@@ -16,15 +16,6 @@
     <string name="LOGIN_GOOGLE"> GOOGLE </string>
     <string name="LOGIN_KAKAO"> KAKAO </string>
 
-    <string name="PREFIX_HTTP">http://</string>
-    <string name="MAIN_SERVER_URL">www.lazyboyindustries.com</string>
-    <string name="MAIN_SERVER_IP">49.50.172.17</string>
-    <string name="MAIN_SERVER_IP_SIM">10.0.2.2</string>
-    <string name="STREAMING_SERVER_IP">49.50.172.17</string>
-
-    <string name="HOTSPOT_HOST_IP">192.168.43.1</string>
-    <string name="HOTSPOT_DEVICE_IP">192.168.43.74</string>
-
     <string name="MENU_START_CAPTURE"> Start </string>
     <string name="MENU_STOP_CAPTURE"> Stop </string>
     <string name="MENU_HOME"> Home </string>

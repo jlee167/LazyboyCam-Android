@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.guardiancamera_wifi.R;
+import com.example.guardiancamera_wifi.configs.Addresses;
 import com.example.guardiancamera_wifi.configs.ProtectedClientStream;
 import com.example.guardiancamera_wifi.networking.http.HttpConnection;
 
@@ -145,7 +146,7 @@ public class StreamFragment extends Fragment {
                                         ProtectedClientStream.getGeoSrcUrl(),
                                         sendData,
                                         "POST",
-                                        getString(R.string.STREAMING_SERVER_IP)
+                                        Addresses.STREAMING_SERVER_IP
                                 )
                         );
                         double latitude = geoData.getDouble("latitude");
@@ -165,7 +166,7 @@ public class StreamFragment extends Fragment {
                                         ProtectedClientStream.getAudioSrcUrl(),
                                         sendData,
                                         "POST",
-                                        getString(R.string.STREAMING_SERVER_IP)
+                                        Addresses.STREAMING_SERVER_IP
                                 )
                         );
                         byte [] audioData = audioInput.getString("audioData")

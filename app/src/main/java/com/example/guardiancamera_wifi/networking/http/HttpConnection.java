@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.guardiancamera_wifi.R;
+import com.example.guardiancamera_wifi.configs.Addresses;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +39,7 @@ public class HttpConnection {
         URL authServerUrl;
         HttpURLConnection conn;
 
-        authServerUrl = new URL(appContext.getString(R.string.PREFIX_HTTP)
+        authServerUrl = new URL(Addresses.PREFIX_HTTP
                 + serverAddr
                 + uri);
 
