@@ -11,14 +11,14 @@ import android.os.Process;
 
 import androidx.annotation.Nullable;
 
-import com.example.guardiancamera_wifi.R;
 import com.example.guardiancamera_wifi.configs.Addresses;
-import com.example.guardiancamera_wifi.configs.VideoConfig;
 import com.example.guardiancamera_wifi.configs.EmergencyStream;
+import com.example.guardiancamera_wifi.configs.VideoConfig;
+import com.example.guardiancamera_wifi.configs.WifiCameraProtocol;
 import com.example.guardiancamera_wifi.networking.http.HttpConnection;
 import com.example.guardiancamera_wifi.networking.http.StreamingURI;
-import com.example.guardiancamera_wifi.networking.socket.WifiCameraProtocol;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,7 +54,6 @@ public class EmergencyService extends Service {
     /* Camera Listener Objects */
     private Socket listenerSocket;
     private ServerSocket listenerServerSocket;
-    private Thread listenerThread;
     CamCmdHandler commandHandler;
     private BufferedInputStream istream;
     private OutputStream ostream;
@@ -74,7 +73,7 @@ public class EmergencyService extends Service {
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NotNull Message msg) {
 
             try {
                 /* Prepare TCP socket to wifi camera */
@@ -115,144 +114,76 @@ public class EmergencyService extends Service {
                  *   and respond to camera with the results.
                  */
                 while (true) {
-                    try {
-                        if (runState) {
-                            if (istream.available() > 0) {
-                                byte[] buf = new byte[istream.available()];
-                                int bytesRead = istream.read(buf, 0, istream.available());
-                                if (!isPreamble(buf))
-                                    continue;
+                    if (runState && (istream.available() > 0)) {
+                        byte[] buf = new byte[istream.available()];
+                        int bytesRead = istream.read(buf, 0, istream.available());
+                        if (!isPreamble(buf))
+                            continue;
 
-
-                                if (buf[2] == WifiCameraProtocol.CAM_REQUEST_EMERGENCY) {
-                                    if (camConnected) {
-                                        ostream.write(WifiCameraProtocol.CAM_CMD_PREAMBLE);
-                                        ostream.write(WifiCameraProtocol.CAM_RESP_ACK);
-                                        ostream.flush();
-                                        startEmergency();
-                                    } else
-                                        ostream.write(WifiCameraProtocol.CAM_RESP_ERR);
-                                }
-                                /*
-                                else if (buf[2] == WifiCameraProtocol.CAM_REQUEST_STOP_EMERGENCY) {
-                                    ostream.write(WifiCameraProtocol.CAM_CMD_PREAMBLE);
-                                    ostream.write(WifiCameraProtocol.CAM_RESP_ACK);
-                                    ostream.flush();
-                                    stopEmergency();
-                                }
-                                */
-
-                                else if (buf[2] == WifiCameraProtocol.CAM_REQUEST_SERIAL_ID) {
-                                    /* Camera serial number matches */
-                                    boolean camVerified = VideoConfig.serialNumber.equals(
-                                            Arrays.toString(Arrays.copyOfRange(buf, 3, 9))
-                                    );
-
-                                    if (camVerified) {
-                                        camConnected = true;
-                                        ostream.write(WifiCameraProtocol.CAM_CMD_PREAMBLE);
-                                        ostream.write(WifiCameraProtocol.CAM_CMD_SET_FRAMESIZE);
-                                        ostream.write(VideoConfig.resolution);
-                                        ostream.write(VideoConfig.format);
-                                        ostream.write(';');
-                                        ostream.write(EmergencyStream.getVideoDestUrl().getBytes(StandardCharsets.UTF_8));
-                                        ostream.write(';');
-                                        ostream.write(EmergencyStream.getAudioDestUrl().getBytes(StandardCharsets.UTF_8));
-                                        ostream.flush();
-                                    }
-                                }
-                            }
-                        } else {
-                            return;
+                        if (buf[2] == WifiCameraProtocol.CAM_CMD_START_EMERGENCY) {
+                            if (camConnected) {
+                                ostream.write(WifiCameraProtocol.CAM_CMD_PREAMBLE);
+                                ostream.write(WifiCameraProtocol.CAM_RESP_ACK);
+                                ostream.flush();
+                                startEmergency();
+                            } else
+                                ostream.write(WifiCameraProtocol.CAM_RESP_ERR);
                         }
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
+
+                        else if (buf[2] == WifiCameraProtocol.CAM_CMD_STOP_EMERGENCY) {
+                            ostream.write(WifiCameraProtocol.CAM_CMD_PREAMBLE);
+                            ostream.write(WifiCameraProtocol.CAM_RESP_ACK);
+                            ostream.flush();
+                            stopEmergency();
+                        }
+
+                        else if (buf[2] == WifiCameraProtocol.CAM_CMD_REGISTER) {
+                            /* Camera serial number matches */
+                            boolean camVerified = VideoConfig.serialNumber.equals(
+                                    Arrays.toString(Arrays.copyOfRange(buf, 3, 9))
+                            );
+
+                            if (camVerified) {
+                                camConnected = true;
+                                ostream.write((byte)EmergencyStream.getAudioDestUrl().length());
+                                ostream.write((byte)EmergencyStream.getVideoDestUrl().length());
+                                ostream.write(VideoConfig.resolution);
+                                ostream.write(VideoConfig.format);
+                                ostream.write(EmergencyStream.getVideoDestUrl().getBytes(StandardCharsets.UTF_8));
+                                ostream.write(EmergencyStream.getAudioDestUrl().getBytes(StandardCharsets.UTF_8));
+                                ostream.flush();
+                            } else
+                                ostream.write(WifiCameraProtocol.CAM_RESP_ERR);
+                        }
+                    } else {
+                        return;
                     }
                 }
-
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            //listenerThread.start();
         }
     }
 
 
     public EmergencyService() {
-        /* */
         reportConn = new HttpConnection();
-
-        /*
-        listenerThread = new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        if (runState) {
-                            if (istream.available() > 0) {
-                                byte[] buf = new byte[istream.available()];
-                                int bytesRead = istream.read(buf, 0, istream.available());
-                                if (!isPreamble(buf))
-                                    continue;
-
-
-                                if (buf[2] == WifiCameraProtocol.CAM_REQUEST_EMERGENCY) {
-                                    if (camConnected) {
-                                        ostream.write(WifiCameraProtocol.CAM_CMD_PREAMBLE);
-                                        ostream.write(WifiCameraProtocol.CAM_RESP_ACK);
-                                        ostream.flush();
-                                        startEmergency();
-                                    }
-                                    else
-                                        ostream.write(WifiCameraProtocol.CAM_RESP_ERR);
-                                }
-                                else if (buf[2] == WifiCameraProtocol.CAM_REQUEST_STOP_EMERGENCY) {
-                                    ostream.write(WifiCameraProtocol.CAM_CMD_PREAMBLE);
-                                    ostream.write(WifiCameraProtocol.CAM_RESP_ACK);
-                                    ostream.flush();
-                                    stopEmergency();
-                                }
-
-                                else if (buf[2] == WifiCameraProtocol.CAM_REQUEST_SERIAL_ID) {
-                                    boolean camVerified = CameraConfig.serialNumber.equals(
-                                            Arrays.toString(Arrays.copyOfRange(buf, 3, 9))
-                                    );
-
-                                    if (camVerified) {
-                                        camConnected = true;
-                                        ostream.write(WifiCameraProtocol.CAM_CMD_PREAMBLE);
-                                        ostream.write(WifiCameraProtocol.CAM_CMD_SET_FRAMESIZE);
-                                        ostream.write(CameraConfig.resolution);
-                                        ostream.write(CameraConfig.format);
-                                        ostream.write(';');
-                                        ostream.write(EmergencyStream.getVideoDestUrl().getBytes(StandardCharsets.UTF_8));
-                                        ostream.write(';');
-                                        ostream.write(EmergencyStream.getAudioDestUrl().getBytes(StandardCharsets.UTF_8));
-                                        ostream.flush();
-                                    }
-                                }
-                            }
-                        } else {
-                            return;
-                        }
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-         */
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        HandlerThread handlerThread = new HandlerThread("TCP Handler Thread", Process.THREAD_PRIORITY_BACKGROUND);
-        handlerThread.start();
-        commandHandler = new CamCmdHandler(handlerThread.getLooper());
-
-        return super.onStartCommand(intent, flags, startId);
+        if (!runState) {
+            runState = true;
+            HandlerThread handlerThread = new HandlerThread("TCP Handler Thread",
+                                                Process.THREAD_PRIORITY_BACKGROUND);
+            handlerThread.start();
+            commandHandler = new CamCmdHandler(handlerThread.getLooper());
+            commandHandler.sendEmptyMessage(0);
+            return START_STICKY;
+        }
+        else
+            return START_NOT_STICKY;
     }
 
 
@@ -282,23 +213,23 @@ public class EmergencyService extends Service {
 
     private JSONObject startStream(JSONObject data) throws IOException, JSONException {
         return new JSONObject(
-                reportConn.sendHttpRequest(
-                    StreamingURI.URI_STREAM,
-                    data,
-                    HttpConnection.POST,
-                        Addresses.STREAMING_SERVER_IP
-                )
+            reportConn.sendHttpRequest(
+                StreamingURI.URI_STREAM,
+                data,
+                HttpConnection.POST,
+                    Addresses.STREAMING_SERVER_IP
+            )
         );
     }
 
     private JSONObject stopStream() throws IOException, JSONException {
         return new JSONObject(
-                reportConn.sendHttpRequest(
-                    StreamingURI.URI_STREAM,
-                    new JSONObject(),
-                    HttpConnection.DELETE,
-                        Addresses.STREAMING_SERVER_IP
-                )
+            reportConn.sendHttpRequest(
+                StreamingURI.URI_STREAM,
+                new JSONObject(),
+                HttpConnection.DELETE,
+                    Addresses.STREAMING_SERVER_IP
+            )
         );
     }
 
@@ -314,27 +245,29 @@ public class EmergencyService extends Service {
         /* Stop handler thread */
         runState = false;
 
-        /* Notify end of stream to streaming server */
-        try {
-            stopStream();
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+        byte[] buf = new byte[1];
+        int retries = 0;
 
-        /* Notify camera of the end of stream */
         try {
+            /* Notify end of stream to streaming server */
+            stopStream();
+
+            /* Notify camera of the end of stream */
             ostream.write(WifiCameraProtocol.CAM_CMD_DISCONNECT);
             ostream.flush();
+
+            while (buf[0] != WifiCameraProtocol.CAM_RESP_ACK) {
+                istream.read(buf, 0, 1);
+                retries++;
+                if (retries == 100)
+                    break;
+            }
 
             if (!listenerServerSocket.isClosed())
                 listenerServerSocket.close();
             if (!listenerSocket.isClosed())
                 listenerSocket.close();
-
-            //if (!camThread.isAlive()) {
-            //    camThread.interrupt();
-            //}
-        } catch (IOException e) {
+        }catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
