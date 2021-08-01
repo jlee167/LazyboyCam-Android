@@ -5,30 +5,28 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.location.Location;
-import android.location.LocationManager;
-import android.location.LocationListener;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.example.guardiancamera_wifi.configs.Addresses;
 import com.example.guardiancamera_wifi.configs.EmergencyStream;
+import com.example.guardiancamera_wifi.networking.http.HttpConnection;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 
 public class GeolocationService extends Service {
@@ -42,29 +40,18 @@ public class GeolocationService extends Service {
 
     private Location location;
     private LocationManager locationManager;
-    private LocationListener locationListener;
-
-    private URL targetUrl;
-    private HttpURLConnection conn;
-    private BufferedOutputStream outputStream;
-    private BufferedInputStream inputStream;
-
+    public LocationListener locationListener;
     private HandlerThread handlerThread;
+
+    /* Streaming Server Objects */
+    HttpConnection conn;
+
 
     /**
      * @return True if the service is running.
      */
     public static boolean isRunning() {
         return runState;
-    }
-
-
-    /**
-     * Default Constructor
-     * Do nothing.
-     */
-    public GeolocationService() throws MalformedURLException {
-        this.targetUrl = new URL(EmergencyStream.getGeoDestUrl());
     }
 
 
@@ -78,7 +65,43 @@ public class GeolocationService extends Service {
         }
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NotNull Message msg) {
+            {
+                /* @Todo Error Notification */
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    return;
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    return;
+            }
+
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            conn = new HttpConnection();
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    try {
+                        JSONObject locationData = new JSONObject();
+                        locationData.put("latitude", location.getLatitude());
+                        locationData.put("longitude", location.getLongitude());
+                        locationData.put("timestamp", System.currentTimeMillis());
+
+                        conn.sendHttpRequest(
+                                EmergencyStream.getGeoDestUrl(),
+                                locationData,
+                                HttpConnection.POST,
+                                Addresses.STREAMING_SERVER_IP
+                        );
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    2000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    2000, 0, locationListener);
         }
     }
 
@@ -86,80 +109,25 @@ public class GeolocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        try {
-            conn = (HttpURLConnection) targetUrl.openConnection();
-        } catch (IOException e) {
-            e.printStackTrace();
-            stopSelf();
-            return;
-        }
-        conn.setRequestProperty("Content-Type", "application/json; utf-8");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setDoOutput(true);
-        conn.setDoInput(true);
-
-        try {
-            conn.connect();
-            outputStream = new BufferedOutputStream(conn.getOutputStream());
-            inputStream = new BufferedInputStream(conn.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                JSONObject locationData = new JSONObject();
-                try {
-                    locationData.put("latitude", location.getLatitude());
-                    locationData.put("longitude", location.getLongitude());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    outputStream.write(locationData.toString().getBytes());
-                    outputStream.flush();
-                    outputStream.close();
-                    int responseCode = conn.getResponseCode();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ///ActivityCompat.requestPermissions(this.getActivity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 100);
-            ///ActivityCompat.requestPermissions(this, [Manifest.permission.ACCESS_FINE_LOCATION], 200);
-            ///ActivityCompat.requestPermissions(this, [Manifest.permission.ACCESS_FINE_LOCATION], 300);
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, locationListener);
-
-        handlerThread = new HandlerThread("Geodata Service Controller", Process.THREAD_PRIORITY_BACKGROUND);
-        handlerThread.start();
-        serviceLooper = handlerThread.getLooper();
-        serviceController = new StreamHandler(serviceLooper);
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
+        if (runState)
+            return super.onStartCommand(intent, flags, startId);
+        else
+            runState = true;
 
-        Message msg = serviceController.obtainMessage();
-        msg.arg1 = startId;
-        serviceController.sendMessage(msg);
+        handlerThread = new HandlerThread("Geodata Service Controller", Process.THREAD_PRIORITY_BACKGROUND);
+        handlerThread.start();
+        serviceLooper = handlerThread.getLooper();
+        serviceController = new StreamHandler(serviceLooper);
+        serviceController.sendEmptyMessage(0);
 
-        runState = true;
-        return START_STICKY;
+        return super.onStartCommand(intent, flags, startId);
     }
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -167,9 +135,12 @@ public class GeolocationService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+
     @Override
     public void onDestroy() {
         runState = false;
+        locationManager.removeUpdates(locationListener);
+        serviceLooper.quitSafely();
         handlerThread.quitSafely();
         super.onDestroy();
     }
