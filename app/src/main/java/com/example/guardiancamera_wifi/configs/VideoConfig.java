@@ -26,6 +26,7 @@ public class VideoConfig {
 
     final static byte IDX_MJPEG     = 0;
     final static byte IDX_RGB565    = 1;
+    final static byte IDX_RTMP      = 2;
 
     public static String serialNumber;
     public static boolean useExtCamera = false;
@@ -76,17 +77,21 @@ public class VideoConfig {
         }
 
         assert formatPreference != null;
-        switch (formatPreference) {
-            case FORMAT_MJPEG:
-                format = IDX_MJPEG;
-                break;
+        if (useExtCamera)
+            format = IDX_RTMP;
+        else {
+            switch (formatPreference) {
+                case FORMAT_MJPEG:
+                    format = IDX_MJPEG;
+                    break;
 
-            case FORMAT_RGB565:
-                format = IDX_RGB565;
-                break;
+                case FORMAT_RGB565:
+                    format = IDX_RGB565;
+                    break;
 
-            default:
-                format = IDX_MJPEG;
+                default:
+                    format = IDX_MJPEG;
+            }
         }
     }
 }
