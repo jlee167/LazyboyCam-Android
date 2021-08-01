@@ -105,8 +105,8 @@ public class MainMenuActivity extends AppCompatActivity {
                         if (GeolocationService.isRunning()) {
                             stopService(geoLocationIntent);
                             while (GeolocationService.isRunning()) {};
-                            startService(geoLocationIntent);
                         }
+                        startService(geoLocationIntent);
 
                         ((TextView)findViewById(R.id.clientStatus)).setText("Danger");
                         ((TextView)findViewById(R.id.streamLog)).append(
