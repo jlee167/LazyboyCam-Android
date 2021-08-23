@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.activities.MainMenuActivity">
+    tools:context=".presentation.views.app.MainMenuActivity">
 
 
     <LinearLayout
@@ -90,7 +90,7 @@
 
         <fragment
             android:id="@+id/fragment1"
-            android:name="com.example.guardiancamera_wifi.views.fragments.HomeFragment"
+            android:name="com.example.guardiancamera_wifi.presentation.views.app.home.HomeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_home" />

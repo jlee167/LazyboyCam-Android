@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".models.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -29,7 +29,7 @@
         android:theme="@style/Theme.Design.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <receiver
-            android:name=".broadcastReceivers.EmergencyBroadcast"
+            android:name=".domain.broadcasts.EmergencyBroadcast"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -38,7 +38,7 @@
         </receiver>
 
         <service
-            android:name=".services.EmergencyService"
+            android:name=".domain.services.EmergencyService"
             android:enabled="true"
             android:exported="true" />
         <!--
@@ -59,9 +59,9 @@
             android:label="@string/title_activity_rtmp_test">
         </activity>
 
-        <activity android:name=".views.activities.MainMenuActivity" />
+        <activity android:name=".presentation.views.app.MainMenuActivity" />
 
-        <activity android:name=".views.activities.LoginActivity" >
+        <activity android:name=".presentation.views.login.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

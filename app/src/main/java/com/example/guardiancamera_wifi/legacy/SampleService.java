@@ -10,7 +10,7 @@ import android.os.Message;
 import android.os.Process;
 
 import com.arthenica.mobileffmpeg.FFmpeg;
-import com.example.guardiancamera_wifi.models.MyApplication;
+import com.example.guardiancamera_wifi.MyApplication;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
