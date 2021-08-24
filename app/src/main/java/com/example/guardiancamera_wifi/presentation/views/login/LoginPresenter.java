@@ -81,17 +81,6 @@ public class LoginPresenter {
 
 
     /**
-     * @param authProvider
-     * @throws IOException
-     */
-    private void createBackendSession(Types.OAuthProvider authProvider) throws IOException {
-        MyApplication.mainServerConn = new MainServerConnection(applicationContext,
-                authProvider);
-        MyApplication.mainServerConn.registerOAuthAccount();
-    }
-
-
-    /**
      * Kakao session callback function.
      * Registers user to application and move to next activity on success.
      * Prints error message to log on fail
@@ -120,9 +109,9 @@ public class LoginPresenter {
                         }
                     });
 
-
             try {
-                createBackendSession(Types.OAuthProvider.AUTHENTICATOR_KAKAO);
+                loginUseCase.login(MyApplication.mainServerConn,
+                        Types.OAuthProvider.AUTHENTICATOR_KAKAO, null, null);
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -133,7 +122,6 @@ public class LoginPresenter {
                     applicationContext.getResources().getString(R.string.INDEX_LOGIN_METHOD),
                     applicationContext.getResources().getString(R.string.LOGIN_KAKAO)
             );
-
             activity.startActivity(intent);
         }
 
@@ -178,7 +166,7 @@ public class LoginPresenter {
      * @param data
      */
     public void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data)
-            throws InterruptedException, ExecutionException, JSONException, IOException {
+            throws IOException {
         Intent intent = new Intent(activity, MainMenuActivity.class);
 
         if (requestCode == RC_GOOGLE_SIGN_IN) {
@@ -192,35 +180,24 @@ public class LoginPresenter {
             } else {
                 return;
             }
-
-
-            try {
-                createBackendSession(Types.OAuthProvider.AUTHENTICATOR_GOOGLE);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
         } else {
-            /* Invalid request */
-            //@todo
+            //@todo: Output error message (Invalid Request)
         }
 
-        MyApplication.mainServerConn.login(null, null);
+        loginUseCase.login(MyApplication.mainServerConn,
+                Types.OAuthProvider.AUTHENTICATOR_GOOGLE, null, null);
         activity.startActivity(intent);
     }
 
 
     public void mainServerAuth(String username, String password) throws IOException {
-        /* Application-scope backend connection manager */
-        createBackendSession(Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL);
         final MainServerConnection conn = MyApplication.mainServerConn;
 
         try {
-            conn.pingServer();
             boolean success = loginUseCase.login(MyApplication.mainServerConn,
                     Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL, username, password);
 
-            /* Force delete credential */
+            /* Force delete credentials */
             username = null;
             password = null;
 
