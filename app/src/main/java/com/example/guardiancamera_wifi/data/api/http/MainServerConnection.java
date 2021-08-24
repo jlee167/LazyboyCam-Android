@@ -80,6 +80,12 @@ public class MainServerConnection {
     }
 
 
+    public MainServerConnection(final Context applicationContext)
+            throws IOException {
+        appContext = applicationContext;
+    }
+
+
     public Types.OAuthProvider getAuthProvider() {
         return this.authProvider;
     }

@@ -11,6 +11,8 @@ import com.example.guardiancamera_wifi.data.api.http.EmergencyServerConnection;
 import com.kakao.auth.IApplicationConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
+
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -66,6 +68,12 @@ public class MyApplication extends Application {
 
         videoConfig = new VideoConfig(this);
         appLogs = new ConcurrentLinkedDeque<String>();
+
+        try {
+            mainServerConn = new MainServerConnection(getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // SDK Initialization
         KakaoSDK.init(new KakaoAdapter() {
