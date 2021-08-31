@@ -1,6 +1,6 @@
 package com.example.guardiancamera_wifi.domain.models;
 
-public class ProtectedClientStream {
+public class PeerStreamData {
 
     private static boolean writeLocked = false;
 
