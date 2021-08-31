@@ -48,6 +48,18 @@
     </string-array>
 
 
+    <string name="USER_STATUS_FINE"> Fine </string>
+    <string name="USER_STATUS_EMERGENCY"> Danger </string>
+    <string name="CAMERA_STATUS_CONNECTED"> Connected </string>
+    <string name="CAMERA_STATUS_DISCONNECTED"> Disconnected </string>
+    <string name="STREAM_STATUS_ACTIVE"> Active </string>
+    <string name="STREAM_STATUS_INACTIVE"> Inactive </string>
+
+    <string name="OPEN_LOG"> Open Log </string>
+    <string name="CLOSE_LOG"> Close Log </string>
+
+
+
     <string-array name="WIFI_VIDEO_SOURCES">
         <item>Guardian Camera</item>
         <item>Phone Camera</item>
