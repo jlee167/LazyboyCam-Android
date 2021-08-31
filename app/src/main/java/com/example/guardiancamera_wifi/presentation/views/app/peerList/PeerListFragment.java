@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutionException;
 
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mViewHolder> {
 
-    // Dataset Array containing peer info objects
     ArrayList<LazyWebUser> dataset;
 
 
@@ -172,15 +171,6 @@ public class PeerListFragment extends Fragment {
     }
 
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FriendListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static PeerListFragment newInstance(String param1, String param2) {
         PeerListFragment fragment = new PeerListFragment();
         Bundle args = new Bundle();
