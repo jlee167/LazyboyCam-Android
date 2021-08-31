@@ -8,17 +8,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.guardiancamera_wifi.R;
+import com.example.guardiancamera_wifi.domain.usecases.login.LoginRequest;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
+import java.util.Objects;
 
 
 public class LoginActivity extends AppCompatActivity {
 
-    LoginPresenter loginPresenter;
+    private LoginPresenter loginPresenter;
 
 
     @Override
@@ -27,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         loginPresenter = new LoginPresenter(getApplicationContext(), this);
-        loginPresenter.init();
+        loginPresenter.initOAuthModules();
     }
 
 
@@ -47,12 +45,13 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.loginBtn).setOnClickListener(view -> {
             TextInputEditText accountInput = findViewById(R.id.accountInput);
+            String account = Objects.requireNonNull(accountInput.getText()).toString();
+
             TextInputEditText passwordInput = findViewById(R.id.passwordInput);
-            try {
-                loginPresenter.mainServerAuth(accountInput.getText().toString(), passwordInput.getText().toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String password = Objects.requireNonNull(passwordInput.getText()).toString();
+
+            LoginRequest request = loginPresenter.getNonSocialLoginRequest(account, password);
+            loginPresenter.login(request);
         });
     }
 
@@ -60,11 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        try {
-            loginPresenter.handleActivityResult(requestCode, resultCode, data);
-        } catch (InterruptedException | ExecutionException | JSONException | IOException e) {
-            e.printStackTrace();
-        }
+        loginPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
 

@@ -1,14 +1,23 @@
 package com.example.guardiancamera_wifi.presentation.views.login;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.example.guardiancamera_wifi.Env;
-import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.data.api.http.MainServerConnection;
 import com.example.guardiancamera_wifi.MyApplication;
-import com.example.guardiancamera_wifi.domain.libs.types.Types;
-import com.example.guardiancamera_wifi.domain.usecases.LoginUseCase;
+import com.example.guardiancamera_wifi.domain.models.Types;
+import com.example.guardiancamera_wifi.domain.usecases.login.LoginRequest;
+import com.example.guardiancamera_wifi.domain.usecases.login.LoginUseCase;
+import com.example.guardiancamera_wifi.domain.usecases.login.exceptions.InvalidCredentialException;
+import com.example.guardiancamera_wifi.domain.usecases.getPeers.GetPeersRequest;
+import com.example.guardiancamera_wifi.domain.usecases.getPeers.GetPeersUseCase;
+import com.example.guardiancamera_wifi.domain.usecases.userProfile.GetUserProfileRequest;
+import com.example.guardiancamera_wifi.domain.usecases.userProfile.GetUserProfileUseCase;
+import com.example.guardiancamera_wifi.domain.usecases.userProfile.exceptions.UserNotFoundException;
 import com.example.guardiancamera_wifi.presentation.views.app.MainMenuActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,51 +33,34 @@ import com.kakao.auth.network.response.AccessTokenInfoResponse;
 import com.kakao.network.ErrorResult;
 import com.kakao.util.exception.KakaoException;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-
-import androidx.annotation.Nullable;
-
 import org.json.JSONException;
+
+import java.util.concurrent.ExecutionException;
 
 
 public class LoginPresenter {
 
-    private Context applicationContext;
     private Activity activity;
     private LoginUseCase loginUseCase;
+    private GetUserProfileUseCase getUserProfileUseCase;
+    private GetPeersUseCase getPeersUseCase;
+    private Context applicationContext;
 
-    /* Google client object & Intent request code */
     GoogleSignInClient mGoogleSignInClient;
     private static final int RC_GOOGLE_SIGN_IN = 7;
     private Intent mainMenuIntent;
 
 
-    /**
-     * Constructor.
-     * Accepts necessary contexts from parent view (Activity).
-     *
-     * @param applicationContext
-     * @param activity
-     */
     public LoginPresenter(Context applicationContext, Activity activity) {
         this.applicationContext = applicationContext;
         this.activity = activity;
         this.mainMenuIntent = new Intent(activity, MainMenuActivity.class);
         this.loginUseCase = new LoginUseCase();
+        this.getUserProfileUseCase = new GetUserProfileUseCase();
+        this.getPeersUseCase = new GetPeersUseCase();
     }
 
 
-    public void init() {
-        initOAuthModules();
-    }
-
-
-    /**
-     * Initialize OAuth2 Clients
-     */
     public void initOAuthModules() {
         Session.getCurrentSession().addCallback(this.sessionCallback);
 
@@ -82,8 +74,6 @@ public class LoginPresenter {
 
     /**
      * Kakao session callback function.
-     * Registers user to application and move to next activity on success.
-     * Prints error message to log on fail
      */
     private ISessionCallback sessionCallback = new ISessionCallback() {
         @Override
@@ -109,20 +99,8 @@ public class LoginPresenter {
                         }
                     });
 
-            try {
-                loginUseCase.login(MyApplication.mainServerConn,
-                        Types.OAuthProvider.AUTHENTICATOR_KAKAO, null, null);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            Intent intent = new Intent(applicationContext, MainMenuActivity.class);
-            intent.putExtra(
-                    applicationContext.getResources().getString(R.string.INDEX_LOGIN_METHOD),
-                    applicationContext.getResources().getString(R.string.LOGIN_KAKAO)
-            );
-            activity.startActivity(intent);
+            LoginRequest request = getKakaoUserLoginRequest();
+            login(request);
         }
 
         @Override
@@ -132,9 +110,6 @@ public class LoginPresenter {
     };
 
 
-    /**
-     * Begin Google OAuth procedure
-     */
     public void googleSignIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         activity.startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
@@ -158,56 +133,101 @@ public class LoginPresenter {
 
 
     /**
-     * Handle results from login attempt.
-     * If login attempt was successful, start Main Menu activity.
+     * Get user's Google OAuth account and attempt authentication with
+     * authentication server
      *
      * @param requestCode
      * @param resultCode
      * @param data
      */
-    public void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data)
-            throws IOException {
-        Intent intent = new Intent(activity, MainMenuActivity.class);
-
+    public void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == RC_GOOGLE_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             if (handleGoogleSignInResult(task)) {
-                intent.putExtra(
-                        applicationContext.getResources().getString(R.string.INDEX_LOGIN_METHOD),
-                        applicationContext.getResources().getString(R.string.LOGIN_GOOGLE)
-                );
-            } else {
-                return;
+                LoginRequest request = getGoogleUserLoginRequest();
+                login(request);
             }
-        } else {
-            //@todo: Output error message (Invalid Request)
         }
+    }
 
-        loginUseCase.login(MyApplication.mainServerConn,
-                Types.OAuthProvider.AUTHENTICATOR_GOOGLE, null, null);
-        activity.startActivity(intent);
+    private LoginRequest getKakaoUserLoginRequest() {
+        LoginRequest request = new LoginRequest();
+        request.setMainServerConn(MyApplication.mainServerConn);
+        request.setAuthProvider(Types.OAuthProvider.AUTHENTICATOR_KAKAO);
+        request.setOAuthAccessToken(Session.getCurrentSession().getTokenInfo().getAccessToken());
+        request.setUsername(null);
+        request.setPassword(null);
+        return request;
+    }
+
+    private LoginRequest getGoogleUserLoginRequest() {
+        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(applicationContext);
+        assert googleAccount != null;
+
+        LoginRequest request = new LoginRequest();
+        request.setMainServerConn(MyApplication.mainServerConn);
+        request.setAuthProvider(Types.OAuthProvider.AUTHENTICATOR_GOOGLE);
+        request.setOAuthAccessToken(googleAccount.getIdToken());
+        return request;
+    }
+
+    public LoginRequest getNonSocialLoginRequest(String username, String password) {
+        LoginRequest request = new LoginRequest();
+        request.setMainServerConn(MyApplication.mainServerConn);
+        request.setAuthProvider(Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL);
+        request.setUsername(username);
+        request.setPassword(password);
+        return request;
     }
 
 
-    public void mainServerAuth(String username, String password) throws IOException {
-        final MainServerConnection conn = MyApplication.mainServerConn;
+    public void login(LoginRequest request) {
+        try {
+            authUser(request);
+            updateUserData();
+        } catch (Exception e) {
+            return;
+        }
+
+        onLoginUiUpdate();
+    }
+
+    private void onLoginUiUpdate() {
+        activity.startActivity(this.mainMenuIntent);
+    }
+
+    private void authUser(LoginRequest request)
+            throws InterruptedException, ExecutionException, InvalidCredentialException, JSONException {
+        try {
+            loginUseCase.execute(request);
+        } catch (InvalidCredentialException invalidException) {
+            /* @Todo Error message on toast */
+            throw invalidException;
+        } catch (Exception e) {
+            /* @Todo Error message on toast */
+            throw e;
+        }
+    }
+
+    private void updateUserData() throws UserNotFoundException,
+            ExecutionException, JSONException, InterruptedException {
+        GetUserProfileRequest request = new GetUserProfileRequest();
+        GetPeersRequest getPeersRequest = new GetPeersRequest();
+
+        request.setMainServerConnection(MyApplication.mainServerConn);
+        getPeersRequest.setMainServerConnection(MyApplication.mainServerConn);
 
         try {
-            boolean success = loginUseCase.login(MyApplication.mainServerConn,
-                    Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL, username, password);
-
-            /* Force delete credentials */
-            username = null;
-            password = null;
-
-            if (success) {
-                conn.getUser();
-                activity.startActivity(this.mainMenuIntent);
-            }
-        } catch (InterruptedException | ExecutionException | JSONException e) {
-            e.printStackTrace();
+            getUserProfileUseCase.execute(request);
+            MyApplication.peers = getPeersUseCase.execute(getPeersRequest);
+        } catch (UserNotFoundException userNotFoundException) {
+            /* @Todo Error message on toast */
+            throw userNotFoundException;
+        } catch (Exception e) {
+            /* @Todo Error message on toast */
+            throw e;
         }
+        ;
     }
 
 
