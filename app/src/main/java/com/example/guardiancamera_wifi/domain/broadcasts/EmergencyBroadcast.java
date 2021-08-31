@@ -20,9 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 public class EmergencyBroadcast extends BroadcastReceiver {
 
-    public EmergencyBroadcast() {
-
-    }
+    public EmergencyBroadcast() {}
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -31,7 +29,9 @@ public class EmergencyBroadcast extends BroadcastReceiver {
         SmsMessage[] smsMessage;
 
         try {
+            assert bundle != null;
             pdus = (Objects[]) bundle.get("pdus");
+            assert pdus != null;
             smsMessage = new SmsMessage[pdus.length];
         } catch (NullPointerException e) {
             e.printStackTrace();
