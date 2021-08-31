@@ -3,6 +3,8 @@ package com.example.guardiancamera_wifi;
 import android.app.Application;
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
+
+import com.example.guardiancamera_wifi.domain.models.ClientStreamData;
 import com.example.guardiancamera_wifi.domain.models.VideoConfig;
 import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
 import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
@@ -12,7 +14,6 @@ import com.kakao.auth.IApplicationConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -21,25 +22,19 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class MyApplication extends Application {
 
-    /* Current User */
     public static LazyWebUser currentUser;
-
-    /* Peers (Guardians & Protecteds) of current user */
     public static LazyWebPeers peers;
-
-    /* HTTP handler for Authentication & Web server */
     public static MainServerConnection mainServerConn;
+    public static EmergencyServerConnection emergencyServerConn;
+    public static ClientStreamData clientStreamData;
 
-    /* HTTP handler for Emergency Streaming server */
-    public static EmergencyServerConnection emergencyServerConnection;
-
-    // Application & Peripheral Configuration
     public static VideoConfig videoConfig;
 
     public static ConcurrentLinkedDeque<String> appLogs;
 
-    public static void setCurrentUser(LazyWebUser userinfo) {
-        currentUser = userinfo;
+    public static void setCurrentUser(LazyWebUser user) {
+        /* @Todo: Add Exception Handler for case when a user is already logged in */
+        currentUser = user;
     }
 
     public static MutableLiveData<ConcurrentLinkedDeque<String>> applicationLogLiveData =
@@ -69,11 +64,7 @@ public class MyApplication extends Application {
         videoConfig = new VideoConfig(this);
         appLogs = new ConcurrentLinkedDeque<String>();
 
-        try {
-            mainServerConn = new MainServerConnection(getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mainServerConn = new MainServerConnection();
 
         // SDK Initialization
         KakaoSDK.init(new KakaoAdapter() {
