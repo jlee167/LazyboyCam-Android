@@ -12,8 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.domain.models.EmergencyStream;
 import com.pedro.encoder.input.gl.SpriteGestureController;
 import com.pedro.encoder.input.video.CameraOpenException;
 import com.pedro.rtmp.utils.ConnectCheckerRtmp;
@@ -36,7 +36,7 @@ public class RtmpStreamingActivity extends AppCompatActivity
         implements ConnectCheckerRtmp, View.OnClickListener, SurfaceHolder.Callback,
         View.OnTouchListener {
 
-    private String streamUrl = EmergencyStream.getVideoDestUrl();
+    private String streamUrl = MyApplication.clientStreamData.getVideoDestUrl();
 
     private RtmpCamera1 rtmpCamera1;
     private Button button;
