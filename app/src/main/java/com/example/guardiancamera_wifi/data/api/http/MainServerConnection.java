@@ -373,17 +373,15 @@ public class MainServerConnection {
 
 
     /**
-     * Connect to the authentication server (Http protocol)
-     * Pass Google or Kakao authentication token to the server for validation.
+     *  Connect to the authentication server (Http protocol)
+     *  Pass Google or Kakao authentication token to the server for validation.
+     *
+     * @return
+     * @throws JSONException
+     * @throws ExecutionException
+     * @throws InterruptedException
      */
     public LazyWebPeers getPeers() throws JSONException, ExecutionException, InterruptedException {
-
-        /*
-        JSONArray guardiansQueryResult = sendHttpRequest(LazyWebURI.URI_GUARDIAN(),
-                                                            new JSONObject(), HTTP.GET);
-        JSONArray protectedsQueryResult = sendHttpRequest(LazyWebURI.URI_PROTECTED(),
-                                                            new JSONObject(), HTTP.GET);
-        */
 
         JSONArray guardiansQueryResult;
         JSONArray protectedsQueryResult;
@@ -403,13 +401,8 @@ public class MainServerConnection {
         };
 
         Future<JSONArray[]> future = executor.submit(guardianRequestTask);
-
         guardiansQueryResult = future.get()[0];
         protectedsQueryResult = future.get()[1];
-
-
-        // User information objects to fill.
-        // User info arrays will be used to fill the peer groups object, which will be returned
         LazyWebPeers peerGroups = new LazyWebPeers();
         LazyWebUser[] protecteds, guardians;
 
@@ -432,34 +425,19 @@ public class MainServerConnection {
     }
 
 
-
-
-
-    public Boolean getUser() throws IOException, JSONException, ExecutionException, InterruptedException {
-
-        Callable<Boolean> task = new Callable<Boolean>() {
-
-            private Types.OAuthProvider mAuthProvider = authProvider;
-            private String uri = LazyWebURI.URI_USER();
-            private JSONObject result;
-
-            @Override
-            public Boolean call() throws Exception {
-                try {
-                    result = new JSONObject(sendHttpRequest(
-                            uri,
-                            new JSONObject(),
-                            HttpConnection.POST
-                    ));
-                    MyApplication.currentUser = new LazyWebUser(result);
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-                return true;
+    public JSONObject getUser() throws ExecutionException, InterruptedException {
+        Callable<JSONObject> task = () -> {
+            String uri = LazyWebURI.URI_USER();
+            try {
+                String result = sendHttpRequest(uri, new JSONObject(), HttpConnection.POST);
+                return new JSONObject(result);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                throw e;
             }
         };
 
-        Future<Boolean> future = executor.submit(task);
+        Future<JSONObject> future = executor.submit(task);
         return future.get();
     }
 
