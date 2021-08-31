@@ -7,26 +7,13 @@
     android:layout_height="match_parent"
     android:background="#E8E8E8">
 
-    <TextView
-        android:id="@+id/streamLog"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/border"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/systemLogLabel" />
-
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+        android:id="@+id/generalInfoView"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginStart="40dp"
+        android:layout_height="275dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="35dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="30dp"
         app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,16 +35,76 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/peersLoadedCheckbox"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    app:srcCompat="@android:drawable/checkbox_off_background" />
+
+                <TextView
+                    android:id="@+id/peersLoadedLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="5dp"
+                    android:text="You have 0 protecteds"
+                    android:textColor="#F44336" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    app:srcCompat="@android:drawable/checkbox_off_background" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="5dp"
+                    android:text="You have 0 protecteds"
+                    android:textColor="#F44336" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
                     android:id="@+id/imageView2"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    app:srcCompat="@android:drawable/checkbox_off_background" />
 
                 <TextView
                     android:id="@+id/geoStatus"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="3"
                     android:gravity="left|center_vertical"
                     android:paddingLeft="5dp"
@@ -75,13 +122,17 @@
                     android:id="@+id/imageView3"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    app:srcCompat="@android:drawable/checkbox_off_background" />
 
                 <TextView
                     android:id="@+id/guardiansCount"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:gravity="left|center_vertical"
                     android:paddingLeft="5dp"
@@ -100,13 +151,17 @@
                     android:id="@+id/imageView4"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    app:srcCompat="@android:drawable/checkbox_off_background" />
 
                 <TextView
-                    android:id="@+id/protectedsCount"
-                    android:layout_width="252dp"
+                    android:id="@+id/peersLoaded"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
                     android:gravity="left|center_vertical"
                     android:paddingLeft="5dp"
@@ -153,11 +208,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/clientStatus"
+                    android:id="@+id/userStatusView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Fine" />
+                    android:gravity="center" />
             </LinearLayout>
 
             <LinearLayout
@@ -178,11 +232,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/cameraStatus"
+                    android:id="@+id/cameraStatusView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Offline" />
+                    android:gravity="center" />
             </LinearLayout>
 
             <LinearLayout
@@ -203,11 +256,10 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/streamStatus"
+                    android:id="@+id/streamStatusView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Off" />
+                    android:gravity="center" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -225,6 +277,7 @@
             android:id="@+id/userInfoView"
             android:layout_width="180dp"
             android:layout_height="180dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -235,33 +288,61 @@
 
             <ImageView
                 android:id="@+id/userThumbnail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                app:srcCompat="@drawable/kakao_default_profile_image" />
 
             <TextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:gravity="center|center_horizontal|center_vertical"
-                android:paddingTop="15dp"
-                android:text="TextView"
+                android:text="Name"
+                android:textColor="#FFFFFF"
                 android:textSize="30sp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/logView"
+        android:layout_width="0dp"
+        android:layout_height="275dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="30dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <TextView
+            android:id="@+id/systemLog"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/black"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            android:scrollbars="vertical"
+            android:text="dasf"
+            android:textColor="#01FA53"
+            android:textColorHighlight="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
-        android:id="@+id/systemLogLabel"
+        android:id="@+id/logToggleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:fontFamily="sans-serif-condensed-light"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="@string/LOGS_LABEL"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/streamLog"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        android:layout_marginTop="30dp"
+        android:text="@string/OPEN_LOG"
+        app:layout_constraintEnd_toEndOf="@+id/generalInfoView"
+        app:layout_constraintTop_toBottomOf="@+id/generalInfoView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
