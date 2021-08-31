@@ -2,9 +2,6 @@ package com.example.guardiancamera_wifi.presentation.views.app.watch;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.guardiancamera_wifi.R;
 import com.example.guardiancamera_wifi.data.configs.Addresses;
-import com.example.guardiancamera_wifi.domain.models.ProtectedClientStream;
+import com.example.guardiancamera_wifi.domain.models.PeerStreamData;
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
 
 import net.daum.mf.map.api.MapPOIItem;
@@ -51,11 +48,12 @@ class WebAppInterface {
 
 
 
-public class StreamFragment extends Fragment {
+public class WatchStreamFragment extends Fragment {
 
     WebView videoView;          // Video Player
     MapView mapView;
-    AudioTrack audioPlayer;     // Audio Player
+    WatchStreamPresenter presenter;
+
 
     Thread geoDataFetcher;
     boolean geoDataFetcherOn;
@@ -64,7 +62,8 @@ public class StreamFragment extends Fragment {
     JSONObject sendData;
 
 
-    public StreamFragment() {
+    public WatchStreamFragment() {
+        presenter = new WatchStreamPresenter();
     }
 
 
@@ -110,15 +109,7 @@ public class StreamFragment extends Fragment {
         videoView.loadUrl("file:///android_asset/MJPEG_Viewer.html");
 
 
-        /* Initialize audio player */
-        audioPlayer = new AudioTrack(AudioManager.STREAM_MUSIC,
-                44100,
-                AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                1024,
-                AudioTrack.MODE_STREAM);
 
-        audioPlayer.play();
 
         mapView = new MapView(getActivity());
         ViewGroup mapViewContainer = (ViewGroup) getActivity().findViewById(R.id.mapView);
@@ -143,7 +134,7 @@ public class StreamFragment extends Fragment {
                     try {
                         JSONObject geoData = new JSONObject(
                                 conn.sendHttpRequest(
-                                        ProtectedClientStream.getGeoSrcUrl(),
+                                        PeerStreamData.getGeoSrcUrl(),
                                         sendData,
                                         "POST",
                                         Addresses.STREAMING_SERVER_IP
@@ -163,7 +154,7 @@ public class StreamFragment extends Fragment {
 
                         JSONObject audioInput = new JSONObject(
                                 conn.sendHttpRequest(
-                                        ProtectedClientStream.getAudioSrcUrl(),
+                                        PeerStreamData.getAudioSrcUrl(),
                                         sendData,
                                         "POST",
                                         Addresses.STREAMING_SERVER_IP
@@ -171,7 +162,7 @@ public class StreamFragment extends Fragment {
                         );
                         byte [] audioData = audioInput.getString("audioData")
                                                     .getBytes(StandardCharsets.UTF_8);
-                        audioPlayer.write(audioData, 0, 1024);
+                        presenter.writeAudioData(audioData, 1024);
 
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
@@ -193,8 +184,8 @@ public class StreamFragment extends Fragment {
     @Override
     public void onDetach() {
         geoDataFetcherOn = false;
-        audioPlayer.stop();
-        audioPlayer = null;
+        //audioPlayer.stop();
+        //audioPlayer = null;
         super.onDetach();
     }
 
@@ -207,7 +198,7 @@ public class StreamFragment extends Fragment {
                 while(true) {
                     byte[] audioData = new byte[1024];
                     new Random().nextBytes(audioData);
-                    audioPlayer.write(audioData, 0, 1024);
+                    //audioPlayer.write(audioData, 0, 1024);
                 }
             }
         });
