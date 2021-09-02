@@ -16,10 +16,12 @@ import androidx.core.content.ContextCompat;
 
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.domain.broadcasts.EmergencyBroadcast;
+import com.example.guardiancamera_wifi.domain.models.EmergencyMessages;
 import com.example.guardiancamera_wifi.domain.services.EmergencyService;
 import com.example.guardiancamera_wifi.domain.services.GeolocationService;
 
 public class MainMenuPresenter {
+
     MainMenuActivity activity;
     Context applicationContext;
     Intent emergencyIntent;
@@ -94,29 +96,29 @@ public class MainMenuPresenter {
 
                 assert action != null;
                 switch (action) {
-                    case "stream.start":
+                    case EmergencyMessages.START_STREAM:
                         activity.onStreamStart(MyApplication.clientStreamData);
                         break;
 
-                    case "camera.connected":
+                    case EmergencyMessages.CAMERA_CONNECTED:
                         activity.onCameraConnected();
                         break;
 
-                    case "camera.disconnected":
+                    case EmergencyMessages.CAMERA_DISCONNECTED:
                         activity.onCameraDisconnected();
                         break;
 
-                    case "emergency.start":
+                    case EmergencyMessages.START_EMERGENCY:
                         startGeoLocationService(intent.getStringExtra("geoDestUrl"));
                         activity.onEmergencyStart(MyApplication.clientStreamData);
                         break;
 
-                    case "emergency.stop":
+                    case EmergencyMessages.STOP_EMERGENCY:
                         stopGeoLocationService();
                         activity.onEmergencyStop();
                         break;
 
-                    case "stream.stop":
+                    case EmergencyMessages.STOP_STREAM:
                         activity.onStreamStop();
                         break;
 

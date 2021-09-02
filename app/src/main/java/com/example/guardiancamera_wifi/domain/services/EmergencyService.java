@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.example.guardiancamera_wifi.data.configs.Addresses;
 import com.example.guardiancamera_wifi.domain.models.ClientStreamData;
+import com.example.guardiancamera_wifi.domain.models.EmergencyMessages;
 import com.example.guardiancamera_wifi.domain.models.VideoConfig;
 import com.example.guardiancamera_wifi.data.configs.WifiCameraProtocol;
 import com.example.guardiancamera_wifi.MyApplication;
@@ -243,7 +244,7 @@ public class EmergencyService extends Service {
     public void broadcastStartOfStream() {
         /* Notify updated state to main activity for UI update */
         Intent intent = new Intent();
-        intent.setAction("stream.start");
+        intent.setAction(EmergencyMessages.START_STREAM);
         intent.putExtra("videoUrl", clientStreamData.getVideoDestUrl());
         intent.putExtra("audioUrl", clientStreamData.getAudioDestUrl());
         intent.putExtra("geoUrl", clientStreamData.getGeoDestUrl());
