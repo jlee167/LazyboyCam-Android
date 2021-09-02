@@ -34,12 +34,9 @@ import java.util.concurrent.Future;
 
 public class MainServerConnection {
 
-
-
     private static boolean session_enabled;
     private static String COOKIES;
     private CookieManager cookieManager;
-
     private ExecutorService executor;
 
 
@@ -49,6 +46,7 @@ public class MainServerConnection {
         cookieManager = new CookieManager();
         executor = Executors.newFixedThreadPool(2);
     }
+
 
     public void pingServer() throws InterruptedException {
         Thread pingThread = new Thread(new Runnable() {
@@ -83,6 +81,7 @@ public class MainServerConnection {
         authCredential.put("accessToken", accessToken);
         return authCredential;
     }
+
 
     public String sendHttpRequest(String uri, JSONObject body, String httpMethod) throws IOException {
 
@@ -197,13 +196,6 @@ public class MainServerConnection {
     }
 
 
-    /**
-     * Sign in to lazyweb
-     *
-     * @param username
-     * @param password
-     * @return Success(True) or Fail(False)
-     */
     public JSONObject nonSocialLogin(final String username, final String password)
             throws ExecutionException, InterruptedException {
 

@@ -25,6 +25,7 @@ public class HomeFragment extends Fragment {
     TextView cameraStatusView;
     TextView streamStatusView;
 
+
     public HomeFragment() {
     }
 
@@ -33,35 +34,43 @@ public class HomeFragment extends Fragment {
         streamStatusView.setText(R.string.STREAM_STATUS_ACTIVE);
     }
 
+
     public void handleStreamStop() {
         streamStatusView.setText(R.string.STREAM_STATUS_INACTIVE);
     }
+
 
     public void handleEmergencyStart() {
         userStatusView.setText(R.string.USER_STATUS_EMERGENCY);
     }
 
+
     public void handleEmergencyStop() {
         userStatusView.setText(R.string.USER_STATUS_FINE);
     }
+
 
     public void handleCameraConnection() {
         cameraStatusView.setText(R.string.CAMERA_STATUS_CONNECTED);
     }
 
+
     public void handleCameraDisconnection() {
         cameraStatusView.setText(R.string.CAMERA_STATUS_DISCONNECTED);
     }
+
 
     public void openLogs() {
         activity.findViewById(R.id.generalInfoView).setVisibility(View.INVISIBLE);
         activity.findViewById(R.id.logView).setVisibility(View.VISIBLE);
     }
 
+
     public void closeLogs() {
         activity.findViewById(R.id.generalInfoView).setVisibility(View.VISIBLE);
         activity.findViewById(R.id.logView).setVisibility(View.INVISIBLE);
     }
+
 
     public boolean isLogOpen() {
         return activity.findViewById(R.id.logView).getVisibility() == View.VISIBLE;
@@ -76,10 +85,12 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
+
 
     @Override
     public void onStart() {

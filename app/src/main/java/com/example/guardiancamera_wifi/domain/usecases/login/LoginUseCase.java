@@ -14,6 +14,7 @@ public class LoginUseCase implements UseCase<Void, LoginRequest> {
 
     public Void execute(LoginRequest request)
             throws InterruptedException, ExecutionException, JSONException, InvalidCredentialException {
+
         MainServerConnection mainServerConn;
         Types.OAuthProvider authProvider;
         JSONObject result;
@@ -24,7 +25,6 @@ public class LoginUseCase implements UseCase<Void, LoginRequest> {
         authProvider = request.getAuthProvider();
         username = request.getUsername();
         password = request.getUsername();
-
 
         if (authProvider == Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL)
             result = mainServerConn.nonSocialLogin(username, password);

@@ -22,6 +22,7 @@ public class EmergencyBroadcast extends BroadcastReceiver {
 
     public EmergencyBroadcast() {}
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();

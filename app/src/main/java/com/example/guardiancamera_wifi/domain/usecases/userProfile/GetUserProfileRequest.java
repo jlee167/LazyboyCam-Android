@@ -6,7 +6,6 @@ public class GetUserProfileRequest {
 
     private MainServerConnection mainServerConn;
 
-
     public MainServerConnection getMainServerConn() {
         return mainServerConn;
     }

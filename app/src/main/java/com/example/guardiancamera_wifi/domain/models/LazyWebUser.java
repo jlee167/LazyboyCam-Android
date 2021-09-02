@@ -19,10 +19,6 @@ public class LazyWebUser {
     public String firstname;
     public String lastname;
     public String username;
-
-    public String profileImageUrl;
-    public Bitmap profileImage;
-
     public String email;
     public String cell;
     public String authProvider;
@@ -30,6 +26,8 @@ public class LazyWebUser {
     public String streamAddress;
     public String status;
 
+    public String profileImageUrl;
+    public Bitmap profileImage;
 
 
     public LazyWebUser(JSONObject user) throws JSONException {

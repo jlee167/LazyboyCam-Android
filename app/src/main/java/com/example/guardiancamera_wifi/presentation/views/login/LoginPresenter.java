@@ -150,6 +150,7 @@ public class LoginPresenter {
         }
     }
 
+
     private LoginRequest getKakaoUserLoginRequest() {
         LoginRequest request = new LoginRequest();
         request.setMainServerConn(MyApplication.mainServerConn);
@@ -159,6 +160,7 @@ public class LoginPresenter {
         request.setPassword(null);
         return request;
     }
+
 
     private LoginRequest getGoogleUserLoginRequest() {
         GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(applicationContext);
@@ -170,6 +172,7 @@ public class LoginPresenter {
         request.setOAuthAccessToken(googleAccount.getIdToken());
         return request;
     }
+
 
     public LoginRequest getNonSocialLoginRequest(String username, String password) {
         LoginRequest request = new LoginRequest();
@@ -192,9 +195,11 @@ public class LoginPresenter {
         onLoginUiUpdate();
     }
 
+
     private void onLoginUiUpdate() {
         activity.startActivity(this.mainMenuIntent);
     }
+
 
     private void authUser(LoginRequest request)
             throws InterruptedException, ExecutionException, InvalidCredentialException, JSONException {
@@ -208,6 +213,7 @@ public class LoginPresenter {
             throw e;
         }
     }
+
 
     private void updateUserData() throws UserNotFoundException,
             ExecutionException, JSONException, InterruptedException {
@@ -227,7 +233,6 @@ public class LoginPresenter {
             /* @Todo Error message on toast */
             throw e;
         }
-        ;
     }
 
 

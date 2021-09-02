@@ -2,6 +2,7 @@ package com.example.guardiancamera_wifi.domain.models;
 
 public class PeerStreamData {
 
+
     private static boolean writeLocked = false;
 
     private static String streamID;
