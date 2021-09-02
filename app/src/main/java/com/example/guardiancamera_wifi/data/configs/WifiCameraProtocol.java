@@ -2,7 +2,6 @@ package com.example.guardiancamera_wifi.data.configs;
 
 public class WifiCameraProtocol {
     public static final byte [] CAM_CMD_PREAMBLE = {(byte)0x24, (byte)0x73};
-
     public static final byte CAM_CMD_START_EMERGENCY = 0x10;
     public static final byte CAM_CMD_STOP_EMERGENCY = 0x11;
     public static final byte CAM_CMD_DISCONNECT = 0x15;
