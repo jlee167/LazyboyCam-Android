@@ -1,14 +1,14 @@
 package com.example.guardiancamera_wifi.data.api.http;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
 import com.example.guardiancamera_wifi.data.configs.Addresses;
 import com.example.guardiancamera_wifi.data.configs.LazyWebURI;
-import com.example.guardiancamera_wifi.domain.models.Types;
+import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
 import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
+import com.example.guardiancamera_wifi.domain.models.Types;
 
 import org.json.JSONArray;
 import org.json.JSONException;
