@@ -17,20 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.data.configs.Addresses;
-import com.example.guardiancamera_wifi.domain.models.PeerStreamData;
-import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
 
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Random;
 
 
 class WebAppInterface {
@@ -50,33 +40,26 @@ class WebAppInterface {
 
 public class WatchStreamFragment extends Fragment {
 
-    WebView videoView;          // Video Player
+    WebView videoView;
     MapView mapView;
     WatchStreamPresenter presenter;
 
 
-    Thread geoDataFetcher;
-    boolean geoDataFetcherOn;
-
-    HttpConnection conn;
-    JSONObject sendData;
-
-
     public WatchStreamFragment() {
-        presenter = new WatchStreamPresenter();
+
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new WatchStreamPresenter(getActivity().getApplicationContext(), this);
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_video, container, false);
     }
 
@@ -102,14 +85,9 @@ public class WatchStreamFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
             }
         };
-
         videoView.setWebViewClient(mWebViewClient);
-
         //Todo: Change URL to MJPEG stream HTML page
         videoView.loadUrl("file:///android_asset/MJPEG_Viewer.html");
-
-
-
 
         mapView = new MapView(getActivity());
         ViewGroup mapViewContainer = (ViewGroup) getActivity().findViewById(R.id.mapView);
@@ -126,81 +104,33 @@ public class WatchStreamFragment extends Fragment {
             e.printStackTrace();
         }
         */
-
-        geoDataFetcher = new Thread() {
-            @Override
-            public void run() {
-                while (geoDataFetcherOn) {
-                    try {
-                        JSONObject geoData = new JSONObject(
-                                conn.sendHttpRequest(
-                                        PeerStreamData.getGeoSrcUrl(),
-                                        sendData,
-                                        "POST",
-                                        Addresses.STREAMING_SERVER_IP
-                                )
-                        );
-                        double latitude = geoData.getDouble("latitude");
-                        double longitude = geoData.getDouble("longitude");
-                        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude), true);
-
-                        MapPOIItem marker = new MapPOIItem();
-                        marker.setItemName("Client Location");
-                        marker.setTag(0);
-                        marker.setMapPoint(mapView.getMapCenterPoint());
-                        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
-                        mapView.addPOIItem(marker);
-
-                        JSONObject audioInput = new JSONObject(
-                                conn.sendHttpRequest(
-                                        PeerStreamData.getAudioSrcUrl(),
-                                        sendData,
-                                        "POST",
-                                        Addresses.STREAMING_SERVER_IP
-                                )
-                        );
-                        byte [] audioData = audioInput.getString("audioData")
-                                                    .getBytes(StandardCharsets.UTF_8);
-                        presenter.writeAudioData(audioData, 1024);
-
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
     }
 
+    void onClientChange() {
+        presenter.changeClient();
+    }
+
+    void updateGeoLocationUi(double latitude, double longitude) {
+        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude), true);
+        MapPOIItem marker = new MapPOIItem();
+        marker.setItemName("Client Location");
+        marker.setTag(0);
+        marker.setMapPoint(mapView.getMapCenterPoint());
+        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+        mapView.addPOIItem(marker);
+    }
 
 
     @Override
     public void onStart() {
-        geoDataFetcherOn = true;
-        geoDataFetcher.start();
         super.onStart();
     }
 
+
     @Override
     public void onDetach() {
-        geoDataFetcherOn = false;
-        //audioPlayer.stop();
-        //audioPlayer = null;
         super.onDetach();
-    }
-
-
-    public void audioTest() {
-        getActivity().runOnUiThread(new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                while(true) {
-                    byte[] audioData = new byte[1024];
-                    new Random().nextBytes(audioData);
-                    //audioPlayer.write(audioData, 0, 1024);
-                }
-            }
-        });
+        presenter.deactivateStream();
     }
 }
