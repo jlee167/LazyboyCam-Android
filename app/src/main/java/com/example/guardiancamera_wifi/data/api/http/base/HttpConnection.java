@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.guardiancamera_wifi.data.configs.Addresses;
+import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,23 +25,20 @@ public class HttpConnection {
     protected Context appContext;
 
     /**
-     * @param uri
      * @param sendData
      * @param method
      * @return
      * @throws IOException
      * @throws JSONException
      */
-    public String sendHttpRequest(String uri, JSONObject sendData, String method, String serverAddr)
+    public HttpResponse sendHttpRequest(String url, JSONObject sendData, String method)
             throws IOException, JSONException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;
         URL authServerUrl;
         HttpURLConnection conn;
 
-        authServerUrl = new URL(Addresses.PREFIX_HTTP
-                + serverAddr
-                + uri);
+        authServerUrl = new URL(Addresses.PREFIX_HTTP + url);
 
         boolean outputEnabled = method.equals(POST) || method.equals(PUT);
 
@@ -69,10 +67,10 @@ public class HttpConnection {
 
             int responseCode = conn.getResponseCode();
             inputStream = new BufferedInputStream(conn.getInputStream());
-            byte[] response = new byte[1000];
-            inputStream.read(response);
-            Log.i("res", new String(response));
-            return new String(response);
+            byte[] responseBody = new byte[1000];
+            inputStream.read(responseBody);
+
+            return new HttpResponse(responseCode, responseBody);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

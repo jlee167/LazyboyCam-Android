@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public class MainServerConnection {
+public class MainServerConnection extends HttpConnection{
 
     private static boolean session_enabled;
     private static String COOKIES;
@@ -82,34 +82,26 @@ public class MainServerConnection {
         return authCredential;
     }
 
-
-    public String sendHttpRequest(String uri, JSONObject body, String httpMethod) throws IOException {
-
+    @Override
+    public HttpResponse sendHttpRequest(String url, JSONObject body, String method) throws IOException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;
-
-        String urlString = Addresses.PREFIX_HTTP + Addresses.MAIN_SERVER_URL + uri;
-        URL authServerUrl = new URL(urlString);
+        URL authServerUrl;
         HttpURLConnection httpConn;
-        boolean outputEnabled = httpMethod.equals(HttpConnection.POST) || httpMethod.equals(HttpConnection.PUT);
+        boolean outputEnabled;
+        HttpResponse response;
 
-        try {
-            httpConn = (HttpURLConnection) authServerUrl.openConnection();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
+        authServerUrl = new URL(url);
+        httpConn = (HttpURLConnection) authServerUrl.openConnection();
+        outputEnabled = method.equals(POST) || method.equals(PUT);
+        response = new HttpResponse();
 
         if (session_enabled) {
             httpConn.setRequestProperty("Cookie", COOKIES);
         }
         httpConn.setRequestProperty("Content-Type", "application/json; utf-8");
         httpConn.setRequestProperty("Accept", "application/json");
-        try {
-            httpConn.setRequestMethod(httpMethod);
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        }
+        httpConn.setRequestMethod(method);
 
         if (outputEnabled)
             httpConn.setDoOutput(true);
@@ -117,12 +109,7 @@ public class MainServerConnection {
         httpConn.connect();
 
         if (outputEnabled) {
-            try {
-                outputStream = new BufferedOutputStream(httpConn.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw e;
-            }
+            outputStream = new BufferedOutputStream(httpConn.getOutputStream());
             outputStream.write(body.toString().getBytes());
             outputStream.flush();
             outputStream.close();
@@ -130,11 +117,14 @@ public class MainServerConnection {
         }
 
 
-        int responseCode = httpConn.getResponseCode();
+
         String msg = httpConn.getResponseMessage();
         inputStream = new BufferedInputStream(httpConn.getInputStream());
-        byte[] response = new byte[1000];
-        inputStream.read(response);
+        byte[] responseBody = new byte[1000];
+        inputStream.read(responseBody);
+
+        response.setCode(httpConn.getResponseCode());
+        response.setBody(responseBody);
 
 
         Map<String, List<String>> header = httpConn.getHeaderFields();
@@ -153,8 +143,7 @@ public class MainServerConnection {
         } else {
             session_enabled = false;
         }
-        Log.i("res", new String(response));
-        return new String(response);
+        return response;
     }
 
     public String getAuthUrl(Types.OAuthProvider authProvider) {
@@ -182,8 +171,8 @@ public class MainServerConnection {
                 try {
                     String uri = getAuthUrl(authProvider);
                     JSONObject credential = getOAuthCredential(mAccessToken);
-                    String result = sendHttpRequest(uri, credential, HttpConnection.POST);
-                    return new JSONObject(result);
+                    HttpResponse result = sendHttpRequest(uri, credential, HttpConnection.POST);
+                    return new JSONObject(Arrays.toString(result.getBody()));
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                     throw e;
@@ -203,8 +192,8 @@ public class MainServerConnection {
             try {
                 String uri = getAuthUrl(Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL);
                 JSONObject credential = getNonSocialCredential(username, password);
-                String result = sendHttpRequest(uri, credential, HttpConnection.POST);
-                return new JSONObject(result);
+                HttpResponse result = sendHttpRequest(uri, credential, HttpConnection.POST);
+                return new JSONObject(Arrays.toString(result.getBody()));
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 throw e;
@@ -273,8 +262,8 @@ public class MainServerConnection {
         Callable<JSONObject> task = () -> {
             String uri = LazyWebURI.URI_USER();
             try {
-                String result = sendHttpRequest(uri, new JSONObject(), HttpConnection.POST);
-                return new JSONObject(result);
+                HttpResponse result = sendHttpRequest(uri, new JSONObject(), HttpConnection.POST);
+                return new JSONObject(Arrays.toString(result.getBody()));
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 throw e;

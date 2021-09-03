@@ -89,10 +89,9 @@ public class GeolocationService extends Service {
                         locationData.put("timestamp", System.currentTimeMillis());
 
                         conn.sendHttpRequest(
-                                clientStreamData.getGeoDestUrl(),
+                                Addresses.STREAMING_SERVER_IP +clientStreamData.getGeoDestUrl(),
                                 locationData,
-                                HttpConnection.POST,
-                                Addresses.STREAMING_SERVER_IP
+                                HttpConnection.POST
                         );
                     } catch (JSONException | IOException e) {
                         e.printStackTrace();

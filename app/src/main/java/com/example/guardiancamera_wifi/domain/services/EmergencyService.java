@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.guardiancamera_wifi.data.configs.Addresses;
 import com.example.guardiancamera_wifi.domain.models.ClientStreamData;
 import com.example.guardiancamera_wifi.domain.models.EmergencyMessages;
+import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 import com.example.guardiancamera_wifi.domain.models.VideoConfig;
 import com.example.guardiancamera_wifi.data.configs.WifiCameraProtocol;
 import com.example.guardiancamera_wifi.MyApplication;
@@ -170,14 +171,12 @@ public class EmergencyService extends Service {
             emergency = true;
             JSONObject sendData = new JSONObject();
             sendData.put("token", MyApplication.currentUser.webToken);
-            return new JSONObject(
-                    reportConn.sendHttpRequest(
-                            StreamingURI.URI_EMERGENCY,
-                            new JSONObject(),
-                            HttpConnection.POST,
-                            Addresses.STREAMING_SERVER_IP
-                    )
+            HttpResponse result = reportConn.sendHttpRequest(
+                    Addresses.STREAMING_SERVER_IP+StreamingURI.URI_EMERGENCY,
+                    new JSONObject(),
+                    HttpConnection.POST
             );
+            return new JSONObject(Arrays.toString(result.getBody()));
         } else {
             ostream.write(WifiCameraProtocol.CAM_RESP_ERR);
             return null;
@@ -188,13 +187,11 @@ public class EmergencyService extends Service {
 
         JSONObject sendData = new JSONObject();
         sendData.put("token", MyApplication.currentUser.webToken);
-        JSONObject result = new JSONObject(
-                reportConn.sendHttpRequest(
-                    StreamingURI.URI_EMERGENCY,
-                    new JSONObject(),
-                    HttpConnection.DELETE,
-                        Addresses.STREAMING_SERVER_IP
-                )
+        HttpResponse result = reportConn.sendHttpRequest(
+                Addresses.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY,
+                new JSONObject(),
+                HttpConnection.DELETE
+
         );
 
         //@Todo: confirm result before sending message to camera
@@ -209,7 +206,7 @@ public class EmergencyService extends Service {
             //Close Fail
         }
 
-        return result;
+        return new JSONObject(Arrays.toString(result.getBody()));
     }
 
     private JSONObject startStream() throws IOException, JSONException {
@@ -218,27 +215,23 @@ public class EmergencyService extends Service {
         streamInfo.put("resolution", VideoConfig.resolution);
 
         streamInfo.put("token", MyApplication.currentUser.webToken);
-        return new JSONObject(
-            reportConn.sendHttpRequest(
-                StreamingURI.URI_STREAM + '/' + MyApplication.currentUser.username,
-                    streamInfo,
-                HttpConnection.POST,
-                    Addresses.STREAMING_SERVER_IP
-            )
+        HttpResponse result = reportConn.sendHttpRequest(
+                Addresses.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/' + MyApplication.currentUser.username,
+                streamInfo,
+                HttpConnection.POST
         );
+        return new JSONObject(Arrays.toString(result.getBody()));
     }
 
     private JSONObject stopStream() throws IOException, JSONException {
         JSONObject data = new JSONObject();
         data.put("token", MyApplication.currentUser.webToken);
-        return new JSONObject(
-            reportConn.sendHttpRequest(
-                StreamingURI.URI_STREAM,
-                new JSONObject(),
-                HttpConnection.DELETE,
-                    Addresses.STREAMING_SERVER_IP
-            )
+        HttpResponse result = reportConn.sendHttpRequest(
+            Addresses.STREAMING_SERVER_IP + StreamingURI.URI_STREAM,
+            new JSONObject(),
+            HttpConnection.DELETE
         );
+        return new JSONObject(Arrays.toString(result.getBody()));
     }
 
     public void broadcastStartOfStream() {
