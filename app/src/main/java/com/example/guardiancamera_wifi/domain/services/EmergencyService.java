@@ -237,7 +237,7 @@ public class EmergencyService extends Service {
     public void broadcastStartOfStream() {
         /* Notify updated state to main activity for UI update */
         Intent intent = new Intent();
-        intent.setAction(EmergencyMessages.START_STREAM);
+        intent.setAction(EmergencyMessages.STREAM_READY);
         intent.putExtra("videoUrl", clientStreamData.getVideoDestUrl());
         intent.putExtra("audioUrl", clientStreamData.getAudioDestUrl());
         intent.putExtra("geoUrl", clientStreamData.getGeoDestUrl());

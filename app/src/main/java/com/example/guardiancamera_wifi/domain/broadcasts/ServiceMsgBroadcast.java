@@ -31,7 +31,7 @@ abstract public class ServiceMsgBroadcast extends BroadcastReceiver {
 
         assert action != null;
         switch (action) {
-            case EmergencyMessages.START_STREAM:
+            case EmergencyMessages.STREAM_READY:
                 onStreamStart();
                 break;
 
@@ -43,15 +43,15 @@ abstract public class ServiceMsgBroadcast extends BroadcastReceiver {
                 onCameraDisconnected();
                 break;
 
-            case EmergencyMessages.START_EMERGENCY:
+            case EmergencyMessages.EMERGENCY_STARTED:
                 onEmergencyStart(intent);
                 break;
 
-            case EmergencyMessages.STOP_EMERGENCY:
+            case EmergencyMessages.EMERGENCY_STOPPED:
                 onEmergencyStop();
                 break;
 
-            case EmergencyMessages.STOP_STREAM:
+            case EmergencyMessages.STREAM_STOPPED:
                 onStreamStop();
                 break;
 

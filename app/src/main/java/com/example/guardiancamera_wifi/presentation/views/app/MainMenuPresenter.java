@@ -130,7 +130,7 @@ public class MainMenuPresenter {
 
                 assert action != null;
                 switch (action) {
-                    case EmergencyMessages.START_STREAM:
+                    case EmergencyMessages.STREAM_READY:
                         activity.onStreamStart(MyApplication.clientStreamData);
                         break;
 
@@ -142,17 +142,17 @@ public class MainMenuPresenter {
                         activity.onCameraDisconnected();
                         break;
 
-                    case EmergencyMessages.START_EMERGENCY:
+                    case EmergencyMessages.EMERGENCY_STARTED:
                         startGeoLocationService(intent.getStringExtra("geoDestUrl"));
                         activity.onEmergencyStart(MyApplication.clientStreamData);
                         break;
 
-                    case EmergencyMessages.STOP_EMERGENCY:
+                    case EmergencyMessages.EMERGENCY_STOPPED:
                         stopGeoLocationService();
                         activity.onEmergencyStop();
                         break;
 
-                    case EmergencyMessages.STOP_STREAM:
+                    case EmergencyMessages.STREAM_STOPPED:
                         activity.onStreamStop();
                         break;
 
