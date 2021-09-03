@@ -113,12 +113,8 @@ public class MainServerConnection extends HttpConnection{
             outputStream.write(body.toString().getBytes());
             outputStream.flush();
             outputStream.close();
-            //streamToAuthServer.write(body.toString().getBytes(StandardCharsets.UTF_8));
         }
 
-
-
-        String msg = httpConn.getResponseMessage();
         inputStream = new BufferedInputStream(httpConn.getInputStream());
         byte[] responseBody = new byte[1000];
         inputStream.read(responseBody);
@@ -273,27 +269,4 @@ public class MainServerConnection extends HttpConnection{
         Future<JSONObject> future = executor.submit(task);
         return future.get();
     }
-
-    /*
-    public void registerUser() throws IOException, JSONException {
-        // @todo: fill json
-        JSONObject token_json = new JSONObject();
-        String uri = LazyWebURI.URI_USER();
-        sendHttpRequest(uri, token_json, httpConnection.POST);
-    }
-
-
-    public void updateUser() throws IOException, JSONException {
-        // @todo: fill json
-        JSONObject token_json = new JSONObject();
-        String uri = LazyWebURI.URI_USER();
-        sendHttpRequest(uri, token_json, httpConnection.PUT);
-    }
-
-    public void deleteUser() throws IOException, JSONException {
-        JSONObject token_json = new JSONObject();
-        String uri = LazyWebURI.URI_USER();
-        sendHttpRequest(uri, token_json, httpConnection.DELETE);
-    }
-    */
 }
