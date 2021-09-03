@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.domain.broadcasts.EmergencyBroadcast;
+import com.example.guardiancamera_wifi.domain.broadcasts.ServiceMsgBroadcast;
 import com.example.guardiancamera_wifi.domain.models.EmergencyMessages;
 import com.example.guardiancamera_wifi.domain.services.EmergencyService;
 import com.example.guardiancamera_wifi.domain.services.GeolocationService;
@@ -88,6 +89,39 @@ public class MainMenuPresenter {
     public void startServiceBroadcastReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction("MainMenuActivity");
+        serviceMsgReceiver = new ServiceMsgBroadcast() {
+            @Override
+            public void onStreamStart() {
+                activity.onStreamStart(MyApplication.clientStreamData);
+            }
+
+            @Override
+            public void onStreamStop() {
+                activity.onStreamStop();
+            }
+
+            @Override
+            public void onEmergencyStart(Intent intent) {
+                startGeoLocationService(intent.getStringExtra("geoDestUrl"));
+                activity.onEmergencyStart(MyApplication.clientStreamData);
+            }
+
+            @Override
+            public void onEmergencyStop() {
+                stopGeoLocationService();
+                activity.onEmergencyStop();
+            }
+
+            @Override
+            public void onCameraConnected() {
+                activity.onCameraConnected();
+            }
+
+            @Override
+            public void onCameraDisconnected() {
+                activity.onCameraDisconnected();
+            }
+        };
         serviceMsgReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -140,17 +174,6 @@ public class MainMenuPresenter {
             NotificationManager notificationManager = activity.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-
-        /*
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "LazyBoyChannel")
-                .setSmallIcon(R.drawable.kakaoaccount_icon)
-                .setContentTitle("Emergency Notification")
-                .setContentText("Emergency Text")
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setDefaults(NotificationCompat.DEFAULT_ALL);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(0, builder.build());
-        */
 
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.provider.Telephony.SMS_RECEIVED");

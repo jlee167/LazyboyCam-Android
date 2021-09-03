@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.guardiancamera_wifi.domain.models.EmergencyMessages;
+
 
 abstract public class ServiceMsgBroadcast extends BroadcastReceiver {
 
@@ -15,7 +17,7 @@ abstract public class ServiceMsgBroadcast extends BroadcastReceiver {
 
     abstract public void onStreamStop();
 
-    abstract public void onEmergencyStart();
+    abstract public void onEmergencyStart(Intent intent);
 
     abstract public void onEmergencyStop();
 
@@ -29,27 +31,27 @@ abstract public class ServiceMsgBroadcast extends BroadcastReceiver {
 
         assert action != null;
         switch (action) {
-            case "stream.start":
+            case EmergencyMessages.START_STREAM:
                 onStreamStart();
                 break;
 
-            case "camera.connected":
+            case EmergencyMessages.CAMERA_CONNECTED:
                 onCameraConnected();
                 break;
 
-            case "camera.disconnected":
+            case EmergencyMessages.CAMERA_DISCONNECTED:
                 onCameraDisconnected();
                 break;
 
-            case "emergency.start":
-                onEmergencyStart();
+            case EmergencyMessages.START_EMERGENCY:
+                onEmergencyStart(intent);
                 break;
 
-            case "emergency.stop":
+            case EmergencyMessages.STOP_EMERGENCY:
                 onEmergencyStop();
                 break;
 
-            case "stream.stop":
+            case EmergencyMessages.STOP_STREAM:
                 onStreamStop();
                 break;
 

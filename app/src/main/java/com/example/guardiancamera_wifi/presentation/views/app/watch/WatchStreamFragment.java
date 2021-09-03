@@ -92,18 +92,6 @@ public class WatchStreamFragment extends Fragment {
         mapView = new MapView(getActivity());
         ViewGroup mapViewContainer = (ViewGroup) getActivity().findViewById(R.id.mapView);
         mapViewContainer.addView(mapView);
-
-
-        /*
-        try {
-            conn = new HttpConnection();
-            sendData = new JSONObject();
-            sendData.put("token", ProtectedClientStream.getJWT());
-            conn.sendHttpRequest(ProtectedClientStream.getGeoSrcUrl(), sendData, "POST", getString(R.string.STREAMING_SERVER_IP));
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
-        */
     }
 
     void onClientChange() {
