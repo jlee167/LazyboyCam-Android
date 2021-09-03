@@ -172,7 +172,7 @@ public class EmergencyService extends Service {
             JSONObject sendData = new JSONObject();
             sendData.put("token", MyApplication.currentUser.webToken);
             HttpResponse result = reportConn.sendHttpRequest(
-                    Addresses.STREAMING_SERVER_IP+StreamingURI.URI_EMERGENCY,
+                    Addresses.PREFIX_HTTP + Addresses.STREAMING_SERVER_IP+StreamingURI.URI_EMERGENCY,
                     new JSONObject(),
                     HttpConnection.POST
             );
@@ -188,7 +188,7 @@ public class EmergencyService extends Service {
         JSONObject sendData = new JSONObject();
         sendData.put("token", MyApplication.currentUser.webToken);
         HttpResponse result = reportConn.sendHttpRequest(
-                Addresses.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY,
+                Addresses.PREFIX_HTTP + Addresses.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY,
                 new JSONObject(),
                 HttpConnection.DELETE
 
@@ -216,7 +216,7 @@ public class EmergencyService extends Service {
 
         streamInfo.put("token", MyApplication.currentUser.webToken);
         HttpResponse result = reportConn.sendHttpRequest(
-                Addresses.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/' + MyApplication.currentUser.username,
+                Addresses.PREFIX_HTTP + Addresses.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/' + MyApplication.currentUser.username,
                 streamInfo,
                 HttpConnection.POST
         );
@@ -227,7 +227,7 @@ public class EmergencyService extends Service {
         JSONObject data = new JSONObject();
         data.put("token", MyApplication.currentUser.webToken);
         HttpResponse result = reportConn.sendHttpRequest(
-            Addresses.STREAMING_SERVER_IP + StreamingURI.URI_STREAM,
+            Addresses.PREFIX_HTTP + Addresses.STREAMING_SERVER_IP + StreamingURI.URI_STREAM,
             new JSONObject(),
             HttpConnection.DELETE
         );
