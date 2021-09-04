@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -17,9 +16,10 @@ import androidx.core.content.ContextCompat;
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.domain.broadcasts.EmergencyBroadcast;
 import com.example.guardiancamera_wifi.domain.broadcasts.ServiceMsgBroadcast;
-import com.example.guardiancamera_wifi.domain.models.EmergencyMessages;
 import com.example.guardiancamera_wifi.domain.services.EmergencyService;
 import com.example.guardiancamera_wifi.domain.services.GeolocationService;
+import com.example.guardiancamera_wifi.domain.services.exceptions.InEmergencyException;
+import com.example.guardiancamera_wifi.domain.services.exceptions.TimeoutException;
 
 public class MainMenuPresenter {
 
@@ -60,16 +60,24 @@ public class MainMenuPresenter {
             activity.stopService(new Intent(activity, GeolocationService.class));
     }
 
-    public boolean isStreaming() {
-        return EmergencyService.isRunning();
-    }
+    public void handleServiceBtnClick() throws InEmergencyException, TimeoutException {
+        if (!EmergencyService.isRunning()) {
+            applicationContext.startService(emergencyIntent);
 
-    public void startStreamingService() {
-        activity.startService(emergencyIntent);
-    }
-
-    public void stopStreamingService() {
-        activity.stopService(emergencyIntent);
+            int timeoutCnt = 0;
+            while (!EmergencyService.isRunning()) {
+                timeoutCnt++;
+                if (timeoutCnt > 100000) { //@Todo: make a TIMEOUT_THRESHOLD variable in config dir
+                    throw new TimeoutException();
+                }
+            };
+        }
+        else {
+            if (!EmergencyService.isEmergency())
+                applicationContext.stopService(emergencyIntent);
+            else
+                throw new InEmergencyException();
+        }
     }
 
     public void stopGeoLocationService() {
@@ -86,13 +94,14 @@ public class MainMenuPresenter {
     }
 
 
-    public void startServiceBroadcastReceiver() {
+    public void startServiceMessageReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction("MainMenuActivity");
+
         serviceMsgReceiver = new ServiceMsgBroadcast() {
             @Override
             public void onStreamStart() {
-                activity.onStreamStart(MyApplication.clientStreamData);
+                activity.onStreamStart(MyApplication.clientStreamInfo);
             }
 
             @Override
@@ -103,7 +112,7 @@ public class MainMenuPresenter {
             @Override
             public void onEmergencyStart(Intent intent) {
                 startGeoLocationService(intent.getStringExtra("geoDestUrl"));
-                activity.onEmergencyStart(MyApplication.clientStreamData);
+                activity.onEmergencyStart(MyApplication.clientStreamInfo);
             }
 
             @Override
@@ -120,45 +129,6 @@ public class MainMenuPresenter {
             @Override
             public void onCameraDisconnected() {
                 activity.onCameraDisconnected();
-            }
-        };
-        serviceMsgReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                Bundle extras = intent.getExtras();
-
-                assert action != null;
-                switch (action) {
-                    case EmergencyMessages.STREAM_READY:
-                        activity.onStreamStart(MyApplication.clientStreamData);
-                        break;
-
-                    case EmergencyMessages.CAMERA_CONNECTED:
-                        activity.onCameraConnected();
-                        break;
-
-                    case EmergencyMessages.CAMERA_DISCONNECTED:
-                        activity.onCameraDisconnected();
-                        break;
-
-                    case EmergencyMessages.EMERGENCY_STARTED:
-                        startGeoLocationService(intent.getStringExtra("geoDestUrl"));
-                        activity.onEmergencyStart(MyApplication.clientStreamData);
-                        break;
-
-                    case EmergencyMessages.EMERGENCY_STOPPED:
-                        stopGeoLocationService();
-                        activity.onEmergencyStop();
-                        break;
-
-                    case EmergencyMessages.STREAM_STOPPED:
-                        activity.onStreamStop();
-                        break;
-
-                    default:
-                        break;
-                }
             }
         };
         activity.registerReceiver(serviceMsgReceiver, filter);

@@ -15,8 +15,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.guardiancamera_wifi.R;
 import com.example.guardiancamera_wifi.domain.broadcasts.EmergencyBroadcast;
-import com.example.guardiancamera_wifi.domain.models.ClientStreamData;
+import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
 import com.example.guardiancamera_wifi.domain.models.VideoConfig;
+import com.example.guardiancamera_wifi.domain.services.EmergencyService;
+import com.example.guardiancamera_wifi.domain.services.exceptions.InEmergencyException;
+import com.example.guardiancamera_wifi.domain.services.exceptions.TimeoutException;
 import com.example.guardiancamera_wifi.presentation.views.app.home.HomeFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.peerList.PeerListFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.setting.SettingsFragment;
@@ -27,7 +30,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     MainMenuPresenter presenter;
 
-    TextView captureServiceBtn;
+    TextView streamingServiceBtn;
     TextView viewVideoBtn;
     TextView peerListBtn;
     TextView settingBtn;
@@ -42,15 +45,15 @@ public class MainMenuActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void onStreamStart(ClientStreamData clientStreamData) {
+    public void onStreamStart(ClientStreamInfo clientStreamInfo) {
         ((TextView) findViewById(R.id.streamStatusView)).setText("Active");
         ((TextView) findViewById(R.id.systemLog)).append("Stream Started. \n");
         ((TextView) findViewById(R.id.systemLog)).append(
-                "Video URL: " + clientStreamData.getVideoDestUrl() + "\n");
+                "Video URL: " + clientStreamInfo.getVideoDestUrl() + "\n");
         ((TextView) findViewById(R.id.systemLog)).append(
-                "Audio URL: " + clientStreamData.getAudioDestUrl() + "\n");
+                "Audio URL: " + clientStreamInfo.getAudioDestUrl() + "\n");
         ((TextView) findViewById(R.id.systemLog)).append(
-                "Geo URL: " + clientStreamData.getGeoDestUrl() + "\n");
+                "Geo URL: " + clientStreamInfo.getGeoDestUrl() + "\n");
     }
 
     public void onCameraConnected() {
@@ -65,7 +68,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 "Camera Disconnected" + VideoConfig.serialNumber + "\n");
     }
 
-    public void onEmergencyStart(ClientStreamData clientStreamData) {
+    public void onEmergencyStart(ClientStreamInfo clientStreamInfo) {
         ((TextView) findViewById(R.id.userStatusView)).setText("Danger");
         ((TextView) findViewById(R.id.systemLog)).append(
                 "Emergency Protocol Started. \n");
@@ -82,24 +85,33 @@ public class MainMenuActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.systemLog)).append("Stream Stopped. \n");
     }
 
+    public void updateStreamingServiceUI() {
+        if (EmergencyService.isRunning()) {
+            streamingServiceBtn.setText(R.string.MENU_STOP_CAPTURE);
+        } else {
+            streamingServiceBtn.setText(R.string.MENU_START_CAPTURE);
+        }
+    }
+
+
     /**
      * Create activity intents and initialize control buttons' UI.
      * Connect respective buttons to corresponding services and activities.
      */
     private void initUI() {
-        captureServiceBtn = findViewById(R.id.captureStartBtn);
+        streamingServiceBtn = findViewById(R.id.captureStartBtn);
         viewVideoBtn = findViewById(R.id.videoViewBtn);
         peerListBtn = findViewById(R.id.peerListBtn);
         settingBtn = findViewById(R.id.settingBtn);
         homeBtn = findViewById(R.id.homeBtn);
 
-        captureServiceBtn.setOnClickListener(v -> {
-            if (!presenter.isStreaming()) {
-                presenter.startStreamingService();
-                captureServiceBtn.setText(R.string.MENU_STOP_CAPTURE);
-            } else {
-                presenter.stopStreamingService();
-                captureServiceBtn.setText(R.string.MENU_START_CAPTURE);
+        streamingServiceBtn.setOnClickListener(v -> {
+            try {
+                presenter.handleServiceBtnClick();
+                updateStreamingServiceUI();
+            } catch (InEmergencyException | TimeoutException e) {
+                //@Todo: Toast Error message
+                e.printStackTrace();
             }
         });
 
@@ -117,10 +129,9 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-
         presenter = new MainMenuPresenter(getApplicationContext(), this);
         presenter.getPermission();
-        presenter.startServiceBroadcastReceiver();
+        presenter.startServiceMessageReceiver();
         presenter.startSMSReceiver();
 
         initUI();
@@ -135,22 +146,10 @@ public class MainMenuActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
 
-        /*
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "LazyBoyChannel")
-                .setSmallIcon(R.drawable.kakaoaccount_icon)
-                .setContentTitle("Emergency Notification")
-                .setContentText("Emergency Text")
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setDefaults(NotificationCompat.DEFAULT_ALL);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(0, builder.build());
-        */
-
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.provider.Telephony.SMS_RECEIVED");
         EmergencyBroadcast emergencyBroadcast = new EmergencyBroadcast();
         registerReceiver(emergencyBroadcast, filter);
-
     }
 
 
