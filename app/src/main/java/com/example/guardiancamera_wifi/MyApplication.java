@@ -9,7 +9,7 @@ import com.example.guardiancamera_wifi.domain.models.VideoConfig;
 import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
 import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
 import com.example.guardiancamera_wifi.data.api.http.MainServerConnection;
-import com.example.guardiancamera_wifi.data.api.http.EmergencyServerConnection;
+import com.example.guardiancamera_wifi.data.api.http.UserEmergencyConnection;
 import com.kakao.auth.IApplicationConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
@@ -25,7 +25,7 @@ public class MyApplication extends Application {
     public static LazyWebUser currentUser;
     public static LazyWebPeers peers;
     public static MainServerConnection mainServerConn;
-    public static EmergencyServerConnection emergencyServerConn;
+    public static UserEmergencyConnection userEmergencyConnection;
     public static ClientStreamInfo clientStreamInfo;
 
     public static VideoConfig videoConfig;

@@ -11,6 +11,7 @@ import android.os.Process;
 
 import androidx.annotation.Nullable;
 
+import com.example.guardiancamera_wifi.data.api.http.UserEmergencyConnection;
 import com.example.guardiancamera_wifi.data.api.http.exceptions.RequestDeniedException;
 import com.example.guardiancamera_wifi.data.configs.IpTable;
 import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
@@ -59,13 +60,10 @@ public class EmergencyService extends Service {
     private ServerSocket listenerServerSocket;
     private CamCmdHandler commandHandler;
     private HttpConnection reportConn;
-
     private BufferedInputStream camInputStream;
     private OutputStream camOutputStream;
-
     private ClientStreamInfo streamInfo;
-
-
+    private UserEmergencyConnection userEmergencyConnection;
 
 
     public static boolean isRunning() {
@@ -88,6 +86,7 @@ public class EmergencyService extends Service {
         emergency = false;
         camConnected = false;
         streamInfo = MyApplication.clientStreamInfo;
+        userEmergencyConnection = MyApplication.userEmergencyConnection;
     }
 
 
