@@ -1,6 +1,6 @@
 package com.example.guardiancamera_wifi.data.configs;
 
-public class Addresses {
+public class IpTable {
     public final static String PREFIX_HTTP = "http://";
     public final static String MAIN_SERVER_URL = "www.lazyboyindustries.com";
     public final static String MAIN_SERVER_IP = "49.50.172.17";

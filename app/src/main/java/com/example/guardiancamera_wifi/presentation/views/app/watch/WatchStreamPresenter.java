@@ -6,8 +6,8 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
-import com.example.guardiancamera_wifi.data.configs.Addresses;
-import com.example.guardiancamera_wifi.domain.models.ClientStreamData;
+import com.example.guardiancamera_wifi.data.configs.IpTable;
+import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
 import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 import com.example.guardiancamera_wifi.domain.models.PeerStreamData;
 import com.example.guardiancamera_wifi.domain.models.base.VideoDescriptor;
@@ -32,7 +32,7 @@ public class WatchStreamPresenter {
     private Thread audioThread;
     private boolean streamActive;
     private VideoDescriptor videoDescriptor;
-    private ClientStreamData clientStreamData;
+    private ClientStreamInfo clientStreamInfo;
 
     HttpConnection conn;
     JSONObject sendData;
@@ -48,7 +48,7 @@ public class WatchStreamPresenter {
         deactivateStream();
 
         videoDescriptor = new VideoDescriptor();
-        clientStreamData = new ClientStreamData();
+        clientStreamInfo = new ClientStreamInfo();
 
         geoLocationThread = new Thread() {
             @Override
@@ -56,7 +56,7 @@ public class WatchStreamPresenter {
                 while (streamActive) {
                     try {
                         HttpResponse geoDataQueryResult = conn.sendHttpRequest(
-                                Addresses.STREAMING_SERVER_IP +PeerStreamData.getGeoSrcUrl(),
+                                IpTable.STREAMING_SERVER_IP +PeerStreamData.getGeoSrcUrl(),
                                 null,
                                 "GET"
                         );
@@ -77,7 +77,7 @@ public class WatchStreamPresenter {
                     try {
                        byte [] audioInput =
                             conn.sendHttpRequest(
-                                    Addresses.STREAMING_SERVER_IP +PeerStreamData.getAudioSrcUrl(),
+                                    IpTable.STREAMING_SERVER_IP +PeerStreamData.getAudioSrcUrl(),
                                     null,
                                     "GET"
                             ).getBody();

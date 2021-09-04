@@ -19,8 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.example.guardiancamera_wifi.MyApplication;
-import com.example.guardiancamera_wifi.data.configs.Addresses;
-import com.example.guardiancamera_wifi.domain.models.ClientStreamData;
+import com.example.guardiancamera_wifi.data.configs.IpTable;
+import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
 
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ public class GeolocationService extends Service {
 
     /* Streaming Server Objects */
     HttpConnection conn;
-    ClientStreamData clientStreamData;
+    ClientStreamInfo clientStreamInfo;
 
     /**
      * @return True if the service is running.
@@ -89,7 +89,7 @@ public class GeolocationService extends Service {
                         locationData.put("timestamp", System.currentTimeMillis());
 
                         conn.sendHttpRequest(
-                                Addresses.STREAMING_SERVER_IP +clientStreamData.getGeoDestUrl(),
+                                IpTable.STREAMING_SERVER_IP + clientStreamInfo.getGeoDestUrl(),
                                 locationData,
                                 HttpConnection.POST
                         );
@@ -109,7 +109,7 @@ public class GeolocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        clientStreamData = MyApplication.clientStreamData;
+        clientStreamInfo = MyApplication.clientStreamInfo;
     }
 
 

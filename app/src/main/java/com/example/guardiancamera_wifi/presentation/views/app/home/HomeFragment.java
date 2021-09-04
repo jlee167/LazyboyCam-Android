@@ -1,6 +1,7 @@
 package com.example.guardiancamera_wifi.presentation.views.app.home;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,8 +81,6 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //return super.onCreateView(inflater, container, savedInstanceState);
-
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -118,7 +117,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onEmergencyStart() {
+            public void onEmergencyStart(Intent intent) {
                 presenter.handleEmergencyStart();
                 self.handleEmergencyStart();
             }

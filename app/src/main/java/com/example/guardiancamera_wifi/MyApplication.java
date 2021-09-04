@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.guardiancamera_wifi.domain.models.ClientStreamData;
+import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
 import com.example.guardiancamera_wifi.domain.models.VideoConfig;
 import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
 import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
@@ -26,7 +26,7 @@ public class MyApplication extends Application {
     public static LazyWebPeers peers;
     public static MainServerConnection mainServerConn;
     public static EmergencyServerConnection emergencyServerConn;
-    public static ClientStreamData clientStreamData;
+    public static ClientStreamInfo clientStreamInfo;
 
     public static VideoConfig videoConfig;
 

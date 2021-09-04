@@ -1,7 +1,5 @@
 package com.example.guardiancamera_wifi.presentation.views.app.home;
 
-import com.example.guardiancamera_wifi.domain.broadcasts.ServiceMsgBroadcast;
-
 public class HomePresenter {
 
     HomePresenter() {

@@ -1,10 +1,5 @@
 package com.example.guardiancamera_wifi.domain.models.base;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import androidx.preference.PreferenceManager;
-
 
 public class VideoDescriptor {
 
