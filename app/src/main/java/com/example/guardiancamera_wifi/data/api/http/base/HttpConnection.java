@@ -1,9 +1,8 @@
 package com.example.guardiancamera_wifi.data.api.http.base;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.example.guardiancamera_wifi.data.configs.Addresses;
+import com.example.guardiancamera_wifi.data.configs.IpTable;
 import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 
 import org.json.JSONException;
@@ -38,7 +37,7 @@ public class HttpConnection {
         URL authServerUrl;
         HttpURLConnection conn;
 
-        authServerUrl = new URL(Addresses.PREFIX_HTTP + url);
+        authServerUrl = new URL(IpTable.PREFIX_HTTP + url);
 
         boolean outputEnabled = method.equals(POST) || method.equals(PUT);
 
