@@ -3,7 +3,7 @@ package com.example.guardiancamera_wifi.data.api.http;
 import android.text.TextUtils;
 
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
-import com.example.guardiancamera_wifi.data.configs.Addresses;
+import com.example.guardiancamera_wifi.data.configs.IpTable;
 import com.example.guardiancamera_wifi.data.configs.LazyWebURI;
 import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
@@ -128,14 +128,14 @@ public class MainServerConnection extends HttpConnection{
             List<String> cookie = header.get("Set-Cookie");
             for (int i = 0; i < cookie.size(); i++) {
                 cookieManager.getCookieStore().add(
-                        URI.create(Addresses.PREFIX_HTTP + Addresses.MAIN_SERVER_URL),
+                        URI.create(IpTable.PREFIX_HTTP + IpTable.MAIN_SERVER_URL),
                         HttpCookie.parse(cookie.get(i)).get(0));
             }
             session_enabled = true;
             COOKIES = TextUtils.join(
                     ";",
-                    cookieManager.getCookieStore().get(URI.create(Addresses.PREFIX_HTTP
-                            + Addresses.MAIN_SERVER_URL)));
+                    cookieManager.getCookieStore().get(URI.create(IpTable.PREFIX_HTTP
+                            + IpTable.MAIN_SERVER_URL)));
         } else {
             session_enabled = false;
         }

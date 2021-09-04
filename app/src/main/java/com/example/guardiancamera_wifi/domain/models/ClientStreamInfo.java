@@ -1,11 +1,22 @@
 package com.example.guardiancamera_wifi.domain.models;
 
-public class ClientStreamData {
+import com.example.guardiancamera_wifi.domain.models.base.VideoDescriptor;
 
-    public boolean writeLocked = false;
+public class ClientStreamInfo {
+
+    private boolean writeLocked = false;
 
     protected int id;
     protected String videoDestUrl, audioDestUrl, geoDestUrl;
+    protected VideoDescriptor videoDescriptor;
+
+    public VideoDescriptor getVideoDescriptor() {
+        return videoDescriptor;
+    }
+
+    public void setVideoDescriptor(VideoDescriptor videoDescriptor) {
+        this.videoDescriptor = videoDescriptor;
+    }
 
 
     public boolean setVideoDestUrl(String url) {
