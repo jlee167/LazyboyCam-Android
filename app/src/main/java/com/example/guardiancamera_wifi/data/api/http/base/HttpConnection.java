@@ -1,11 +1,8 @@
 package com.example.guardiancamera_wifi.data.api.http.base;
 
-import android.content.Context;
-
 import com.example.guardiancamera_wifi.data.configs.IpTable;
 import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -20,18 +17,14 @@ public class HttpConnection {
     public static String PUT    = "PUT";
     public static String DELETE = "DELETE";
 
-    /* Caller activity context & passed intent */
-    protected Context appContext;
-
     /**
      * @param sendData
      * @param method
      * @return
      * @throws IOException
-     * @throws JSONException
      */
     public HttpResponse sendHttpRequest(String url, JSONObject sendData, String method)
-            throws IOException, JSONException {
+            throws IOException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;
         URL authServerUrl;
@@ -41,38 +34,28 @@ public class HttpConnection {
 
         boolean outputEnabled = method.equals(POST) || method.equals(PUT);
 
-        try {
-            conn = (HttpURLConnection) authServerUrl.openConnection();
-            conn.setRequestProperty("Content-Type", "application/json; utf-8");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestMethod(method);
+        conn = (HttpURLConnection) authServerUrl.openConnection();
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestMethod(method);
 
-            if (outputEnabled)
-                conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.connect();
+        if (outputEnabled)
+            conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.connect();
 
-            if (outputEnabled) {
-                try {
-                    /* Http output stream */
-                    outputStream = new BufferedOutputStream(conn.getOutputStream());
-                    outputStream.write(sendData.toString().getBytes());
-                    outputStream.flush();
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            int responseCode = conn.getResponseCode();
-            inputStream = new BufferedInputStream(conn.getInputStream());
-            byte[] responseBody = new byte[1000];
-            inputStream.read(responseBody);
-
-            return new HttpResponse(responseCode, responseBody);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        if (outputEnabled) {
+            outputStream = new BufferedOutputStream(conn.getOutputStream());
+            outputStream.write(sendData.toString().getBytes());
+            outputStream.flush();
+            outputStream.close();
         }
+
+        int responseCode = conn.getResponseCode();
+        inputStream = new BufferedInputStream(conn.getInputStream());
+        byte[] responseBody = new byte[1000];
+        inputStream.read(responseBody);
+
+        return new HttpResponse(responseCode, responseBody);
     }
 }

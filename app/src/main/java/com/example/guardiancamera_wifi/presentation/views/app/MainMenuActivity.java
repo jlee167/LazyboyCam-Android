@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.guardiancamera_wifi.R;
 import com.example.guardiancamera_wifi.domain.broadcasts.EmergencyBroadcast;
 import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
-import com.example.guardiancamera_wifi.domain.models.VideoConfig;
 import com.example.guardiancamera_wifi.domain.services.EmergencyService;
 import com.example.guardiancamera_wifi.domain.services.exceptions.InEmergencyException;
 import com.example.guardiancamera_wifi.domain.services.exceptions.TimeoutException;
@@ -59,13 +58,13 @@ public class MainMenuActivity extends AppCompatActivity {
     public void onCameraConnected() {
         ((TextView) findViewById(R.id.cameraStatusView)).setText("Online");
         ((TextView) findViewById(R.id.systemLog)).append(
-                "Camera Connected. Serial: " + VideoConfig.serialNumber + "\n");
+                "Camera Connected. Serial: " + EmergencyService.getVideoConfig().serialNumber + "\n");
     }
 
     public void onCameraDisconnected() {
         ((TextView) findViewById(R.id.cameraStatusView)).setText("Offline");
         ((TextView) findViewById(R.id.systemLog)).append(
-                "Camera Disconnected" + VideoConfig.serialNumber + "\n");
+                "Camera Disconnected" + EmergencyService.getVideoConfig().serialNumber + "\n");
     }
 
     public void onEmergencyStart(ClientStreamInfo clientStreamInfo) {
@@ -123,6 +122,7 @@ public class MainMenuActivity extends AppCompatActivity {
             changeFragment(homeFragment);
         });
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

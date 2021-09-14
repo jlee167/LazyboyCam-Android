@@ -10,7 +10,6 @@ import com.example.guardiancamera_wifi.data.configs.IpTable;
 import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
 import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 import com.example.guardiancamera_wifi.domain.models.PeerStreamData;
-import com.example.guardiancamera_wifi.domain.models.base.VideoDescriptor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +30,6 @@ public class WatchStreamPresenter {
     private Thread geoLocationThread;
     private Thread audioThread;
     private boolean streamActive;
-    private VideoDescriptor videoDescriptor;
     private ClientStreamInfo clientStreamInfo;
 
     HttpConnection conn;
@@ -47,7 +45,6 @@ public class WatchStreamPresenter {
         playAudio();
         deactivateStream();
 
-        videoDescriptor = new VideoDescriptor();
         clientStreamInfo = new ClientStreamInfo();
 
         geoLocationThread = new Thread() {
@@ -82,7 +79,7 @@ public class WatchStreamPresenter {
                                     "GET"
                             ).getBody();
                         writeAudioData(audioInput, 1024);
-                    } catch (JSONException | IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -91,8 +88,8 @@ public class WatchStreamPresenter {
     }
 
     public boolean isAudioPlayedOnWebView() {
-        return (videoDescriptor.getFormat() == VideoDescriptor.Format.MJPEG)
-                    || (videoDescriptor.getFormat() == VideoDescriptor.Format.RGB565);
+        //@Todo
+        return false;
     }
 
     public void initAudio() {
