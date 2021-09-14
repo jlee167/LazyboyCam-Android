@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
-import com.example.guardiancamera_wifi.domain.models.VideoConfig;
+import com.example.guardiancamera_wifi.data.configs.VideoConfig;
 import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
 import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
 import com.example.guardiancamera_wifi.data.api.http.MainServerConnection;
@@ -18,8 +18,6 @@ import java.util.Calendar;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 
-
-
 public class MyApplication extends Application {
 
     public static LazyWebUser currentUser;
@@ -27,8 +25,6 @@ public class MyApplication extends Application {
     public static MainServerConnection mainServerConn;
     public static UserEmergencyConnection userEmergencyConnection;
     public static ClientStreamInfo clientStreamInfo;
-
-    public static VideoConfig videoConfig;
 
     public static ConcurrentLinkedDeque<String> appLogs;
 
@@ -61,7 +57,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        videoConfig = new VideoConfig(this);
         appLogs = new ConcurrentLinkedDeque<String>();
 
         mainServerConn = new MainServerConnection();
