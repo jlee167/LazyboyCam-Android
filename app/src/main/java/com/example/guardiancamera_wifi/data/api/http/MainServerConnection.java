@@ -256,7 +256,7 @@ public class MainServerConnection extends HttpConnection{
 
     public JSONObject getUser() throws ExecutionException, InterruptedException {
         Callable<JSONObject> task = () -> {
-            String uri = LazyWebURI.URI_USER();
+            String uri = LazyWebURI.URI_SELF_PROFILE();
             try {
                 HttpResponse result = sendHttpRequest(uri, new JSONObject(), HttpConnection.POST);
                 return new JSONObject(Arrays.toString(result.getBody()));

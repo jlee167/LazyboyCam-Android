@@ -8,7 +8,7 @@ public class LazyWebURI {
     private static final String URI_LOGOUT = "/logout";
     private static final String URI_PING = "/ping";
 
-    private static final String URI_USER_INFO = "/self";
+    private static final String URI_SELF_PROFILE = "/self";
     private static final String URI_PREFIX_USERS = "/members";
     private static final String URI_PREFIX_GUARDIAN = "/members/guardian";
     private static final String URI_PREFIX_PROTECTED = "/members/protected";
@@ -37,8 +37,8 @@ public class LazyWebURI {
         return URI_LOGOUT;
     }
 
-    public static String URI_USER() {
-        return URI_USER_INFO;
+    public static String URI_SELF_PROFILE() {
+        return URI_SELF_PROFILE;
     }
 
     public static String URI_KAKAO() {
