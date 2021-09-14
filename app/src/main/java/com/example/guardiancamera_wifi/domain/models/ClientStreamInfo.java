@@ -1,6 +1,6 @@
 package com.example.guardiancamera_wifi.domain.models;
 
-import com.example.guardiancamera_wifi.domain.models.base.VideoDescriptor;
+import com.example.guardiancamera_wifi.data.configs.VideoConfig;
 
 public class ClientStreamInfo {
 
@@ -8,16 +8,16 @@ public class ClientStreamInfo {
 
     protected int id;
     protected String videoDestUrl, audioDestUrl, geoDestUrl;
-    protected VideoDescriptor videoDescriptor;
+    protected VideoConfig videoConfig;
 
-    public VideoDescriptor getVideoDescriptor() {
-        return videoDescriptor;
+    
+    public VideoConfig getVideoConfig() {
+        return videoConfig;
     }
 
-    public void setVideoDescriptor(VideoDescriptor videoDescriptor) {
-        this.videoDescriptor = videoDescriptor;
+    public void setVideoConfig(VideoConfig videoConfig) {
+        this.videoConfig = videoConfig;
     }
-
 
     public boolean setVideoDestUrl(String url) {
         if (writeLocked)

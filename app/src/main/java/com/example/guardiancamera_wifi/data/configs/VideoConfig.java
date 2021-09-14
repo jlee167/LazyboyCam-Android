@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.domain.models;
+package com.example.guardiancamera_wifi.data.configs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,6 +8,8 @@ import androidx.preference.PreferenceManager;
 
 public class VideoConfig {
 
+    final Context appContext;
+
     // Frame Size macros
     final static String FRAME_SIZE_QCIF = "QCIF(320 X 240)";
     final static String FRAME_SIZE_VGA = "VGA(640 X 480)";
@@ -15,23 +17,23 @@ public class VideoConfig {
     final static String FRAME_SIZE_HD = "HD(1280 X 720)";
     final static String FRAME_SIZE_FHD = "FULL HD(1920 X 1080)";
 
-    final static byte IDX_QCIF    = 0;
-    final static byte IDX_VGA     = 1;
-    final static byte IDX_SVGA    = 2;
-    final static byte IDX_HD      = 3;
-    final static byte IDX_FHD     = 4;
+    final static byte ID_QCIF = 0;
+    final static byte ID_VGA = 1;
+    final static byte ID_SVGA = 2;
+    final static byte ID_HD = 3;
+    final static byte ID_FHD = 4;
 
     final static String FORMAT_MJPEG = "MJPEG";
     final static String FORMAT_RGB565 = "RGB565";
 
-    final static byte IDX_MJPEG     = 0;
-    final static byte IDX_RGB565    = 1;
-    final static byte IDX_RTMP      = 2;
+    final static byte ID_MJPEG = 0;
+    final static byte ID_RGB565 = 1;
+    final static byte ID_RTMP = 2;
 
-    public static String serialNumber;
-    public static boolean useExtCamera = false;
-    public static byte resolution;
-    public static byte format;
+    public String serialNumber;
+    public boolean useExtCamera = false;
+    public byte resolution;
+    public byte format;
 
 
     /**
@@ -40,10 +42,11 @@ public class VideoConfig {
      *      Todo: Restrict Framesize when RGB565 format is selected
      */
     public VideoConfig(Context context) {
+        appContext = context;
     }
 
-    public static void update(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public void update() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
         serialNumber = preferences.getString("camSerial", "");
         useExtCamera = preferences.getBoolean("extCamera", false);
 
@@ -53,44 +56,44 @@ public class VideoConfig {
         assert resPreference != null;
         switch (resPreference) {
             case FRAME_SIZE_QCIF:
-                resolution = IDX_QCIF;
+                resolution = ID_QCIF;
                 break;
 
             case FRAME_SIZE_VGA:
-                resolution = IDX_VGA;
+                resolution = ID_VGA;
                 break;
 
             case FRAME_SIZE_SVGA:
-                resolution = IDX_SVGA;
+                resolution = ID_SVGA;
                 break;
 
             case FRAME_SIZE_HD:
-                resolution = IDX_HD;
+                resolution = ID_HD;
                 break;
 
             case FRAME_SIZE_FHD:
-                resolution = IDX_FHD;
+                resolution = ID_FHD;
                 break;
 
             default:
-                resolution = IDX_QCIF;
+                resolution = ID_QCIF;
         }
 
         assert formatPreference != null;
         if (useExtCamera)
-            format = IDX_RTMP;
+            format = ID_RTMP;
         else {
             switch (formatPreference) {
                 case FORMAT_MJPEG:
-                    format = IDX_MJPEG;
+                    format = ID_MJPEG;
                     break;
 
                 case FORMAT_RGB565:
-                    format = IDX_RGB565;
+                    format = ID_RGB565;
                     break;
 
                 default:
-                    format = IDX_MJPEG;
+                    format = ID_MJPEG;
             }
         }
     }
