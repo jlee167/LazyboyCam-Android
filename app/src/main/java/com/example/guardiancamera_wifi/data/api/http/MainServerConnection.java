@@ -2,8 +2,8 @@ package com.example.guardiancamera_wifi.data.api.http;
 
 import android.text.TextUtils;
 
+import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
-import com.example.guardiancamera_wifi.data.configs.IpTable;
 import com.example.guardiancamera_wifi.data.configs.LazyWebURI;
 import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +43,7 @@ public class MainServerConnection extends HttpConnection{
         session_enabled = false;
         COOKIES = "";
         cookieManager = new CookieManager();
-        executor = Executors.newFixedThreadPool(2);
+        executor = Executors.newFixedThreadPool(Env.MAX_THREADS_MAIN_SERVER);
     }
 
 
@@ -128,14 +127,14 @@ public class MainServerConnection extends HttpConnection{
             List<String> cookie = header.get("Set-Cookie");
             for (int i = 0; i < cookie.size(); i++) {
                 cookieManager.getCookieStore().add(
-                        URI.create(IpTable.PREFIX_HTTP + IpTable.MAIN_SERVER_URL),
+                        java.net.URI.create(URI.PREFIX_HTTP + Env.MAIN_SERVER_URL),
                         HttpCookie.parse(cookie.get(i)).get(0));
             }
             session_enabled = true;
             COOKIES = TextUtils.join(
                     ";",
-                    cookieManager.getCookieStore().get(URI.create(IpTable.PREFIX_HTTP
-                            + IpTable.MAIN_SERVER_URL)));
+                    cookieManager.getCookieStore().get(java.net.URI.create(URI.PREFIX_HTTP
+                            + Env.MAIN_SERVER_URL)));
         } else {
             session_enabled = false;
         }

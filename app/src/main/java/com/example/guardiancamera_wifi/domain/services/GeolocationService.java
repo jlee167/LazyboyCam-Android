@@ -18,8 +18,8 @@ import android.os.Process;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
-import com.example.guardiancamera_wifi.data.configs.IpTable;
 import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
 
@@ -89,7 +89,7 @@ public class GeolocationService extends Service {
                         locationData.put("timestamp", System.currentTimeMillis());
 
                         conn.sendHttpRequest(
-                                IpTable.STREAMING_SERVER_IP + clientStreamInfo.getGeoDestUrl(),
+                                Env.STREAMING_SERVER_IP + clientStreamInfo.getGeoDestUrl(),
                                 locationData,
                                 HttpConnection.POST
                         );

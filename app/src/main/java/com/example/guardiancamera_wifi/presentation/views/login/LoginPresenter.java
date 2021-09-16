@@ -65,7 +65,7 @@ public class LoginPresenter {
         Session.getCurrentSession().addCallback(this.sessionCallback);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(Env.GoogleClientID)
+                .requestIdToken(Env.GOOGLE_CLIENT_ID)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this.activity, gso);

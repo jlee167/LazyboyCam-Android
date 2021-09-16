@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.data.api.http.UserEmergencyConnection;
 import com.example.guardiancamera_wifi.data.api.http.exceptions.RequestDeniedException;
-import com.example.guardiancamera_wifi.data.configs.IpTable;
+import com.example.guardiancamera_wifi.data.configs.AndroidHotspot;
 import com.example.guardiancamera_wifi.data.configs.VideoConfig;
 import com.example.guardiancamera_wifi.data.configs.WifiCameraProtocol;
 import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
@@ -235,7 +235,7 @@ public class EmergencyService extends Service {
     public void initCameraSocket() throws IOException {
         /* Prepare TCP socket to wifi camera */
         listenerServerSocket = new ServerSocket();
-        listenerServerSocket.bind(new InetSocketAddress(IpTable.HOTSPOT_HOST_IP, 8001));
+        listenerServerSocket.bind(new InetSocketAddress(AndroidHotspot.HOTSPOT_HOST_IP, 8001));
         listenerSocket = listenerServerSocket.accept();
         camOutputStream = listenerSocket.getOutputStream();
         camInputStream = new BufferedInputStream(listenerSocket.getInputStream());

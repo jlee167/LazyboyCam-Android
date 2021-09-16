@@ -5,8 +5,8 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
+import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
-import com.example.guardiancamera_wifi.data.configs.IpTable;
 import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
 import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 import com.example.guardiancamera_wifi.domain.models.PeerStreamData;
@@ -53,7 +53,7 @@ public class WatchStreamPresenter {
                 while (streamActive) {
                     try {
                         HttpResponse geoDataQueryResult = conn.sendHttpRequest(
-                                IpTable.STREAMING_SERVER_IP +PeerStreamData.getGeoSrcUrl(),
+                                Env.STREAMING_SERVER_IP +PeerStreamData.getGeoSrcUrl(),
                                 null,
                                 "GET"
                         );
@@ -74,7 +74,7 @@ public class WatchStreamPresenter {
                     try {
                        byte [] audioInput =
                             conn.sendHttpRequest(
-                                    IpTable.STREAMING_SERVER_IP +PeerStreamData.getAudioSrcUrl(),
+                                    Env.STREAMING_SERVER_IP +PeerStreamData.getAudioSrcUrl(),
                                     null,
                                     "GET"
                             ).getBody();

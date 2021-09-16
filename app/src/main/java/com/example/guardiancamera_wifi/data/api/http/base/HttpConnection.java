@@ -1,6 +1,6 @@
 package com.example.guardiancamera_wifi.data.api.http.base;
 
-import com.example.guardiancamera_wifi.data.configs.IpTable;
+import com.example.guardiancamera_wifi.data.api.http.URI;
 import com.example.guardiancamera_wifi.domain.models.HttpResponse;
 
 import org.json.JSONObject;
@@ -30,7 +30,7 @@ public class HttpConnection {
         URL authServerUrl;
         HttpURLConnection conn;
 
-        authServerUrl = new URL(IpTable.PREFIX_HTTP + url);
+        authServerUrl = new URL(URI.PREFIX_HTTP + url);
 
         boolean outputEnabled = method.equals(POST) || method.equals(PUT);
 
