@@ -253,7 +253,7 @@ public class MainServerConnection extends HttpConnection{
     }
 
 
-    public JSONObject getUser() throws ExecutionException, InterruptedException {
+    public JSONObject getSelfProfile() throws ExecutionException, InterruptedException {
         Callable<JSONObject> task = () -> {
             String uri = LazyWebURI.URI_SELF_PROFILE();
             try {

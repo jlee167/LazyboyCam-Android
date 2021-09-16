@@ -17,10 +17,10 @@ public class GetUserProfileUseCase implements UseCase<Void, GetUserProfileReques
     public Void execute(GetUserProfileRequest request)
             throws UserNotFoundException, ExecutionException, InterruptedException, JSONException {
         MainServerConnection conn = request.getMainServerConn();
-        JSONObject serverResp = conn.getUser();
+        JSONObject serverResp = conn.getSelfProfile();
 
         if (serverResp.getBoolean("result"))
-            MyApplication.currentUser = new LazyWebUser(conn.getUser());
+            MyApplication.currentUser = new LazyWebUser(conn.getSelfProfile());
         else
             throw new UserNotFoundException();
 
