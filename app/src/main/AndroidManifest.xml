@@ -59,16 +59,15 @@
             android:label="@string/title_activity_rtmp_test">
         </activity>
 
-        <activity android:name=".presentation.views.app.MainMenuActivity" >
+        <activity android:name=".presentation.views.app.MainMenuActivity" />
+
+        <activity android:name=".presentation.views.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".presentation.views.login.LoginActivity" />
-
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
