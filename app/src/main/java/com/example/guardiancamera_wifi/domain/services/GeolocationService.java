@@ -15,12 +15,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.example.guardiancamera_wifi.Env;
-import com.example.guardiancamera_wifi.MyApplication;
-import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,8 +28,6 @@ import java.io.IOException;
 
 public class GeolocationService extends Service {
 
-    // Running status of the service. True when one or more instance is running.
-    // There should not be more than one instance running concurrently!
     private static boolean runState;
 
     private StreamHandler serviceController;
@@ -44,9 +38,10 @@ public class GeolocationService extends Service {
     public LocationListener locationListener;
     private HandlerThread handlerThread;
 
-    /* Streaming Server Objects */
-    HttpConnection conn;
-    ClientStreamInfo clientStreamInfo;
+    private String geoDestUrl;
+    private String webToken;
+    private HttpConnection conn;
+
 
     /**
      * @return True if the service is running.
@@ -79,23 +74,17 @@ public class GeolocationService extends Service {
 
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             conn = new HttpConnection();
-            locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(@NonNull Location location) {
-                    try {
-                        JSONObject locationData = new JSONObject();
-                        locationData.put("latitude", location.getLatitude());
-                        locationData.put("longitude", location.getLongitude());
-                        locationData.put("timestamp", System.currentTimeMillis());
-
-                        conn.sendHttpRequest(
-                                Env.STREAMING_SERVER_IP + clientStreamInfo.getGeoDestUrl(),
-                                locationData,
-                                HttpConnection.POST
-                        );
-                    } catch (JSONException | IOException e) {
-                        e.printStackTrace();
-                    }
+            locationListener = location -> {
+                try {
+                    JSONObject header = new JSONObject();
+                    header.put("webToken", webToken);
+                    JSONObject body = new JSONObject();
+                    body.put("latitude", location.getLatitude());
+                    body.put("longitude", location.getLongitude());
+                    body.put("timestamp", System.currentTimeMillis());
+                    conn.sendHttpRequest(geoDestUrl, header, body, HttpConnection.POST);
+                } catch (JSONException | IOException e) {
+                    e.printStackTrace();
                 }
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
@@ -109,24 +98,26 @@ public class GeolocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        clientStreamInfo = MyApplication.clientStreamInfo;
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (runState)
-            return super.onStartCommand(intent, flags, startId);
+        if (runState) {
+            /* @Todo: error message to toast */
+            return START_NOT_STICKY;
+        }
         else
             runState = true;
 
+        geoDestUrl = intent.getStringExtra("geoDestUrl");
+        webToken = intent.getStringExtra("webToken");
         handlerThread = new HandlerThread("Geodata Service Controller", Process.THREAD_PRIORITY_BACKGROUND);
         handlerThread.start();
         serviceLooper = handlerThread.getLooper();
         serviceController = new StreamHandler(serviceLooper);
         serviceController.sendEmptyMessage(0);
-
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
 

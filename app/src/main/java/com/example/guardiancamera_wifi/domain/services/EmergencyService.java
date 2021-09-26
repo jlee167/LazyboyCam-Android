@@ -87,7 +87,7 @@ public class EmergencyService extends Service {
         camConnected = false;
         streamInfo = MyApplication.clientStreamInfo;
         userEmergencyConnection = MyApplication.userEmergencyConnection;
-        videoConfig = new VideoConfig(getApplicationContext());
+        videoConfig = new VideoConfig(this);
     }
 
 
@@ -228,7 +228,7 @@ public class EmergencyService extends Service {
         streamInfo.setId(resp.getInt("id"));
         streamInfo.setVideoDestUrl(resp.getString("videoUrl"));
         streamInfo.setAudioDestUrl(resp.getString("audioUrl"));
-        streamInfo.setGeoDestUrl(resp.getString("geoUrl"));
+        streamInfo.setGeoDestUrl(resp.getString("geoLocationUrl"));
     }
 
 
@@ -247,7 +247,7 @@ public class EmergencyService extends Service {
         camOutputStream.write((byte) streamInfo.getAudioDestUrl().length());
         camOutputStream.write((byte) streamInfo.getVideoDestUrl().length());
         camOutputStream.write(videoConfig.resolution);
-        camOutputStream.write(videoConfig.format);
+        camOutputStream.write(VideoConfig.getFormatID(videoConfig.format));
         camOutputStream.write(streamInfo.getVideoDestUrl().getBytes(StandardCharsets.UTF_8));
         camOutputStream.write(streamInfo.getAudioDestUrl().getBytes(StandardCharsets.UTF_8));
         camOutputStream.flush();
