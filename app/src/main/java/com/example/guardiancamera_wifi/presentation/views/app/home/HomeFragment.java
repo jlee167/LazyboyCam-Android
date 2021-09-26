@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.R;
 import com.example.guardiancamera_wifi.domain.broadcasts.ServiceMsgBroadcast;
+import com.squareup.picasso.Picasso;
 
 
 public class HomeFragment extends Fragment {
@@ -90,6 +93,17 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        userStatusView.setText(R.string.USER_STATUS_FINE);
+        cameraStatusView.setText(R.string.CAMERA_STATUS_DISCONNECTED);
+        streamStatusView.setText(R.string.STREAM_STATUS_INACTIVE);
+        ImageView profileImage = (ImageView) getActivity().findViewById(R.id.userProfileImage);
+        Picasso.get().load(MyApplication.currentUser.getProfileImageUrl()).into(profileImage);
+        TextView username = (TextView) getActivity().findViewById(R.id.username);
+        username.setText(MyApplication.currentUser.getUsername());
+    }
 
     @Override
     public void onStart() {
@@ -140,10 +154,6 @@ public class HomeFragment extends Fragment {
                 self.handleCameraDisconnection();
             }
         };
-
-        userStatusView.setText(R.string.USER_STATUS_FINE);
-        cameraStatusView.setText(R.string.CAMERA_STATUS_DISCONNECTED);
-        streamStatusView.setText(R.string.STREAM_STATUS_INACTIVE);
 
         activity.findViewById(R.id.logToggleBtn).setOnClickListener(new View.OnClickListener() {
             @Override
