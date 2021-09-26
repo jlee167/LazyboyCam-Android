@@ -1,13 +1,6 @@
 package com.example.guardiancamera_wifi.presentation.views.app.peerList;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +8,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
-import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.guardiancamera_wifi.MyApplication;
+import com.example.guardiancamera_wifi.R;
+import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
+import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
@@ -106,10 +106,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mView
         TextView name = (TextView) personalInfoArea.getChildAt(mViewHolder.INDEX_NAME);
         TextView serverAddress = (TextView) personalInfoArea.getChildAt(mViewHolder.INDEX_SERVER_ADDRESS);
 
-
-        profilePicture.setImageBitmap(dataset.get(position).profileImage);
-        name.setText(dataset.get(position).username);
-        serverAddress.setText(dataset.get(position).streamAddress);
+        Picasso.get().load(dataset.get(position).getProfileImageUrl()).into(profilePicture);
+        name.setText(dataset.get(position).getUsername());
+        //serverAddress.setText(dataset.get(position).streamAddress);
     }
 }
 
