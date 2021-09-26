@@ -82,7 +82,7 @@ public class MainServerConnection extends HttpConnection{
     }
 
     @Override
-    public HttpResponse sendHttpRequest(String url, JSONObject body, String method) throws IOException {
+    public HttpResponse sendHttpRequest(String url, JSONObject header, JSONObject body, String method) throws IOException, JSONException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;
         URL authServerUrl;
@@ -166,7 +166,7 @@ public class MainServerConnection extends HttpConnection{
                 try {
                     String uri = getAuthUrl(authProvider);
                     JSONObject credential = getOAuthCredential(mAccessToken);
-                    HttpResponse result = sendHttpRequest(uri, credential, HttpConnection.POST);
+                    HttpResponse result = sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
                     return new JSONObject(Arrays.toString(result.getBody()));
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -187,8 +187,8 @@ public class MainServerConnection extends HttpConnection{
             try {
                 String uri = getAuthUrl(Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL);
                 JSONObject credential = getNonSocialCredential(username, password);
-                HttpResponse result = sendHttpRequest(uri, credential, HttpConnection.POST);
-                return new JSONObject(Arrays.toString(result.getBody()));
+                HttpResponse result = sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
+                return new JSONObject(new String(result.getBody()));
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 throw e;
@@ -211,26 +211,33 @@ public class MainServerConnection extends HttpConnection{
      */
     public LazyWebPeers getPeers() throws JSONException, ExecutionException, InterruptedException {
 
-        JSONArray guardiansQueryResult;
-        JSONArray protectedsQueryResult;
+        HttpResponse getGuardiansResponse;
+        HttpResponse getProtectedsResponse;
 
-        Callable<JSONArray[]> guardianRequestTask = new Callable<JSONArray[]>() {
-            String uri_guardian = LazyWebURI.URI_GUARDIAN();
-            String uri_protected = LazyWebURI.URI_PROTECTED();
+        Callable<HttpResponse[]> guardianRequestTask = new Callable<HttpResponse[]>() {
+            String uri_guardian = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_GUARDIAN();
+            String uri_protected = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_PROTECTED();
             String method = HttpConnection.GET;
 
             @Override
-            public JSONArray[] call() throws Exception {
-                return new JSONArray[]{
-                        new JSONArray(sendHttpRequest(uri_guardian, new JSONObject(), method)),
-                        new JSONArray(sendHttpRequest(uri_protected, new JSONObject(), method))
+            public HttpResponse[] call() throws Exception {
+                return new HttpResponse[]{
+                        sendHttpRequest(uri_guardian, new JSONObject(), new JSONObject(), method),
+                        sendHttpRequest(uri_protected, new JSONObject(), new JSONObject(), method)
                 };
             }
         };
 
-        Future<JSONArray[]> future = executor.submit(guardianRequestTask);
-        guardiansQueryResult = future.get()[0];
-        protectedsQueryResult = future.get()[1];
+        Future<HttpResponse[]> future = executor.submit(guardianRequestTask);
+        getGuardiansResponse = future.get()[0];
+        getProtectedsResponse = future.get()[1];
+
+
+        JSONObject guardiansRespBody = new JSONObject(new String(getGuardiansResponse.getBody()));
+        JSONObject protectedsRespBody = new JSONObject(new String(getProtectedsResponse.getBody()));
+        JSONArray guardiansJsonArray = (JSONArray) guardiansRespBody.get("guardians");
+        JSONArray protectedsJsonArray = (JSONArray) protectedsRespBody.get("protecteds");
+
         LazyWebPeers peerGroups = new LazyWebPeers();
         LazyWebUser[] protecteds, guardians;
 
@@ -257,8 +264,8 @@ public class MainServerConnection extends HttpConnection{
         Callable<JSONObject> task = () -> {
             String uri = LazyWebURI.URI_SELF_PROFILE();
             try {
-                HttpResponse result = sendHttpRequest(uri, new JSONObject(), HttpConnection.POST);
-                return new JSONObject(Arrays.toString(result.getBody()));
+                HttpResponse result = sendHttpRequest(uri, new JSONObject(), new JSONObject(), HttpConnection.GET);
+                return new JSONObject(new String(result.getBody()));
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 throw e;

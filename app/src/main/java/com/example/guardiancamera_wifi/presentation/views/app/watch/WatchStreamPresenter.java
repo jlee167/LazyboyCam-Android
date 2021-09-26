@@ -55,6 +55,7 @@ public class WatchStreamPresenter {
                         HttpResponse geoDataQueryResult = conn.sendHttpRequest(
                                 Env.STREAMING_SERVER_IP +PeerStreamData.getGeoSrcUrl(),
                                 null,
+                                null,
                                 "GET"
                         );
                         JSONObject geoData = new JSONObject(Arrays.toString(geoDataQueryResult.getBody()));
@@ -76,10 +77,11 @@ public class WatchStreamPresenter {
                             conn.sendHttpRequest(
                                     Env.STREAMING_SERVER_IP +PeerStreamData.getAudioSrcUrl(),
                                     null,
+                                    null,
                                     "GET"
                             ).getBody();
                         writeAudioData(audioInput, 1024);
-                    } catch (IOException e) {
+                    } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
                 }

@@ -25,14 +25,17 @@ public class UserEmergencyConnection extends HttpConnection {
     }
 
     public JSONObject startStream(VideoConfig videoConfig) throws IOException, JSONException, RequestDeniedException {
-        JSONObject streamInfo = new JSONObject();
-        streamInfo.put("format", videoConfig.format);
-        streamInfo.put("resolution", videoConfig.resolution);
-        streamInfo.put("webToken", MyApplication.currentUser.webToken);
-        String url = URI.PREFIX_HTTP + Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
-                + MyApplication.currentUser.uid;
-        HttpResponse response = sendHttpRequest(url, streamInfo, HttpConnection.POST);
-        JSONObject responseBody = new JSONObject(Arrays.toString(response.getBody()));
+        JSONObject body = new JSONObject();
+        body.put("protocol", videoConfig.format);
+        body.put("resolution", videoConfig.resolution);
+
+        JSONObject header = new JSONObject();
+        header.put("webToken", MyApplication.currentUser.getWebToken());
+
+        String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
+                + MyApplication.currentUser.getUid();
+        HttpResponse response = sendHttpRequest(url, header, body, HttpConnection.POST);
+        JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result")) {
             MyApplication.clientStreamInfo.setId(responseBody.getInt("id"));
             return responseBody;
@@ -45,10 +48,14 @@ public class UserEmergencyConnection extends HttpConnection {
 
     public JSONObject stopStream() throws IOException, JSONException, RequestDeniedException {
         JSONObject data = new JSONObject();
-        data.put("webToken", MyApplication.currentUser.webToken);
-        String url = URI.PREFIX_HTTP + Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
+        data.put("webToken", MyApplication.currentUser.getWebToken());
+
+        JSONObject header = new JSONObject();
+        header.put("webToken", MyApplication.currentUser.getWebToken());
+
+        String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.clientStreamInfo.getId();
-        HttpResponse response = sendHttpRequest(url, new JSONObject(), HttpConnection.DELETE);
+        HttpResponse response = sendHttpRequest(url, header, new JSONObject(), HttpConnection.DELETE);
         JSONObject responseBody = new JSONObject(Arrays.toString(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
@@ -59,10 +66,14 @@ public class UserEmergencyConnection extends HttpConnection {
 
     public JSONObject startEmergency() throws IOException, JSONException, RequestDeniedException {
         JSONObject sendData = new JSONObject();
-        sendData.put("webToken", MyApplication.currentUser.webToken);
-        String url = URI.PREFIX_HTTP + Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY + '/'
+        sendData.put("webToken", MyApplication.currentUser.getWebToken());
+
+        JSONObject header = new JSONObject();
+        header.put("webToken", MyApplication.currentUser.getWebToken());
+
+        String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY + '/'
                 + MyApplication.clientStreamInfo.getId();
-        HttpResponse response = sendHttpRequest(url, sendData, HttpConnection.POST);
+        HttpResponse response = sendHttpRequest(url, header, sendData, HttpConnection.POST);
         JSONObject responseBody = new JSONObject(Arrays.toString(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
@@ -73,10 +84,15 @@ public class UserEmergencyConnection extends HttpConnection {
 
     public JSONObject stopEmergency() throws IOException, JSONException, RequestDeniedException {
         JSONObject sendData = new JSONObject();
-        sendData.put("token", MyApplication.currentUser.webToken);
-        String url = URI.PREFIX_HTTP + Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY
+        sendData.put("token", MyApplication.currentUser.getWebToken());
+
+        JSONObject header = new JSONObject();
+        header.put("webToken", MyApplication.currentUser.getWebToken());
+
+
+        String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY
                 + MyApplication.clientStreamInfo.getId();
-        HttpResponse response = sendHttpRequest(url, sendData, HttpConnection.DELETE);
+        HttpResponse response = sendHttpRequest(url, header, sendData, HttpConnection.DELETE);
         JSONObject responseBody = new JSONObject(Arrays.toString(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
