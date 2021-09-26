@@ -24,14 +24,15 @@ public class LoginUseCase implements UseCase<Void, LoginRequest> {
         mainServerConn = request.getMainServerConn();
         authProvider = request.getAuthProvider();
         username = request.getUsername();
-        password = request.getUsername();
+        password = request.getPassword();
 
+        mainServerConn.clearCookies();
         if (authProvider == Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL)
             result = mainServerConn.nonSocialLogin(username, password);
         else
             result = mainServerConn.oAuthLogin(request.getOAuthAccessToken(), authProvider);
 
-        if (result.getBoolean("result"))
+        if (result.getBoolean("token"))
             return null;
         else
             throw new InvalidCredentialException();
