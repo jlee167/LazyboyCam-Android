@@ -60,6 +60,8 @@ public class MyApplication extends Application {
         appLogs = new ConcurrentLinkedDeque<String>();
 
         mainServerConn = new MainServerConnection();
+        userEmergencyConnection = new UserEmergencyConnection(this.getApplicationContext());
+        clientStreamInfo = new ClientStreamInfo();
 
         // SDK Initialization
         KakaoSDK.init(new KakaoAdapter() {
