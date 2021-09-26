@@ -46,6 +46,10 @@ public class MainServerConnection extends HttpConnection{
         executor = Executors.newFixedThreadPool(Env.MAX_THREADS_MAIN_SERVER);
     }
 
+    public void clearCookies() {
+        COOKIES = "";
+    }
+
 
     public void pingServer() throws InterruptedException {
         Thread pingThread = new Thread(new Runnable() {
