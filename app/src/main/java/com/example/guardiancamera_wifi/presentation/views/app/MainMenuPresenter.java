@@ -86,7 +86,8 @@ public class MainMenuPresenter {
     }
 
     public void startGeoLocationService(String geoDestUrl) {
-        geoLocationIntent.putExtra("destUrl", geoDestUrl);
+        geoLocationIntent.putExtra("geoDestUrl", geoDestUrl);
+        geoLocationIntent.putExtra("webToken", MyApplication.currentUser.getWebToken());
 
         if (GeolocationService.isRunning())
             activity.stopService(geoLocationIntent);
@@ -102,6 +103,7 @@ public class MainMenuPresenter {
             @Override
             public void onStreamStart() {
                 activity.onStreamStart(MyApplication.clientStreamInfo);
+                startGeoLocationService(MyApplication.clientStreamInfo.getGeoDestUrl());
             }
 
             @Override
@@ -111,7 +113,6 @@ public class MainMenuPresenter {
 
             @Override
             public void onEmergencyStart(Intent intent) {
-                startGeoLocationService(intent.getStringExtra("geoDestUrl"));
                 activity.onEmergencyStart(MyApplication.clientStreamInfo);
             }
 

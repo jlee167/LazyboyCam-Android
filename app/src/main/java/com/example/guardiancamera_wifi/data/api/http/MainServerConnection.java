@@ -54,7 +54,6 @@ public class MainServerConnection extends HttpConnection{
     public void pingServer() throws InterruptedException {
         Thread pingThread = new Thread(new Runnable() {
             String url = LazyWebURI.URI_PING();
-            JSONObject token_json = new JSONObject();
             String method = HttpConnection.GET;
 
             @Override
@@ -102,8 +101,9 @@ public class MainServerConnection extends HttpConnection{
         if (session_enabled) {
             httpConn.setRequestProperty("Cookie", COOKIES);
         }
-        httpConn.setRequestProperty("Content-Type", "application/json; utf-8");
+        httpConn.setRequestProperty("Content-Type", "application/json");
         httpConn.setRequestProperty("Accept", "application/json");
+        httpConn.setRequestProperty("Connection", "close");
         httpConn.setRequestMethod(method);
 
         if (outputEnabled)
@@ -118,17 +118,17 @@ public class MainServerConnection extends HttpConnection{
             outputStream.close();
         }
 
+        int code = httpConn.getResponseCode();
         inputStream = new BufferedInputStream(httpConn.getInputStream());
         byte[] responseBody = new byte[1000];
         inputStream.read(responseBody);
-
         response.setCode(httpConn.getResponseCode());
         response.setBody(responseBody);
 
 
-        Map<String, List<String>> header = httpConn.getHeaderFields();
-        if (header.containsKey("Set-Cookie")) {
-            List<String> cookie = header.get("Set-Cookie");
+        Map<String, List<String>> headers = httpConn.getHeaderFields();
+        if (headers.containsKey("Set-Cookie")) {
+            List<String> cookie = headers.get("Set-Cookie");
             for (int i = 0; i < cookie.size(); i++) {
                 cookieManager.getCookieStore().add(
                         java.net.URI.create(URI.PREFIX_HTTP + Env.MAIN_SERVER_URL),
@@ -148,13 +148,13 @@ public class MainServerConnection extends HttpConnection{
     public String getAuthUrl(Types.OAuthProvider authProvider) {
         switch (authProvider) {
             case AUTHENTICATOR_KAKAO:
-                return LazyWebURI.URI_LOGIN() + LazyWebURI.URI_KAKAO();
+                return URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_LOGIN() + LazyWebURI.URI_KAKAO();
 
             case AUTHENTICATOR_GOOGLE:
-                return LazyWebURI.URI_LOGIN() + LazyWebURI.URI_GOOGLE();
+                return URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_LOGIN() + LazyWebURI.URI_GOOGLE();
 
             default: {
-                return LazyWebURI.URI_LOGIN();
+                return URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_LOGIN();
             }
         }
     }
@@ -243,30 +243,34 @@ public class MainServerConnection extends HttpConnection{
         JSONArray protectedsJsonArray = (JSONArray) protectedsRespBody.get("protecteds");
 
         LazyWebPeers peerGroups = new LazyWebPeers();
-        LazyWebUser[] protecteds, guardians;
 
-        protecteds = new LazyWebUser[protectedsQueryResult.length()];
-        guardians = new LazyWebUser[guardiansQueryResult.length()];
-
-
-        for (int i = 0; i < guardiansQueryResult.length(); i++) {
-            guardians[i] = new LazyWebUser();
-            guardians[i].registerPeerUser(guardiansQueryResult.getJSONObject(i));
+        if (guardiansJsonArray.length() > 0) {
+            LazyWebUser[] guardians;
+            guardians = new LazyWebUser[guardiansJsonArray.length()];
+            for (int i = 0; i < guardiansJsonArray.length(); i++) {
+                guardians[i] = new LazyWebUser();
+                guardians[i].registerPeerUser(guardiansJsonArray.getJSONObject(i));
+            }
+            peerGroups.setGuardians(guardians);
         }
 
-        for (int i = 0; i < protectedsQueryResult.length(); i++) {
-            protecteds[i] = new LazyWebUser();
-            protecteds[i].registerPeerUser(protectedsQueryResult.getJSONObject(i));
+        if (protectedsJsonArray.length() > 0) {
+            LazyWebUser[] protecteds;
+            protecteds = new LazyWebUser[protectedsJsonArray.length()];
+            for (int i = 0; i < protectedsJsonArray.length(); i++) {
+                protecteds[i] = new LazyWebUser();
+                protecteds[i].registerPeerUser(protectedsJsonArray.getJSONObject(i));
+            }
+            peerGroups.setProtecteds(protecteds);
         }
-        peerGroups.setGuardians(guardians);
-        peerGroups.setProtecteds(protecteds);
+
         return peerGroups;
     }
 
 
     public JSONObject getSelfProfile() throws ExecutionException, InterruptedException {
         Callable<JSONObject> task = () -> {
-            String uri = LazyWebURI.URI_SELF_PROFILE();
+            String uri = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_SELF_PROFILE();
             try {
                 HttpResponse result = sendHttpRequest(uri, new JSONObject(), new JSONObject(), HttpConnection.GET);
                 return new JSONObject(new String(result.getBody()));
