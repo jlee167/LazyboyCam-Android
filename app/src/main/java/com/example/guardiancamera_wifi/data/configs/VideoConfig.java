@@ -25,6 +25,7 @@ public class VideoConfig {
 
     final static String FORMAT_MJPEG = "MJPEG";
     final static String FORMAT_RGB565 = "RGB565";
+    final static String FORMAT_RTMP = "RTMP";
 
     final static byte ID_MJPEG = 0;
     final static byte ID_RGB565 = 1;
@@ -33,7 +34,7 @@ public class VideoConfig {
     public String serialNumber;
     public boolean useExtCamera = false;
     public byte resolution;
-    public byte format;
+    public String format;
 
 
     /**
@@ -81,20 +82,34 @@ public class VideoConfig {
 
         assert formatPreference != null;
         if (useExtCamera)
-            format = ID_RTMP;
+            format = FORMAT_RTMP;
         else {
             switch (formatPreference) {
                 case FORMAT_MJPEG:
-                    format = ID_MJPEG;
+                    format = FORMAT_MJPEG;
                     break;
 
                 case FORMAT_RGB565:
-                    format = ID_RGB565;
+                    format = FORMAT_RGB565;
                     break;
 
                 default:
-                    format = ID_MJPEG;
+                    format = FORMAT_MJPEG;
             }
+        }
+    }
+
+    public static byte getFormatID(String formatString) {
+        switch (formatString) {
+            case FORMAT_MJPEG:
+                return ID_MJPEG;
+            case FORMAT_RGB565:
+                return ID_RGB565;
+            case FORMAT_RTMP:
+                return ID_RTMP;
+
+            default:
+                return ID_RTMP;
         }
     }
 }
