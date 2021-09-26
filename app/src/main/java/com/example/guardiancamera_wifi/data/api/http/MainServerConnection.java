@@ -59,7 +59,7 @@ public class MainServerConnection extends HttpConnection{
             @Override
             public void run() {
                 try {
-                    sendHttpRequest(url, token_json, method);
+                    sendHttpRequest(url, new JSONObject(), new JSONObject(), method);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -85,7 +85,7 @@ public class MainServerConnection extends HttpConnection{
     }
 
     @Override
-    public HttpResponse sendHttpRequest(String url, JSONObject header, JSONObject body, String method) throws IOException, JSONException {
+    public HttpResponse sendHttpRequest(String url, JSONObject header, JSONObject body, String method) throws IOException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;
         URL authServerUrl;
