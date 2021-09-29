@@ -101,8 +101,8 @@ public class EmergencyService extends Service {
             try {
                 videoConfig.update();
                 JSONObject resp = startStream();
-                registerStreamInfo(resp);
                 initCameraSocket();
+                registerStreamInfo(resp);
                 broadcastState(EmergencyMessages.STREAM_READY);
 
                 /*
