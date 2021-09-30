@@ -138,6 +138,7 @@ public class EmergencyService extends Service {
 
         if (!isCamConnected()) {
             camOutputStream.write(WifiCameraProtocol.CAM_RESP_ERR);
+            return;
         }
 
         if (cmd == WifiCameraProtocol.CAM_CMD_START_EMERGENCY) {
