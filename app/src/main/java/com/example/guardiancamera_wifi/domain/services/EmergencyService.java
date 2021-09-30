@@ -136,6 +136,10 @@ public class EmergencyService extends Service {
         final int SERIAL_START_BIT = 3;
         final int SERIAL_LAST_BIT = 9;
 
+        if (!isCamConnected()) {
+            camOutputStream.write(WifiCameraProtocol.CAM_RESP_ERR);
+        }
+
         if (cmd == WifiCameraProtocol.CAM_CMD_START_EMERGENCY) {
             startEmergency();
             broadcastState(EmergencyMessages.EMERGENCY_STARTED);
