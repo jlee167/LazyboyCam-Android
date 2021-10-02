@@ -11,22 +11,12 @@
         android:id="@+id/MainMenu"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:background="#EF5B0C"
+        android:background="#3716CC"
         android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/captureStartBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:text="@string/MENU_START_CAPTURE"
-            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/homeBtn"
@@ -36,7 +26,7 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:text="@string/MENU_HOME"
-            android:textColor="#000000" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/videoViewBtn"
@@ -47,7 +37,7 @@
             android:clickable="false"
             android:gravity="center"
             android:text="@string/MENU_WATCH_STREAM"
-            android:textColor="#000000" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/peerListBtn"
@@ -57,7 +47,7 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:text="@string/MENU_LIST_PEERS"
-            android:textColor="#000000" />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/settingBtn"
@@ -67,7 +57,7 @@
             android:background="@android:color/transparent"
             android:gravity="center"
             android:text="@string/MENU_SETTINGS"
-            android:textColor="#000000" />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
     <androidx.appcompat.widget.Toolbar

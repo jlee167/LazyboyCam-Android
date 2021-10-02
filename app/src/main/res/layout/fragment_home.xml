@@ -10,7 +10,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/generalInfoView"
         android:layout_width="match_parent"
-        android:layout_height="275dp"
+        android:layout_height="175dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="30dp"
@@ -112,63 +112,6 @@
                     android:textColor="#F44336" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp"
-                    app:srcCompat="@android:drawable/checkbox_off_background" />
-
-                <TextView
-                    android:id="@+id/guardiansCount"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:gravity="left|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:text="You have 0 guardians"
-                    android:textColor="#F44336" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp"
-                    app:srcCompat="@android:drawable/checkbox_off_background" />
-
-                <TextView
-                    android:id="@+id/peersLoaded"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:gravity="left|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:text="You have 0 protecteds"
-                    android:textColor="#F44336" />
-
-            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -266,18 +209,19 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="235dp"
-        android:background="@drawable/profile_background"
+        android:background="@drawable/background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/userInfoView"
-            android:layout_width="180dp"
+            android:layout_width="0dp"
             android:layout_height="180dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -306,7 +250,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/logView"
         android:layout_width="0dp"
-        android:layout_height="275dp"
+        android:layout_height="175dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="30dp"
@@ -338,9 +282,23 @@
         android:id="@+id/logToggleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="@string/OPEN_LOG"
         app:layout_constraintEnd_toEndOf="@+id/generalInfoView"
+        app:layout_constraintTop_toBottomOf="@+id/generalInfoView" />
+
+    <Button
+        android:id="@+id/captureStartBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/profile_background"
+        android:text="Start Streaming"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/generalInfoView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

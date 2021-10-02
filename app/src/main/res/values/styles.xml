@@ -25,5 +25,10 @@
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="LoginEditText" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">#CAC9C9</item>
+        <item name="colorControlActivated">#FF9800</item>
+        <item name="colorControlHighlight">#FF9800</item>
+    </style>
 
 </resources>
