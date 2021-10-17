@@ -16,8 +16,8 @@
     <string name="LOGIN_GOOGLE"> GOOGLE </string>
     <string name="LOGIN_KAKAO"> KAKAO </string>
 
-    <string name="MENU_START_CAPTURE"> Start </string>
-    <string name="MENU_STOP_CAPTURE"> Stop </string>
+    <string name="MENU_START_CAPTURE"> Start Streaming </string>
+    <string name="MENU_STOP_CAPTURE"> Stop Streaming </string>
     <string name="MENU_HOME"> Home </string>
     <string name="MENU_WATCH_STREAM"> Watch </string>
     <string name="MENU_LIST_PEERS"> Friends</string>
@@ -50,8 +50,8 @@
 
     <string name="USER_STATUS_FINE"> Fine </string>
     <string name="USER_STATUS_EMERGENCY"> Danger </string>
-    <string name="CAMERA_STATUS_CONNECTED"> Connected </string>
-    <string name="CAMERA_STATUS_DISCONNECTED"> Disconnected </string>
+    <string name="CAMERA_STATUS_CONNECTED"> Online </string>
+    <string name="CAMERA_STATUS_DISCONNECTED"> Offline </string>
     <string name="STREAM_STATUS_ACTIVE"> Active </string>
     <string name="STREAM_STATUS_INACTIVE"> Inactive </string>
 

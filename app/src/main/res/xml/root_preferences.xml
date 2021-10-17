@@ -10,7 +10,6 @@
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
-
     <PreferenceCategory app:title="Video">
 
         <SwitchPreference
@@ -33,6 +32,15 @@
             android:summary="%s"
             android:title="Video Format" />
 
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Credits">
+
+        <EditTextPreference
+            android:defaultValue="Default value"
+            android:key="Credit:"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Icons by https://icons8.com" />
     </PreferenceCategory>
 
 </PreferenceScreen>

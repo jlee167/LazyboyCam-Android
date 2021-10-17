@@ -11,7 +11,7 @@
         android:id="@+id/MainMenu"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:background="#3716CC"
+        android:background="#4E00BA"
         android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
