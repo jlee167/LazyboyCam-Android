@@ -7,8 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.guardiancamera_wifi.domain.model.Stream;
 import com.example.guardiancamera_wifi.domain.model.Peers;
 import com.example.guardiancamera_wifi.domain.model.User;
-import com.example.guardiancamera_wifi.data.api.http.MainServerConnection;
-import com.example.guardiancamera_wifi.data.api.http.UserEmergencyConnection;
+import com.example.guardiancamera_wifi.data.api.http.MainServer;
+import com.example.guardiancamera_wifi.data.api.http.StreamingServer;
 import com.kakao.auth.IApplicationConfig;
 import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
@@ -21,8 +21,8 @@ public class MyApplication extends Application {
 
     public static User currentUser;
     public static Peers peers;
-    public static MainServerConnection mainServerConn;
-    public static UserEmergencyConnection userEmergencyConnection;
+    public static MainServer mainServerConn;
+    public static StreamingServer streamingServer;
     public static Stream clientStream;
 
     public static ConcurrentLinkedDeque<String> appLogs;
@@ -58,8 +58,8 @@ public class MyApplication extends Application {
 
         appLogs = new ConcurrentLinkedDeque<String>();
 
-        mainServerConn = new MainServerConnection();
-        userEmergencyConnection = new UserEmergencyConnection(this.getApplicationContext());
+        mainServerConn = new MainServer();
+        streamingServer = new StreamingServer(this.getApplicationContext());
         clientStream = new Stream();
 
         // SDK Initialization

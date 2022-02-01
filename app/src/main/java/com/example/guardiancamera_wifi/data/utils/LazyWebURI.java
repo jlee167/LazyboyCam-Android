@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.data.config;
+package com.example.guardiancamera_wifi.data.utils;
 
 
 public class LazyWebURI {
@@ -12,6 +12,7 @@ public class LazyWebURI {
     private static final String URI_PREFIX_USERS = "/members";
     private static final String URI_PREFIX_GUARDIAN = "/members/guardian";
     private static final String URI_PREFIX_PROTECTED = "/members/protected";
+    private static final String URI_MY_TOKEN= "/self/webtoken";
     private static final String UID_ALL = "/all";
 
     private static final String URI_KAKAO = "/kakao";
@@ -63,5 +64,9 @@ public class LazyWebURI {
 
     public static String URI_PROTECTED() {
         return URI_PREFIX_PROTECTED + UID_ALL;
+    }
+
+    public static String URI_MY_TOKEN() {
+        return URI_MY_TOKEN;
     }
 }

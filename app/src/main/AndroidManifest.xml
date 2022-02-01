@@ -28,6 +28,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar"
         android:usesCleartextTraffic="true">
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="773f5cf195e6563612114d2c0955e53c" />
+
         <receiver
             android:name=".domain.broadcast.EmergencyBroadcast"
             android:enabled="true"
@@ -70,9 +74,7 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="773f5cf195e6563612114d2c0955e53c" />
+
     </application>
 
 </manifest>

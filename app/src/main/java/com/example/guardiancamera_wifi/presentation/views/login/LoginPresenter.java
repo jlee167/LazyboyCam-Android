@@ -9,15 +9,16 @@ import androidx.annotation.Nullable;
 
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
+import com.example.guardiancamera_wifi.data.repository.user.UserRepositoryImpl;
 import com.example.guardiancamera_wifi.domain.model.Types;
+import com.example.guardiancamera_wifi.domain.repository.user.UserRepository;
+import com.example.guardiancamera_wifi.domain.usecase.jwt.GetMyJwtUseCase;
 import com.example.guardiancamera_wifi.domain.usecase.login.LoginRequest;
 import com.example.guardiancamera_wifi.domain.usecase.login.LoginUseCase;
 import com.example.guardiancamera_wifi.domain.usecase.login.exceptions.InvalidCredentialException;
-import com.example.guardiancamera_wifi.domain.usecase.getPeers.GetPeersRequest;
-import com.example.guardiancamera_wifi.domain.usecase.getPeers.GetPeersUseCase;
-import com.example.guardiancamera_wifi.domain.usecase.userProfile.GetUserProfileRequest;
-import com.example.guardiancamera_wifi.domain.usecase.userProfile.GetUserProfileUseCase;
-import com.example.guardiancamera_wifi.domain.usecase.userProfile.exceptions.UserNotFoundException;
+import com.example.guardiancamera_wifi.domain.usecase.peers.GetPeersUseCase;
+import com.example.guardiancamera_wifi.domain.usecase.user.GetUserProfileUseCase;
+import com.example.guardiancamera_wifi.domain.usecase.user.exceptions.UserNotFoundException;
 import com.example.guardiancamera_wifi.presentation.views.app.MainMenuActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -41,23 +42,29 @@ import java.util.concurrent.ExecutionException;
 public class LoginPresenter {
 
     private Activity activity;
-    private LoginUseCase loginUseCase;
-    private GetUserProfileUseCase getUserProfileUseCase;
-    private GetPeersUseCase getPeersUseCase;
     private Context applicationContext;
 
     GoogleSignInClient mGoogleSignInClient;
     private static final int RC_GOOGLE_SIGN_IN = 7;
     private Intent mainMenuIntent;
 
+    private UserRepository userRepository;
+    private LoginUseCase loginUseCase;
+    private GetUserProfileUseCase getUserProfileUseCase;
+    private GetPeersUseCase getPeersUseCase;
+    private GetMyJwtUseCase getMyJwtUseCase;
+
 
     public LoginPresenter(Context applicationContext, Activity activity) {
         this.applicationContext = applicationContext;
         this.activity = activity;
         this.mainMenuIntent = new Intent(activity, MainMenuActivity.class);
-        this.loginUseCase = new LoginUseCase();
-        this.getUserProfileUseCase = new GetUserProfileUseCase();
-        this.getPeersUseCase = new GetPeersUseCase();
+
+        userRepository = new UserRepositoryImpl();
+        getMyJwtUseCase = new GetMyJwtUseCase(userRepository);
+        loginUseCase = new LoginUseCase(userRepository);
+        getUserProfileUseCase = new GetUserProfileUseCase(userRepository);
+        getPeersUseCase = new GetPeersUseCase(userRepository);
     }
 
 
@@ -202,37 +209,16 @@ public class LoginPresenter {
 
 
     private void authUser(LoginRequest request)
-            throws InterruptedException, ExecutionException, InvalidCredentialException, JSONException {
-        try {
-            loginUseCase.execute(request);
-        } catch (InvalidCredentialException invalidException) {
-            /* @Todo Error message on toast */
-            throw invalidException;
-        } catch (Exception e) {
-            /* @Todo Error message on toast */
-            throw e;
-        }
+            throws InterruptedException, ExecutionException, InvalidCredentialException {
+        loginUseCase.execute(request);
     }
 
 
     private void updateUserData() throws UserNotFoundException,
             ExecutionException, JSONException, InterruptedException {
-        GetUserProfileRequest request = new GetUserProfileRequest();
-        GetPeersRequest getPeersRequest = new GetPeersRequest();
-
-        request.setMainServerConnection(MyApplication.mainServerConn);
-        getPeersRequest.setMainServerConnection(MyApplication.mainServerConn);
-
-        try {
-            getUserProfileUseCase.execute(request);
-            MyApplication.peers = getPeersUseCase.execute(getPeersRequest);
-        } catch (UserNotFoundException userNotFoundException) {
-            /* @Todo Error message on toast */
-            throw userNotFoundException;
-        } catch (Exception e) {
-            /* @Todo Error message on toast */
-            throw e;
-        }
+        MyApplication.currentUser =  getUserProfileUseCase.execute();
+        MyApplication.peers = getPeersUseCase.execute();
+        MyApplication.currentUser.setStreamAccessToken(getMyJwtUseCase.execute());
     }
 
 

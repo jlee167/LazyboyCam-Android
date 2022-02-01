@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.data.config;
+package com.example.guardiancamera_wifi.data.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

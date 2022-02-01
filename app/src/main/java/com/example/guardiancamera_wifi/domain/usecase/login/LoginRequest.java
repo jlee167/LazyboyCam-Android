@@ -1,10 +1,10 @@
 package com.example.guardiancamera_wifi.domain.usecase.login;
 
-import com.example.guardiancamera_wifi.data.api.http.MainServerConnection;
+import com.example.guardiancamera_wifi.data.api.http.MainServer;
 import com.example.guardiancamera_wifi.domain.model.Types;
 
 public class LoginRequest {
-    private MainServerConnection mainServerConn;
+    private MainServer mainServerConn;
     private Types.OAuthProvider authProvider;
     private String username;
     private String password;
@@ -12,11 +12,11 @@ public class LoginRequest {
 
 
 
-    public MainServerConnection getMainServerConn() {
+    public MainServer getMainServerConn() {
         return mainServerConn;
     }
 
-    public void setMainServerConn(MainServerConnection mainServerConn) {
+    public void setMainServerConn(MainServer mainServerConn) {
         this.mainServerConn = mainServerConn;
     }
 
@@ -44,7 +44,7 @@ public class LoginRequest {
         this.password = password;
     }
 
-    public String getOAuthAccessToken() {
+    public String getAccessToken() {
         return OAuthAccessToken;
     }
 

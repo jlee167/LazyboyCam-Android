@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.data.config;
+package com.example.guardiancamera_wifi.data.utils;
 
 public class WifiCameraProtocol {
     public static final byte [] CAM_CMD_PREAMBLE = {(byte)0x24, (byte)0x73};

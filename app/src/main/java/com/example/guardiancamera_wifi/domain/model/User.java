@@ -24,11 +24,12 @@ public class User {
     private String email;
     private String cell;
     private String authProvider;
-    private String webToken;
+    private String privateKey;
     private String streamAddress;
     private String status;
     private String profileImageUrl;
     private Bitmap profileImage;
+    private String streamAccessToken;
 
 
     public User(JSONObject user) throws JSONException {
@@ -37,9 +38,17 @@ public class User {
         this.username   = user.get("username").toString();
         this.email      = user.get("email").toString();
         //this.cell       = user.get("cell").toString();
-        this.authProvider   = (String) user.get("auth_provider");
+        try {
+            this.authProvider   = (String) user.get("auth_provider");
+        } catch (Exception e) {
+            //@Todo
+        }
         this.status         = (String) user.get("status");
-        this.webToken       = (String) user.get("web_token");
+        try {
+            this.privateKey = (String) user.get("stream_key");
+        } catch (Exception e) {
+            //@Todo
+        }
     }
 
     public User(){};
@@ -73,8 +82,8 @@ public class User {
         return uid;
     }
 
-    public String getWebToken() {
-        return webToken;
+    public String getPrivateKey() {
+        return privateKey;
     }
 
     public String getProfileImageUrl() {
@@ -83,5 +92,13 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public void setStreamAccessToken(String token) {
+        streamAccessToken = token;
+    }
+
+    public String getStreamAccessToken() {
+        return streamAccessToken;
     }
 }

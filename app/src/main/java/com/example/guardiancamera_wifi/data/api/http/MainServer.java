@@ -3,8 +3,9 @@ package com.example.guardiancamera_wifi.data.api.http;
 import android.text.TextUtils;
 
 import com.example.guardiancamera_wifi.Env;
-import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
-import com.example.guardiancamera_wifi.data.config.LazyWebURI;
+import com.example.guardiancamera_wifi.data.utils.HttpConnection;
+import com.example.guardiancamera_wifi.data.utils.LazyWebURI;
+import com.example.guardiancamera_wifi.data.utils.URI;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 import com.example.guardiancamera_wifi.domain.model.Peers;
 import com.example.guardiancamera_wifi.domain.model.User;
@@ -31,61 +32,24 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public class MainServerConnection extends HttpConnection{
+public class MainServer extends HttpConnection{
 
     private static boolean session_enabled;
-    private static String COOKIES;
-    private CookieManager cookieManager;
+    public static String COOKIES;
+    public static CookieManager cookieManager;
     private ExecutorService executor;
 
 
-    public MainServerConnection() {
+    public MainServer() {
         session_enabled = false;
-        COOKIES = "";
+        clearCookies();
         cookieManager = new CookieManager();
         executor = Executors.newFixedThreadPool(Env.MAX_THREADS_MAIN_SERVER);
     }
 
-    public void clearCookies() {
-        COOKIES = "";
-    }
-
-
-    public void pingServer() throws InterruptedException {
-        Thread pingThread = new Thread(new Runnable() {
-            String url = LazyWebURI.URI_PING();
-            String method = HttpConnection.GET;
-
-            @Override
-            public void run() {
-                try {
-                    sendHttpRequest(url, new JSONObject(), new JSONObject(), method);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        pingThread.start();
-        pingThread.join();
-    }
-
-
-    public JSONObject getNonSocialCredential(String username, String password)
-            throws JSONException {
-        JSONObject authCredential = new JSONObject();
-        authCredential.put("username", username);
-        authCredential.put("password", password);
-        return authCredential;
-    }
-
-    public JSONObject getOAuthCredential(String accessToken) throws JSONException {
-        JSONObject authCredential = new JSONObject();
-        authCredential.put("accessToken", accessToken);
-        return authCredential;
-    }
-
     @Override
-    public HttpResponse sendHttpRequest(String url, JSONObject header, JSONObject body, String method) throws IOException {
+    public HttpResponse sendHttpRequest(String url, JSONObject header, JSONObject body, String method)
+            throws IOException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;
         URL authServerUrl;
@@ -106,8 +70,9 @@ public class MainServerConnection extends HttpConnection{
         httpConn.setRequestProperty("Connection", "close");
         httpConn.setRequestMethod(method);
 
-        if (outputEnabled)
+        if (outputEnabled) {
             httpConn.setDoOutput(true);
+        }
         httpConn.setDoInput(true);
         httpConn.connect();
 
@@ -145,6 +110,48 @@ public class MainServerConnection extends HttpConnection{
         return response;
     }
 
+
+    public void clearCookies() {
+        COOKIES = "";
+    }
+
+
+    public void pingServer() throws InterruptedException {
+        Thread pingThread = new Thread(new Runnable() {
+            String url = LazyWebURI.URI_PING();
+            String method = HttpConnection.GET;
+
+            @Override
+            public void run() {
+                try {
+                    sendHttpRequest(url, new JSONObject(), new JSONObject(), method);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        pingThread.start();
+        pingThread.join();
+    }
+
+
+    public JSONObject getNonSocialCredential(String username, String password)
+            throws JSONException {
+        JSONObject authCredential = new JSONObject();
+        authCredential.put("username", username);
+        authCredential.put("password", password);
+        return authCredential;
+    }
+
+
+    public JSONObject getOAuthCredential(String accessToken) throws JSONException {
+        JSONObject authCredential = new JSONObject();
+        authCredential.put("accessToken", accessToken);
+        return authCredential;
+    }
+
+
+
     public String getAuthUrl(Types.OAuthProvider authProvider) {
         switch (authProvider) {
             case AUTHENTICATOR_KAKAO:
@@ -158,6 +165,7 @@ public class MainServerConnection extends HttpConnection{
             }
         }
     }
+
 
     public JSONObject oAuthLogin(String accessToken, Types.OAuthProvider authProvider)
             throws ExecutionException, InterruptedException {
@@ -268,12 +276,14 @@ public class MainServerConnection extends HttpConnection{
     }
 
 
-    public JSONObject getSelfProfile() throws ExecutionException, InterruptedException {
+    public JSONObject getClientProfile() throws ExecutionException, InterruptedException {
         Callable<JSONObject> task = () -> {
             String uri = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_SELF_PROFILE();
             try {
                 HttpResponse result = sendHttpRequest(uri, new JSONObject(), new JSONObject(), HttpConnection.GET);
-                return new JSONObject(new String(result.getBody()));
+                String body = new String(result.getBody());
+                JSONObject jsonData = new JSONObject(body);
+                return jsonData;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 throw e;
@@ -281,6 +291,25 @@ public class MainServerConnection extends HttpConnection{
         };
 
         Future<JSONObject> future = executor.submit(task);
+        return future.get();
+    }
+
+
+    public String getMyJWT() throws ExecutionException, InterruptedException {
+        Callable<String> task = () -> {
+            String uri = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_MY_TOKEN();
+            try {
+                HttpResponse result = sendHttpRequest(uri, new JSONObject(), new JSONObject(), HttpConnection.GET);
+                JSONObject resp = new JSONObject(new String(result.getBody()));
+                String token = resp.getString("token");
+                return token;
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                throw e;
+            }
+        };
+
+        Future<String> future = executor.submit(task);
         return future.get();
     }
 }

@@ -65,7 +65,7 @@ public class MainMenuPresenter {
 
     public void startGeoLocationService(String geoDestUrl) {
         geoLocationIntent.putExtra("geoDestUrl", geoDestUrl);
-        geoLocationIntent.putExtra("webToken", MyApplication.currentUser.getWebToken());
+        geoLocationIntent.putExtra("webToken", MyApplication.currentUser.getPrivateKey());
 
         if (GeolocationService.isRunning())
             activity.stopService(geoLocationIntent);

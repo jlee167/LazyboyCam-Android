@@ -1,6 +1,6 @@
 package com.example.guardiancamera_wifi.domain.model;
 
-import com.example.guardiancamera_wifi.data.config.VideoConfig;
+import com.example.guardiancamera_wifi.data.utils.VideoConfig;
 
 public class Stream {
 

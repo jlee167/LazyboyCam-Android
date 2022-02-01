@@ -6,7 +6,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 
 import com.example.guardiancamera_wifi.Env;
-import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
+import com.example.guardiancamera_wifi.data.utils.HttpConnection;
 import com.example.guardiancamera_wifi.domain.model.Stream;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 import com.example.guardiancamera_wifi.domain.model.PeerStreamData;

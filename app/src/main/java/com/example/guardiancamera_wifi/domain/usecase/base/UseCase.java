@@ -1,7 +1,7 @@
 package com.example.guardiancamera_wifi.domain.usecase.base;
 
 import com.example.guardiancamera_wifi.domain.usecase.login.exceptions.InvalidCredentialException;
-import com.example.guardiancamera_wifi.domain.usecase.userProfile.exceptions.UserNotFoundException;
+import com.example.guardiancamera_wifi.domain.usecase.user.exceptions.UserNotFoundException;
 
 import org.json.JSONException;
 

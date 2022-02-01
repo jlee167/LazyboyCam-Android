@@ -17,7 +17,7 @@ import android.os.Process;
 
 import androidx.core.app.ActivityCompat;
 
-import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
+import com.example.guardiancamera_wifi.data.utils.HttpConnection;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
