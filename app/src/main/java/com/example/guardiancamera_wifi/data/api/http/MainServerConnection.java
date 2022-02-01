@@ -4,11 +4,11 @@ import android.text.TextUtils;
 
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
-import com.example.guardiancamera_wifi.data.configs.LazyWebURI;
-import com.example.guardiancamera_wifi.domain.models.HttpResponse;
-import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
-import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
-import com.example.guardiancamera_wifi.domain.models.Types;
+import com.example.guardiancamera_wifi.data.config.LazyWebURI;
+import com.example.guardiancamera_wifi.domain.model.HttpResponse;
+import com.example.guardiancamera_wifi.domain.model.Peers;
+import com.example.guardiancamera_wifi.domain.model.User;
+import com.example.guardiancamera_wifi.domain.model.Types;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -213,7 +213,7 @@ public class MainServerConnection extends HttpConnection{
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    public LazyWebPeers getPeers() throws JSONException, ExecutionException, InterruptedException {
+    public Peers getPeers() throws JSONException, ExecutionException, InterruptedException {
 
         HttpResponse getGuardiansResponse;
         HttpResponse getProtectedsResponse;
@@ -242,23 +242,23 @@ public class MainServerConnection extends HttpConnection{
         JSONArray guardiansJsonArray = (JSONArray) guardiansRespBody.get("guardians");
         JSONArray protectedsJsonArray = (JSONArray) protectedsRespBody.get("protecteds");
 
-        LazyWebPeers peerGroups = new LazyWebPeers();
+        Peers peerGroups = new Peers();
 
         if (guardiansJsonArray.length() > 0) {
-            LazyWebUser[] guardians;
-            guardians = new LazyWebUser[guardiansJsonArray.length()];
+            User[] guardians;
+            guardians = new User[guardiansJsonArray.length()];
             for (int i = 0; i < guardiansJsonArray.length(); i++) {
-                guardians[i] = new LazyWebUser();
+                guardians[i] = new User();
                 guardians[i].registerPeerUser(guardiansJsonArray.getJSONObject(i));
             }
             peerGroups.setGuardians(guardians);
         }
 
         if (protectedsJsonArray.length() > 0) {
-            LazyWebUser[] protecteds;
-            protecteds = new LazyWebUser[protectedsJsonArray.length()];
+            User[] protecteds;
+            protecteds = new User[protectedsJsonArray.length()];
             for (int i = 0; i < protectedsJsonArray.length(); i++) {
-                protecteds[i] = new LazyWebUser();
+                protecteds[i] = new User();
                 protecteds[i].registerPeerUser(protectedsJsonArray.getJSONObject(i));
             }
             peerGroups.setProtecteds(protecteds);

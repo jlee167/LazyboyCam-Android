@@ -29,7 +29,7 @@
         android:theme="@style/Theme.Design.Light.NoActionBar"
         android:usesCleartextTraffic="true">
         <receiver
-            android:name=".domain.broadcasts.EmergencyBroadcast"
+            android:name=".domain.broadcast.EmergencyBroadcast"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -38,7 +38,7 @@
         </receiver>
 
         <service
-            android:name=".domain.services.EmergencyService"
+            android:name=".domain.service.EmergencyService"
             android:enabled="true"
             android:exported="true" />
         <!--
@@ -55,7 +55,7 @@
             android:value="true" />
 
         <activity
-            android:name=".tests.RtmpTestActivity"
+            android:name=".test.RtmpTestActivity"
             android:label="@string/title_activity_rtmp_test">
         </activity>
 

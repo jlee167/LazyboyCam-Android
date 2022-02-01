@@ -14,11 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.domain.broadcasts.EmergencyBroadcast;
-import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
-import com.example.guardiancamera_wifi.domain.services.EmergencyService;
-import com.example.guardiancamera_wifi.domain.services.exceptions.InEmergencyException;
-import com.example.guardiancamera_wifi.domain.services.exceptions.TimeoutException;
+import com.example.guardiancamera_wifi.domain.broadcast.EmergencyBroadcast;
 import com.example.guardiancamera_wifi.presentation.views.app.home.HomeFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.peerList.PeerListFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.setting.SettingsFragment;

@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
-import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
+import com.example.guardiancamera_wifi.domain.model.Peers;
+import com.example.guardiancamera_wifi.domain.model.User;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -30,21 +30,21 @@ import java.util.concurrent.ExecutionException;
 
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mViewHolder> {
 
-    ArrayList<LazyWebUser> dataset;
+    ArrayList<User> dataset;
 
 
     public RecyclerViewAdapter() {
-        dataset = new ArrayList<LazyWebUser>();
+        dataset = new ArrayList<User>();
     }
 
 
-    public RecyclerViewAdapter(ArrayList<LazyWebUser> inputDataset) {
-        dataset = new ArrayList<LazyWebUser>();
+    public RecyclerViewAdapter(ArrayList<User> inputDataset) {
+        dataset = new ArrayList<User>();
         dataset.addAll(inputDataset);
     }
 
 
-    public void addItem(LazyWebUser item) {
+    public void addItem(User item) {
         dataset.add(item);
     }
 
@@ -135,8 +135,8 @@ public class PeerListFragment extends Fragment {
     RecyclerViewAdapter guardianListAdapter, protectedListAdapter;
     LinearLayoutManager layoutManager;
 
-    ArrayList<LazyWebUser> peersArray;
-    private LazyWebPeers peers;
+    ArrayList<User> peersArray;
+    private Peers peers;
 
 
     public void refreshPeerList() {
@@ -148,18 +148,18 @@ public class PeerListFragment extends Fragment {
 
         this.peers = MyApplication.peers;
 
-        LazyWebUser[] protecteds = this.peers.getProtecteds();
-        LazyWebUser[] guardians = this.peers.getGuardians();
+        User[] protecteds = this.peers.getProtecteds();
+        User[] guardians = this.peers.getGuardians();
 
-        ArrayList<LazyWebUser> guardianArrayList = new ArrayList<LazyWebUser>(guardians.length);
-        ArrayList<LazyWebUser> protectedArrayList = new ArrayList<LazyWebUser>(protecteds.length);
+        ArrayList<User> guardianArrayList = new ArrayList<User>(guardians.length);
+        ArrayList<User> protectedArrayList = new ArrayList<User>(protecteds.length);
 
         guardianArrayList.addAll(Arrays.asList(guardians));
         protectedArrayList.addAll(Arrays.asList(protecteds));
 
-        for (LazyWebUser user : guardianArrayList)
+        for (User user : guardianArrayList)
             guardianListAdapter.addItem(user);
-        for (LazyWebUser user : protectedArrayList)
+        for (User user : protectedArrayList)
             protectedListAdapter.addItem(user);
 
         peerListView.setAdapter(guardianListAdapter);

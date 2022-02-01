@@ -14,10 +14,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.guardiancamera_wifi.MyApplication;
-import com.example.guardiancamera_wifi.domain.broadcasts.EmergencyBroadcast;
-import com.example.guardiancamera_wifi.domain.broadcasts.ServiceMsgBroadcast;
-import com.example.guardiancamera_wifi.domain.services.EmergencyService;
-import com.example.guardiancamera_wifi.domain.services.GeolocationService;
+import com.example.guardiancamera_wifi.domain.broadcast.EmergencyBroadcast;
+import com.example.guardiancamera_wifi.domain.broadcast.ServiceMsgBroadcast;
+import com.example.guardiancamera_wifi.domain.service.EmergencyService;
+import com.example.guardiancamera_wifi.domain.service.GeolocationService;
 
 public class MainMenuPresenter {
 
@@ -80,7 +80,7 @@ public class MainMenuPresenter {
         serviceMsgReceiver = new ServiceMsgBroadcast() {
             @Override
             public void onStreamStart() {
-                startGeoLocationService(MyApplication.clientStreamInfo.getGeoDestUrl());
+                startGeoLocationService(MyApplication.clientStream.getGeoDestUrl());
             }
 
             @Override

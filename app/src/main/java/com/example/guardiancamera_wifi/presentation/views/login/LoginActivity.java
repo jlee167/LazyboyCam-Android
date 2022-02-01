@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.domain.usecases.login.LoginRequest;
+import com.example.guardiancamera_wifi.domain.usecase.login.LoginRequest;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;

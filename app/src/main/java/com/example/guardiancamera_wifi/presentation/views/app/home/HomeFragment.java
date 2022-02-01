@@ -19,9 +19,9 @@ import androidx.fragment.app.Fragment;
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.domain.services.EmergencyService;
-import com.example.guardiancamera_wifi.domain.services.exceptions.InEmergencyException;
-import com.example.guardiancamera_wifi.domain.services.exceptions.TimeoutException;
+import com.example.guardiancamera_wifi.domain.service.EmergencyService;
+import com.example.guardiancamera_wifi.domain.service.exceptions.InEmergencyException;
+import com.example.guardiancamera_wifi.domain.service.exceptions.TimeoutException;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;

@@ -7,9 +7,9 @@ import android.media.AudioTrack;
 
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.data.api.http.base.HttpConnection;
-import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
-import com.example.guardiancamera_wifi.domain.models.HttpResponse;
-import com.example.guardiancamera_wifi.domain.models.PeerStreamData;
+import com.example.guardiancamera_wifi.domain.model.Stream;
+import com.example.guardiancamera_wifi.domain.model.HttpResponse;
+import com.example.guardiancamera_wifi.domain.model.PeerStreamData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +30,7 @@ public class WatchStreamPresenter {
     private Thread geoLocationThread;
     private Thread audioThread;
     private boolean streamActive;
-    private ClientStreamInfo clientStreamInfo;
+    private Stream clientStream;
 
     HttpConnection conn;
     JSONObject sendData;
@@ -45,7 +45,7 @@ public class WatchStreamPresenter {
         playAudio();
         deactivateStream();
 
-        clientStreamInfo = new ClientStreamInfo();
+        clientStream = new Stream();
 
         geoLocationThread = new Thread() {
             @Override

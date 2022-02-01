@@ -4,10 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.guardiancamera_wifi.domain.models.ClientStreamInfo;
-import com.example.guardiancamera_wifi.data.configs.VideoConfig;
-import com.example.guardiancamera_wifi.domain.models.LazyWebPeers;
-import com.example.guardiancamera_wifi.domain.models.LazyWebUser;
+import com.example.guardiancamera_wifi.domain.model.Stream;
+import com.example.guardiancamera_wifi.domain.model.Peers;
+import com.example.guardiancamera_wifi.domain.model.User;
 import com.example.guardiancamera_wifi.data.api.http.MainServerConnection;
 import com.example.guardiancamera_wifi.data.api.http.UserEmergencyConnection;
 import com.kakao.auth.IApplicationConfig;
@@ -20,15 +19,15 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class MyApplication extends Application {
 
-    public static LazyWebUser currentUser;
-    public static LazyWebPeers peers;
+    public static User currentUser;
+    public static Peers peers;
     public static MainServerConnection mainServerConn;
     public static UserEmergencyConnection userEmergencyConnection;
-    public static ClientStreamInfo clientStreamInfo;
+    public static Stream clientStream;
 
     public static ConcurrentLinkedDeque<String> appLogs;
 
-    public static void setCurrentUser(LazyWebUser user) {
+    public static void setCurrentUser(User user) {
         /* @Todo: Add Exception Handler for case when a user is already logged in */
         currentUser = user;
     }
@@ -61,7 +60,7 @@ public class MyApplication extends Application {
 
         mainServerConn = new MainServerConnection();
         userEmergencyConnection = new UserEmergencyConnection(this.getApplicationContext());
-        clientStreamInfo = new ClientStreamInfo();
+        clientStream = new Stream();
 
         // SDK Initialization
         KakaoSDK.init(new KakaoAdapter() {
