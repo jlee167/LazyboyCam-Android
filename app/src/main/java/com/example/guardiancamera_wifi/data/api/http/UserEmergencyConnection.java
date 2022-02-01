@@ -47,8 +47,8 @@ public class UserEmergencyConnection extends HttpConnection {
 
 
     public JSONObject stopStream() throws IOException, JSONException, RequestDeniedException {
-        JSONObject data = new JSONObject();
-        data.put("webToken", MyApplication.currentUser.getWebToken());
+        JSONObject body = new JSONObject();
+        body.put("webToken", MyApplication.currentUser.getWebToken());
 
         JSONObject header = new JSONObject();
         header.put("webToken", MyApplication.currentUser.getWebToken());
@@ -56,7 +56,7 @@ public class UserEmergencyConnection extends HttpConnection {
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.clientStreamInfo.getId();
         HttpResponse response = sendHttpRequest(url, header, new JSONObject(), HttpConnection.DELETE);
-        JSONObject responseBody = new JSONObject(Arrays.toString(response.getBody()));
+        JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
         else
@@ -74,7 +74,7 @@ public class UserEmergencyConnection extends HttpConnection {
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY + '/'
                 + MyApplication.clientStreamInfo.getId();
         HttpResponse response = sendHttpRequest(url, header, sendData, HttpConnection.POST);
-        JSONObject responseBody = new JSONObject(Arrays.toString(response.getBody()));
+        JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
         else
@@ -93,7 +93,7 @@ public class UserEmergencyConnection extends HttpConnection {
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY
                 + MyApplication.clientStreamInfo.getId();
         HttpResponse response = sendHttpRequest(url, header, sendData, HttpConnection.DELETE);
-        JSONObject responseBody = new JSONObject(Arrays.toString(response.getBody()));
+        JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
         else

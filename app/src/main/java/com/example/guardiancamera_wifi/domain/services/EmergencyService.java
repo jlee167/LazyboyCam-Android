@@ -1,6 +1,7 @@
 package com.example.guardiancamera_wifi.domain.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -8,6 +9,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -25,8 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -49,22 +51,24 @@ import java.util.Arrays;
  */
 public class EmergencyService extends Service {
 
-    private static boolean runState;
+    private static boolean serviceRunning;
+    private static boolean streamRunning;
     private static boolean emergency;
     private static boolean camConnected;
+    private static boolean stopRequested;
 
     private Socket listenerSocket;
     private ServerSocket listenerServerSocket;
     private CamCmdHandler commandHandler;
     private BufferedInputStream camInputStream;
-    private OutputStream camOutputStream;
+    private DataOutputStream camOutputStream;
     private ClientStreamInfo streamInfo;
     private UserEmergencyConnection userEmergencyConnection;
     private static VideoConfig videoConfig;
 
 
-    public static boolean isRunning() {
-        return runState;
+    public static boolean isServiceRunning() {
+        return serviceRunning;
     }
 
     public static boolean isEmergency() {
@@ -75,16 +79,19 @@ public class EmergencyService extends Service {
         return camConnected;
     }
 
+    public static boolean isStreamRunning() {
+        return streamRunning;
+    }
+
     public static VideoConfig getVideoConfig() {
         return videoConfig;
     }
 
-
-
     public EmergencyService() {
-        runState = false;
+        serviceRunning = false;
         emergency = false;
         camConnected = false;
+        stopRequested = false;
         streamInfo = MyApplication.clientStreamInfo;
         userEmergencyConnection = MyApplication.userEmergencyConnection;
         videoConfig = new VideoConfig(this);
@@ -101,6 +108,8 @@ public class EmergencyService extends Service {
             try {
                 videoConfig.update();
                 JSONObject resp = startStream();
+                streamRunning = true;
+
                 initCameraSocket();
                 registerStreamInfo(resp);
                 broadcastState(EmergencyMessages.STREAM_READY);
@@ -113,14 +122,30 @@ public class EmergencyService extends Service {
                  *   and respond to camera with the results.
                  */
                 while (true) {
-                    if (runState && (camInputStream.available() > 0)) {
-                        byte[] msgBuf = new byte[camInputStream.available()];
-                        camInputStream.read(msgBuf, 0, camInputStream.available());
-                        if (!isPreamble(msgBuf))
-                            continue;
-                        handleMsgFromCamera(msgBuf);
-                    } else {
-                        return;
+                    if (serviceRunning) {
+                        if (camInputStream.available() > 0) {
+                            byte[] msgBuf = new byte[camInputStream.available()];
+                            camInputStream.read(msgBuf, 0, camInputStream.available());
+                            if (!isPreamble(msgBuf))
+                                continue;
+                            try {
+                                handleMsgFromCamera(msgBuf);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (stopRequested) {
+                            if (streamRunning) {
+                                try {
+                                    stopStream();
+                                    streamRunning = false;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            stopRequested = false;
+                        }
                     }
                 }
             } catch (IOException | JSONException | RequestDeniedException e) {
@@ -134,11 +159,24 @@ public class EmergencyService extends Service {
 
         byte cmd = msgBuf[2];
         final int SERIAL_START_BIT = 3;
-        final int SERIAL_LAST_BIT = 9;
+        final int SERIAL_LAST_BIT = 11;
 
         if (!isCamConnected()) {
-            camOutputStream.write(WifiCameraProtocol.CAM_RESP_ERR);
-            return;
+            if (cmd == WifiCameraProtocol.CAM_CMD_ACTIVATE) {
+                String serialNumber = new String(Arrays.copyOfRange(msgBuf, SERIAL_START_BIT, SERIAL_LAST_BIT));
+                boolean camVerified = videoConfig.serialNumber.equals(serialNumber);
+
+                if (camVerified) {
+                    activateCamera();
+                    broadcastState(EmergencyMessages.CAMERA_CONNECTED);
+                }
+                else
+                    camOutputStream.write(WifiCameraProtocol.CAM_RESP_ERR);
+            }
+            else {
+                camOutputStream.write(WifiCameraProtocol.CAM_RESP_ERR);
+                return;
+            }
         }
 
         if (cmd == WifiCameraProtocol.CAM_CMD_START_EMERGENCY) {
@@ -149,18 +187,6 @@ public class EmergencyService extends Service {
         else if (cmd == WifiCameraProtocol.CAM_CMD_STOP_EMERGENCY) {
             stopEmergency();
             broadcastState(EmergencyMessages.EMERGENCY_STOPPED);
-        }
-
-        else if (cmd == WifiCameraProtocol.CAM_CMD_ACTIVATE) {
-            String serialNumber = Arrays.toString(Arrays.copyOfRange(msgBuf, SERIAL_START_BIT, SERIAL_LAST_BIT));
-            boolean camVerified = videoConfig.serialNumber.equals(serialNumber);
-
-            if (camVerified) {
-                activateCamera();
-                broadcastState(EmergencyMessages.CAMERA_CONNECTED);
-            }
-            else
-                camOutputStream.write(WifiCameraProtocol.CAM_RESP_ERR);
         }
     }
 
@@ -210,12 +236,16 @@ public class EmergencyService extends Service {
 
 
     private void stopStream() throws IOException, JSONException, RequestDeniedException {
-        JSONObject responseBody = userEmergencyConnection.stopStream();
-        boolean success = responseBody.getBoolean("result");
-        if (success)
-            runState = false;
-        else
-            throw new RequestDeniedException();
+        stopRequested = false;
+        try {
+            JSONObject responseBody = userEmergencyConnection.stopStream();
+            boolean success = responseBody.getBoolean("result");
+            if (!success)
+                throw new RequestDeniedException();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 
@@ -242,20 +272,25 @@ public class EmergencyService extends Service {
         listenerServerSocket = new ServerSocket();
         listenerServerSocket.bind(new InetSocketAddress(AndroidHotspot.HOTSPOT_HOST_IP, 8001));
         listenerSocket = listenerServerSocket.accept();
-        camOutputStream = listenerSocket.getOutputStream();
+        camOutputStream = new DataOutputStream(listenerSocket.getOutputStream());
         camInputStream = new BufferedInputStream(listenerSocket.getInputStream());
     }
 
 
     public void activateCamera() throws IOException {
         camConnected = true;
-        camOutputStream.write((byte) streamInfo.getAudioDestUrl().length());
-        camOutputStream.write((byte) streamInfo.getVideoDestUrl().length());
-        camOutputStream.write(videoConfig.resolution);
-        camOutputStream.write(VideoConfig.getFormatID(videoConfig.format));
+        //camOutputStream.write(videoConfig.resolution);
+        //camOutputStream.flush();
+        //camOutputStream.write(VideoConfig.getFormatID(videoConfig.format));
+        //camOutputStream.flush();
+        camOutputStream.write((byte)streamInfo.getVideoDestUrl().length());
         camOutputStream.write(streamInfo.getVideoDestUrl().getBytes(StandardCharsets.UTF_8));
+        camOutputStream.write((byte)streamInfo.getAudioDestUrl().length());
         camOutputStream.write(streamInfo.getAudioDestUrl().getBytes(StandardCharsets.UTF_8));
-        camOutputStream.flush();
+        camOutputStream.write((byte)streamInfo.getGeoDestUrl().length());
+        camOutputStream.write(streamInfo.getGeoDestUrl().getBytes(StandardCharsets.UTF_8));
+        camOutputStream.write((byte)MyApplication.currentUser.getWebToken().length());
+        camOutputStream.write(MyApplication.currentUser.getWebToken().getBytes(StandardCharsets.UTF_8));
     }
 
 
@@ -267,8 +302,8 @@ public class EmergencyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (!runState) {
-            runState = true;
+        if (!serviceRunning) {
+            serviceRunning = true;
             HandlerThread handlerThread = new HandlerThread("TCP Handler Thread",
                     Process.THREAD_PRIORITY_BACKGROUND);
             handlerThread.start();
@@ -284,16 +319,37 @@ public class EmergencyService extends Service {
 
     @Override
     public void onDestroy() {
-
-        /* Stop handler thread */
-        runState = false;
-
         byte[] buf = new byte[1];
         int retries = 0;
+        int timeout = 0;
+
+        stopRequested = true;
+
+        Context context = this.getApplicationContext();
+        while (isStreamRunning()) {
+            timeout++;
+            if (timeout > 1000000) {
+                retries++;
+                timeout = 0;
+
+                if (retries < 5) {
+                    CharSequence text = "Stream stop request failed. retry: " + retries;
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+                else {
+                    CharSequence text = "Stream could not be stopped. Contact admin";
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                    toast.show();
+                    break;
+                }
+            }
+        }
 
         try {
             /* Notify emergency server and camera device */
-            stopStream();
+            /*
             camOutputStream.write(WifiCameraProtocol.CAM_CMD_DISCONNECT);
             camOutputStream.flush();
 
@@ -303,14 +359,19 @@ public class EmergencyService extends Service {
                 if (retries == 100)
                     break;
             }
-
+            */
             if (!listenerServerSocket.isClosed())
                 listenerServerSocket.close();
             if (!listenerSocket.isClosed())
                 listenerSocket.close();
-        } catch (IOException | JSONException | RequestDeniedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+        serviceRunning = false;
+        Intent intent = new Intent();
+        intent.setAction(EmergencyMessages.STREAM_STOPPED);
+        sendBroadcast(intent);
 
         super.onDestroy();
     }

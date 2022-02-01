@@ -18,8 +18,6 @@ import com.example.guardiancamera_wifi.domain.broadcasts.EmergencyBroadcast;
 import com.example.guardiancamera_wifi.domain.broadcasts.ServiceMsgBroadcast;
 import com.example.guardiancamera_wifi.domain.services.EmergencyService;
 import com.example.guardiancamera_wifi.domain.services.GeolocationService;
-import com.example.guardiancamera_wifi.domain.services.exceptions.InEmergencyException;
-import com.example.guardiancamera_wifi.domain.services.exceptions.TimeoutException;
 
 public class MainMenuPresenter {
 
@@ -54,30 +52,10 @@ public class MainMenuPresenter {
     }
 
     public void onDestroy() {
-        if (EmergencyService.isRunning())
+        if (EmergencyService.isServiceRunning())
             activity.stopService(new Intent(activity, EmergencyService.class));
         if (GeolocationService.isRunning())
             activity.stopService(new Intent(activity, GeolocationService.class));
-    }
-
-    public void handleServiceBtnClick() throws InEmergencyException, TimeoutException {
-        if (!EmergencyService.isRunning()) {
-            applicationContext.startService(emergencyIntent);
-
-            int timeoutCnt = 0;
-            while (!EmergencyService.isRunning()) {
-                timeoutCnt++;
-                if (timeoutCnt > 100000) { //@Todo: make a TIMEOUT_THRESHOLD variable in config dir
-                    throw new TimeoutException();
-                }
-            };
-        }
-        else {
-            if (!EmergencyService.isEmergency())
-                applicationContext.stopService(emergencyIntent);
-            else
-                throw new InEmergencyException();
-        }
     }
 
     public void stopGeoLocationService() {
@@ -102,34 +80,28 @@ public class MainMenuPresenter {
         serviceMsgReceiver = new ServiceMsgBroadcast() {
             @Override
             public void onStreamStart() {
-                activity.onStreamStart(MyApplication.clientStreamInfo);
                 startGeoLocationService(MyApplication.clientStreamInfo.getGeoDestUrl());
             }
 
             @Override
             public void onStreamStop() {
-                activity.onStreamStop();
             }
 
             @Override
             public void onEmergencyStart(Intent intent) {
-                activity.onEmergencyStart(MyApplication.clientStreamInfo);
             }
 
             @Override
             public void onEmergencyStop() {
                 stopGeoLocationService();
-                activity.onEmergencyStop();
             }
 
             @Override
             public void onCameraConnected() {
-                activity.onCameraConnected();
             }
 
             @Override
             public void onCameraDisconnected() {
-                activity.onCameraDisconnected();
             }
         };
         activity.registerReceiver(serviceMsgReceiver, filter);
