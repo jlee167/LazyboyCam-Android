@@ -23,7 +23,6 @@ import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -33,7 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public class MainServer extends HttpConnection{
+public class MainServer extends HttpConnection implements UserApiInterface{
 
     private static boolean session_enabled;
     public static String COOKIES;
@@ -139,7 +138,7 @@ public class MainServer extends HttpConnection{
     }
 
 
-    public JSONObject getNonSocialCredential(String username, String password)
+    public JSONObject getCredentials(String username, String password)
             throws JSONException {
         JSONObject authCredential = new JSONObject();
         authCredential.put("username", username);
@@ -148,7 +147,7 @@ public class MainServer extends HttpConnection{
     }
 
 
-    public JSONObject getOAuthCredential(String accessToken) throws JSONException {
+    public JSONObject getOAuthToken(String accessToken) throws JSONException {
         JSONObject authCredential = new JSONObject();
         authCredential.put("accessToken", accessToken);
         return authCredential;
@@ -181,7 +180,7 @@ public class MainServer extends HttpConnection{
             public HttpResponse call() throws Exception {
                 try {
                     String uri = getAuthUrl(authProvider);
-                    JSONObject credential = getOAuthCredential(mAccessToken);
+                    JSONObject credential = getOAuthToken(mAccessToken);
                     return sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -200,7 +199,7 @@ public class MainServer extends HttpConnection{
 
         Callable<HttpResponse> task = () -> {
             String uri = getAuthUrl(Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL);
-            JSONObject credential = getNonSocialCredential(username, password);
+            JSONObject credential = getCredentials(username, password);
             return sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
         };
 
