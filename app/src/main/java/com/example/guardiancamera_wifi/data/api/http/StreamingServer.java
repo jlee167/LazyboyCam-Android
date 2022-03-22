@@ -33,6 +33,7 @@ public class StreamingServer extends HttpConnection {
 
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.currentUser.getUid();
+
         HttpResponse response = sendHttpRequest(url, header, body, HttpConnection.POST);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result")) {
@@ -47,10 +48,10 @@ public class StreamingServer extends HttpConnection {
 
     public JSONObject stopStream() throws IOException, JSONException, RequestDeniedException {
         JSONObject body = new JSONObject();
-        body.put("webToken", MyApplication.currentUser.getPrivateKey());
+        body.put("webToken", MyApplication.currentUser.getStreamAccessToken());
 
         JSONObject header = new JSONObject();
-        header.put("webToken", MyApplication.currentUser.getPrivateKey());
+        header.put("webToken", MyApplication.currentUser.getStreamAccessToken());
 
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.clientStream.getId();
