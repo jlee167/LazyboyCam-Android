@@ -36,7 +36,7 @@ public class RtmpStreamingActivity extends AppCompatActivity
         implements ConnectCheckerRtmp, View.OnClickListener, SurfaceHolder.Callback,
         View.OnTouchListener {
 
-    private String streamUrl = MyApplication.clientStream.getVideoDestUrl();
+    private String streamUrl = MyApplication.clientStream.getVideoPostUrl();
 
     private RtmpCamera1 rtmpCamera1;
     private Button button;
