@@ -1,6 +1,7 @@
 package com.example.guardiancamera_wifi.data.api.http;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.data.utils.HttpConnection;
@@ -8,8 +9,8 @@ import com.example.guardiancamera_wifi.data.utils.LazyWebURI;
 import com.example.guardiancamera_wifi.data.utils.URI;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 import com.example.guardiancamera_wifi.domain.model.Peers;
-import com.example.guardiancamera_wifi.domain.model.User;
 import com.example.guardiancamera_wifi.domain.model.Types;
+import com.example.guardiancamera_wifi.domain.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,12 +84,15 @@ public class MainServer extends HttpConnection{
             outputStream.close();
         }
 
-        int code = httpConn.getResponseCode();
-        inputStream = new BufferedInputStream(httpConn.getInputStream());
-        byte[] responseBody = new byte[1000];
-        inputStream.read(responseBody);
         response.setCode(httpConn.getResponseCode());
-        response.setBody(responseBody);
+        byte[] responseBody = new byte[5000];
+        try {
+            inputStream = new BufferedInputStream(httpConn.getInputStream());
+            inputStream.read(responseBody);
+            response.setBody(responseBody);
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
+        }
 
 
         Map<String, List<String>> headers = httpConn.getHeaderFields();
