@@ -22,15 +22,25 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public JSONObject nonSocialLogin(String username, String password)
-            throws ExecutionException, InterruptedException {
-        return mainServer.nonSocialLogin(username, password);
+    public boolean nonSocialLogin(String username, String password)
+            throws ExecutionException, InterruptedException, AuthFailed {
+        HttpResponse response = mainServer.nonSocialLogin(username, password);
+        if (response.getCode() != 200) {
+            throw new AuthFailed();
+        } else {
+            return true;
+        }
     }
 
     @Override
-    public JSONObject oAuthLogin(String accessToken, Types.OAuthProvider authProvider)
-            throws ExecutionException, InterruptedException {
-        return mainServer.oAuthLogin(accessToken, authProvider);
+    public boolean oAuthLogin(String accessToken, Types.OAuthProvider authProvider)
+            throws ExecutionException, InterruptedException, AuthFailed {
+        HttpResponse response = mainServer.oAuthLogin(accessToken, authProvider);
+        if (response.getCode() != 200) {
+            throw new AuthFailed();
+        } else {
+            return true;
+        }
     }
 
     @Override
