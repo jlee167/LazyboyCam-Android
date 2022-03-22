@@ -19,7 +19,6 @@ public class GetUserProfileUseCase {
     public User execute()
             throws UserNotFoundException, ExecutionException, InterruptedException, JSONException {
 
-        User user = userRepository.getClientProfile();
-        return user;
+        return userRepository.getClientProfile();
     }
 }

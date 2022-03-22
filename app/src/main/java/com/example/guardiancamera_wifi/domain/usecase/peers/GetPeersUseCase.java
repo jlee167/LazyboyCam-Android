@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 public class GetPeersUseCase {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public GetPeersUseCase(UserRepository userRepository) {
         this.userRepository = userRepository;
