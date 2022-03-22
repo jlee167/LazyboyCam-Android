@@ -13,18 +13,15 @@ import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.domain.broadcast.EmergencyBroadcast;
 import com.example.guardiancamera_wifi.domain.broadcast.ServiceMsgBroadcast;
 import com.example.guardiancamera_wifi.domain.service.EmergencyService;
-import com.example.guardiancamera_wifi.domain.service.GeolocationService;
 
 public class MainMenuPresenter {
 
     MainMenuActivity activity;
     Context applicationContext;
     Intent emergencyIntent;
-    Intent geoLocationIntent;
 
     BroadcastReceiver serviceMsgReceiver;
     EmergencyBroadcast emergencyBroadcast;
@@ -33,7 +30,6 @@ public class MainMenuPresenter {
         this.activity = activity;
         this.applicationContext = context;
         this.emergencyIntent = new Intent(activity, EmergencyService.class);
-        this.geoLocationIntent = new Intent(activity, GeolocationService.class);
     }
 
     public void getPermission() {
@@ -54,22 +50,6 @@ public class MainMenuPresenter {
     public void onDestroy() {
         if (EmergencyService.isServiceRunning())
             activity.stopService(new Intent(activity, EmergencyService.class));
-        if (GeolocationService.isRunning())
-            activity.stopService(new Intent(activity, GeolocationService.class));
-    }
-
-    public void stopGeoLocationService() {
-        if (GeolocationService.isRunning())
-            activity.stopService(geoLocationIntent);
-    }
-
-    public void startGeoLocationService(String geoDestUrl) {
-        geoLocationIntent.putExtra("geoDestUrl", geoDestUrl);
-        geoLocationIntent.putExtra("webToken", MyApplication.currentUser.getPrivateKey());
-
-        if (GeolocationService.isRunning())
-            activity.stopService(geoLocationIntent);
-        activity.startService(geoLocationIntent);
     }
 
 
@@ -80,7 +60,6 @@ public class MainMenuPresenter {
         serviceMsgReceiver = new ServiceMsgBroadcast() {
             @Override
             public void onStreamStart() {
-                startGeoLocationService(MyApplication.clientStream.getGeoDestUrl());
             }
 
             @Override
@@ -93,7 +72,7 @@ public class MainMenuPresenter {
 
             @Override
             public void onEmergencyStop() {
-                stopGeoLocationService();
+
             }
 
             @Override
