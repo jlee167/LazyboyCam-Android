@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.guardiancamera_wifi.R;
-import com.example.guardiancamera_wifi.domain.broadcast.EmergencyBroadcast;
+import com.example.guardiancamera_wifi.broadcast.EmergencyBroadcast;
 import com.example.guardiancamera_wifi.presentation.views.app.home.HomeFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.peerList.PeerListFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.setting.SettingsFragment;

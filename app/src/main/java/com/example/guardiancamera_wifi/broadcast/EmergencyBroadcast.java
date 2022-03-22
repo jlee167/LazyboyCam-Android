@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.domain.broadcast;
+package com.example.guardiancamera_wifi.broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -64,20 +64,24 @@ public class EmergencyBroadcast extends BroadcastReceiver {
         try {
             /* Update peer states */
             MyApplication.mainServerConn.getPeers();
-
-            /* Alert user with push notification and alarm */
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            RingtoneManager.getRingtone(context, notification).play();
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "LazyBoyChannel")
-                    .setContentTitle("Emergency Notification")
-                    .setContentText("Emergency Text")
-                    .setPriority(NotificationCompat.PRIORITY_HIGH);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(0, builder.build());
-
+            notifyGuardians(context);
         } catch (JSONException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+
+    private void notifyGuardians(Context context) {
+        /* Alert user with push notification and alarm */
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        RingtoneManager.getRingtone(context, notification).play();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "LazyBoyChannel")
+                .setContentTitle("Emergency Notification")
+                .setContentText("Emergency Text")
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(0, builder.build());
+    }
+
 }

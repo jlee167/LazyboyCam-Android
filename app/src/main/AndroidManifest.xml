@@ -33,7 +33,7 @@
             android:value="773f5cf195e6563612114d2c0955e53c" />
 
         <receiver
-            android:name=".domain.broadcast.EmergencyBroadcast"
+            android:name=".broadcast.EmergencyBroadcast"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -42,7 +42,7 @@
         </receiver>
 
         <service
-            android:name=".domain.service.EmergencyService"
+            android:name=".service.EmergencyService"
             android:enabled="true"
             android:exported="true" />
         <!--

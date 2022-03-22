@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.domain.service;
+package com.example.guardiancamera_wifi.service;
 
 import android.Manifest;
 import android.app.Service;

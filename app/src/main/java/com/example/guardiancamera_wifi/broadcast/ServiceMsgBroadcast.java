@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.domain.broadcast;
+package com.example.guardiancamera_wifi.broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

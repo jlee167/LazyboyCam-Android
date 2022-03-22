@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.example.guardiancamera_wifi.domain.broadcast.ServiceMsgBroadcast;
+import com.example.guardiancamera_wifi.broadcast.ServiceMsgBroadcast;
 import com.example.guardiancamera_wifi.domain.model.EmergencyMessages;
-import com.example.guardiancamera_wifi.domain.service.EmergencyService;
-import com.example.guardiancamera_wifi.domain.service.exceptions.InEmergencyException;
-import com.example.guardiancamera_wifi.domain.service.exceptions.TimeoutException;
+import com.example.guardiancamera_wifi.service.EmergencyService;
+import com.example.guardiancamera_wifi.service.exceptions.InEmergencyException;
+import com.example.guardiancamera_wifi.service.exceptions.TimeoutException;
 
 public class HomePresenter {
 

@@ -13,9 +13,9 @@ import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.guardiancamera_wifi.domain.broadcast.EmergencyBroadcast;
-import com.example.guardiancamera_wifi.domain.broadcast.ServiceMsgBroadcast;
-import com.example.guardiancamera_wifi.domain.service.EmergencyService;
+import com.example.guardiancamera_wifi.broadcast.EmergencyBroadcast;
+import com.example.guardiancamera_wifi.broadcast.ServiceMsgBroadcast;
+import com.example.guardiancamera_wifi.service.EmergencyService;
 
 public class MainMenuPresenter {
 
