@@ -4,18 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
+import com.example.guardiancamera_wifi.data.exceptions.auth.AuthFailed;
 import com.example.guardiancamera_wifi.data.repository.user.UserRepositoryImpl;
 import com.example.guardiancamera_wifi.domain.model.Types;
 import com.example.guardiancamera_wifi.domain.repository.user.UserRepository;
 import com.example.guardiancamera_wifi.domain.usecase.jwt.GetMyJwtUseCase;
 import com.example.guardiancamera_wifi.domain.usecase.login.LoginRequest;
 import com.example.guardiancamera_wifi.domain.usecase.login.LoginUseCase;
-import com.example.guardiancamera_wifi.domain.usecase.login.exceptions.InvalidCredentialException;
 import com.example.guardiancamera_wifi.domain.usecase.peers.GetPeersUseCase;
 import com.example.guardiancamera_wifi.domain.usecase.user.GetUserProfileUseCase;
 import com.example.guardiancamera_wifi.domain.usecase.user.exceptions.UserNotFoundException;
@@ -195,21 +196,27 @@ public class LoginPresenter {
         try {
             authUser(request);
             updateUserData();
+        } catch (AuthFailed e) {
+            Toast.makeText(activity,"Authentication Failed. Check your password.",
+                    Toast.LENGTH_LONG).show();
+            return;
         } catch (Exception e) {
+            Toast.makeText(activity,"Unexpected error! Please try again",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
-        onLoginUiUpdate();
+        onLoginSuccess();
     }
 
 
-    private void onLoginUiUpdate() {
+    private void onLoginSuccess() {
         activity.startActivity(this.mainMenuIntent);
     }
 
 
     private void authUser(LoginRequest request)
-            throws InterruptedException, ExecutionException, InvalidCredentialException {
+            throws InterruptedException, ExecutionException, JSONException, AuthFailed {
         loginUseCase.execute(request);
     }
 
