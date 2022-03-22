@@ -7,7 +7,7 @@ public class Stream {
     private boolean writeLocked = false;
 
     protected int id;
-    protected String videoDestUrl, audioDestUrl, geoDestUrl;
+    protected String videoPostUrl, audioPostUrl, geoDataPostUrl;
     protected VideoConfig videoConfig;
 
     
@@ -19,24 +19,24 @@ public class Stream {
         this.videoConfig = videoConfig;
     }
 
-    public boolean setVideoDestUrl(String url) {
+    public boolean setVideoPostUrl(String url) {
         if (writeLocked)
             return false;
-        videoDestUrl = url;
+        videoPostUrl = url;
         return true;
     }
 
-    public boolean setAudioDestUrl(String url) {
+    public boolean setAudioPostUrl(String url) {
         if (writeLocked)
             return false;
-        audioDestUrl = url;
+        audioPostUrl = url;
         return true;
     }
 
-    public boolean setGeoDestUrl(String url) {
+    public boolean setGeoDataPostUrl(String url) {
         if (writeLocked)
             return false;
-        geoDestUrl = url;
+        geoDataPostUrl = url;
         return true;
     }
 
@@ -47,24 +47,16 @@ public class Stream {
         return true;
     }
 
-    public void setWriteLock() {
-        writeLocked = true;
+    public String getVideoPostUrl() {
+        return videoPostUrl;
     }
 
-    public void releaseWriteLock() {
-        writeLocked = false;
+    public String getAudioPostUrl() {
+        return audioPostUrl;
     }
 
-    public String getVideoDestUrl() {
-        return videoDestUrl;
-    }
-
-    public String getAudioDestUrl() {
-        return audioDestUrl;
-    }
-
-    public String getGeoDestUrl() {
-        return geoDestUrl;
+    public String getGeoDataPostUrl() {
+        return geoDataPostUrl;
     }
 
     public int getId() {
