@@ -1,19 +1,25 @@
 package com.example.guardiancamera_wifi.data.api.http;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
-import com.example.guardiancamera_wifi.data.utils.HttpConnection;
 import com.example.guardiancamera_wifi.data.exceptions.RequestDeniedException;
+import com.example.guardiancamera_wifi.data.utils.HttpConnection;
 import com.example.guardiancamera_wifi.data.utils.StreamingURI;
-import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 import com.example.guardiancamera_wifi.data.utils.VideoConfig;
+import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
 
 
 public class StreamingServer extends HttpConnection {
@@ -97,6 +103,60 @@ public class StreamingServer extends HttpConnection {
         if (responseBody.getBoolean("result"))
             return responseBody;
         else
+            throw new RequestDeniedException();
+    }
+
+
+    public void sendJpeg(byte[] data, String urlString) throws IOException {
+        BufferedOutputStream outputStream;
+        BufferedInputStream inputStream;
+        URL url;
+        HttpURLConnection httpConn;
+
+        url = new URL(urlString);
+        httpConn = (HttpURLConnection) url.openConnection();
+
+        httpConn.setRequestProperty("Content-Type", "application/json");//""application/octet-stream");
+        httpConn.setRequestMethod(HttpConnection.POST);
+
+        httpConn.setDoOutput(true);
+        httpConn.setDoInput(true);
+        httpConn.connect();
+
+        outputStream = new BufferedOutputStream(httpConn.getOutputStream());
+        outputStream.write(data);
+        outputStream.flush();
+        /*
+        int offset = 0;
+        while(image.length > offset) {
+            int len;
+            if ((image.length - offset) > 1000)
+                len = 1000;
+            else
+                len = image.length - offset;
+            outputStream.write(image, offset, len);
+            outputStream.flush();
+            offset = offset + len;
+        }
+        */
+        outputStream.close();
+
+        if (httpConn.getResponseCode() != 200) {
+            inputStream = new BufferedInputStream(httpConn.getInputStream());
+            byte[] responseBody = new byte[1000];
+            inputStream.read(responseBody);
+            Log.i("", Arrays.toString(responseBody));
+        }
+    }
+
+
+    public void sendLocation(JSONObject location) throws JSONException, IOException, RequestDeniedException {
+        JSONObject header = new JSONObject();
+        header.put("webToken", MyApplication.currentUser.getStreamAccessToken());
+        String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
+                + MyApplication.clientStream.getId() + "/geo";
+        HttpResponse response = sendHttpRequest(url, header, location, HttpConnection.POST);
+        if (response.getCode() != 200)
             throw new RequestDeniedException();
     }
 }
