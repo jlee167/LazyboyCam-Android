@@ -12,6 +12,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="20dp"
             android:forceHasOverlappingRendering="false"
             android:gravity="center"
             android:hint="Enter Password"
@@ -65,25 +66,12 @@
 
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="50dp"
             android:background="@drawable/login_button2"
             android:text="Login"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:text="Login"
-            android:textColor="#2E2E2E"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/accountInput"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -179,13 +167,25 @@
             android:id="@+id/constraintLayout3"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="140dp"
+            android:background="#431b3f"
             app:layout_constraintBottom_toTopOf="@+id/accountInput"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/accountInput"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/wave_bg" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
