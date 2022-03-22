@@ -2,6 +2,7 @@ package com.example.guardiancamera_wifi.data.repository.user;
 
 import com.example.guardiancamera_wifi.data.api.http.MainServer;
 import com.example.guardiancamera_wifi.data.exceptions.auth.AuthFailed;
+import com.example.guardiancamera_wifi.data.repository.user.remote.UserDataSource;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 import com.example.guardiancamera_wifi.domain.model.Peers;
 import com.example.guardiancamera_wifi.domain.model.Types;
@@ -16,9 +17,11 @@ import java.util.concurrent.ExecutionException;
 public class UserRepositoryImpl implements UserRepository {
 
     MainServer mainServer;
+    UserDataSource userDataSource;
 
     public UserRepositoryImpl() {
         mainServer = new MainServer();
+        //userDataSource = new UserDataSource(new MainServer());
     }
 
     @Override
