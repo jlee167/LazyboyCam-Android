@@ -171,19 +171,18 @@ public class MainServer extends HttpConnection{
     }
 
 
-    public JSONObject oAuthLogin(String accessToken, Types.OAuthProvider authProvider)
+    public HttpResponse oAuthLogin(String accessToken, Types.OAuthProvider authProvider)
             throws ExecutionException, InterruptedException {
 
-        Callable<JSONObject> task = new Callable<JSONObject>() {
+        Callable<HttpResponse> task = new Callable<HttpResponse>() {
             private String mAccessToken = accessToken;
 
             @Override
-            public JSONObject call() throws Exception {
+            public HttpResponse call() throws Exception {
                 try {
                     String uri = getAuthUrl(authProvider);
                     JSONObject credential = getOAuthCredential(mAccessToken);
-                    HttpResponse result = sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
-                    return new JSONObject(Arrays.toString(result.getBody()));
+                    return sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                     throw e;
@@ -191,27 +190,21 @@ public class MainServer extends HttpConnection{
             }
         };
 
-        Future<JSONObject> future = executor.submit(task);
+        Future<HttpResponse> future = executor.submit(task);
         return future.get();
     }
 
 
-    public JSONObject nonSocialLogin(final String username, final String password)
+    public HttpResponse nonSocialLogin(final String username, final String password)
             throws ExecutionException, InterruptedException {
 
-        Callable<JSONObject> task = () -> {
-            try {
-                String uri = getAuthUrl(Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL);
-                JSONObject credential = getNonSocialCredential(username, password);
-                HttpResponse result = sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
-                return new JSONObject(new String(result.getBody()));
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-                throw e;
-            }
+        Callable<HttpResponse> task = () -> {
+            String uri = getAuthUrl(Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL);
+            JSONObject credential = getNonSocialCredential(username, password);
+            return sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
         };
 
-        Future<JSONObject> future = executor.submit(task);
+        Future<HttpResponse> future = executor.submit(task);
         return future.get();
     }
 
