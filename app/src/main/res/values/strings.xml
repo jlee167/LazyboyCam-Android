@@ -17,7 +17,7 @@
     <string name="LOGIN_KAKAO"> KAKAO </string>
 
     <string name="MENU_START_CAPTURE"> Start Streaming </string>
-    <string name="MENU_STOP_CAPTURE"> Stop Streaming </string>
+    <string name="MENU_STOP_CAPTURE"> Stop </string>
     <string name="MENU_HOME"> Home </string>
     <string name="MENU_WATCH_STREAM"> Watch </string>
     <string name="MENU_LIST_PEERS"> Friends</string>
