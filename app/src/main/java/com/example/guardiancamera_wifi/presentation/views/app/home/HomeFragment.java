@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.example.guardiancamera_wifi.Env;
@@ -32,7 +33,10 @@ public class HomeFragment extends Fragment {
     Activity activity;
     HomePresenter presenter;
 
-    TextView streamingServiceBtn;
+    ConstraintLayout streamingServiceBtn;
+    TextView streamingServiceText;
+
+
     TextView userStatusView;
     TextView cameraStatusView;
     TextView streamStatusView;
@@ -42,20 +46,22 @@ public class HomeFragment extends Fragment {
 
     public void updateStreamingServiceUI() {
         if (EmergencyService.isServiceRunning()) {
-            streamingServiceBtn.setText(R.string.MENU_STOP_CAPTURE);
+            streamingServiceText.setText(R.string.MENU_STOP_CAPTURE);
         } else {
-            streamingServiceBtn.setText(R.string.MENU_START_CAPTURE);
+            streamingServiceText.setText(R.string.MENU_START_CAPTURE);
         }
     }
 
     public void initUI() {
         streamingServiceBtn = activity.findViewById(R.id.captureStartBtn);
+        streamingServiceText = activity.findViewById(R.id.captureBtnText);
+
         userStatusView = activity.findViewById(R.id.userStatusView);
         cameraStatusView = activity.findViewById(R.id.cameraStatusView);
         streamStatusView = activity.findViewById(R.id.streamStatusView);
         defaultTextColor = userStatusView.getCurrentTextColor();
 
-        streamingServiceBtn.setText(R.string.MENU_START_CAPTURE);
+        streamingServiceText.setText(R.string.MENU_START_CAPTURE);
 
         this.onCameraDisconnected();
         this.onStreamStop();
