@@ -22,12 +22,7 @@ import java.net.URL;
 import java.util.Arrays;
 
 
-public class StreamingServer extends HttpConnection {
-    private Context appContext;
-
-    public StreamingServer(final Context applicationContext) {
-        this.appContext = applicationContext;
-    }
+public class StreamingServer extends HttpConnection implements StreamApiInterface {
 
     public JSONObject startStream(VideoConfig videoConfig) throws IOException, JSONException, RequestDeniedException {
         JSONObject body = new JSONObject();

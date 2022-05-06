@@ -59,7 +59,7 @@ public class MyApplication extends Application {
         appLogs = new ConcurrentLinkedDeque<String>();
 
         mainServerConn = new MainServer();
-        streamingServer = new StreamingServer(this.getApplicationContext());
+        streamingServer = new StreamingServer();
         clientStream = new Stream();
 
         // SDK Initialization
