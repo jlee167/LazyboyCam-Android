@@ -22,4 +22,6 @@ public interface UserApiInterface {
     JSONObject getClientProfile() throws ExecutionException, InterruptedException;
 
     String getMyJWT() throws ExecutionException, InterruptedException;
+
+    void clearCookies();
 }

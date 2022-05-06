@@ -43,4 +43,8 @@ public class UserDataSource {
     {
         return this.apiInterface.getMyJWT();
     };
+
+    public void clean() {
+        this.apiInterface.clearCookies();
+    }
 }

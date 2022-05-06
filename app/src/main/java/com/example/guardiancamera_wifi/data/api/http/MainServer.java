@@ -116,6 +116,7 @@ public class MainServer extends HttpConnection implements UserApiInterface{
 
     public void clearCookies() {
         COOKIES = "";
+        cookieManager.getCookieStore().removeAll();
     }
 
 
