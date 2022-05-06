@@ -37,14 +37,16 @@ public class MainServer extends HttpConnection implements UserApiInterface{
     private static boolean session_enabled;
     public static String COOKIES;
     public static CookieManager cookieManager;
-    private ExecutorService executor;
+    private static ExecutorService executor;
 
+    static {
+        cookieManager = new CookieManager();
+        executor = Executors.newFixedThreadPool(Env.MAX_THREADS_MAIN_SERVER);
+    }
 
     public MainServer() {
         session_enabled = false;
         clearCookies();
-        cookieManager = new CookieManager();
-        executor = Executors.newFixedThreadPool(Env.MAX_THREADS_MAIN_SERVER);
     }
 
     @Override
