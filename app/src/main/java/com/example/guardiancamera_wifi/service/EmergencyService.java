@@ -610,6 +610,7 @@ public class EmergencyService extends Service {
         sendBroadcast(intent);
 
         serviceRunning = false;
+        streamRunning = false;
         super.onDestroy();
     }
 
