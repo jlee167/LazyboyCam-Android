@@ -12,6 +12,8 @@
     </PreferenceCategory>
     <PreferenceCategory app:title="Video">
 
+
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="extCamera"
@@ -22,6 +24,7 @@
             android:entryValues="@array/WIFI_VIDEO_RESOLUTIONS"
             android:key="resolution"
             android:summary="%s"
+            android:theme="@style/LightText"
             android:title="Video Resolution"
             app:defaultValue="false" />
         <ListPreference

@@ -17,6 +17,7 @@
     <string name="LOGIN_KAKAO"> KAKAO </string>
 
     <string name="MENU_START_CAPTURE"> Start Streaming </string>
+    <string name="MENU_CONNECT_CAMERA"> Connect Camera </string>
     <string name="MENU_STOP_CAPTURE"> Stop </string>
     <string name="MENU_HOME"> Home </string>
     <string name="MENU_WATCH_STREAM"> Watch </string>
@@ -31,6 +32,7 @@
     <string name="MODE_PHONE"> Phone </string>
 
     <string name="LOGS_LABEL"> Logs </string>
+    <string name="WATCH_STREAM_LABEL"> Watch </string>
 
 
     <string-array name="WIFI_VIDEO_RESOLUTIONS">

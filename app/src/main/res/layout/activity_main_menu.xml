@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#13141c"
     tools:context=".presentation.views.app.MainMenuActivity">
 
 
     <LinearLayout
         android:id="@+id/MainMenu"
         android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:background="#4E00BA"
+        android:layout_height="80dp"
+        android:background="#13141c"
         android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

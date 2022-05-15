@@ -12,7 +12,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/white"
+        android:background="#13141c"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -26,15 +26,17 @@
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="10dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_edittext"
+            android:background="@drawable/bg_edittext_dark"
             android:drawableStart="@drawable/icon_account"
             android:drawablePadding="12dp"
+            android:drawableTint="#FFFFFF"
             android:ems="10"
             android:hint="Username"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:singleLine="true"
-            android:textColor="#878787"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/passwordInput"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,16 +49,18 @@
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/bg_edittext"
+            android:background="@drawable/bg_edittext_dark"
             android:drawableStart="@drawable/icon_password"
             android:drawablePadding="12dp"
+            android:drawableTint="#FFFFFF"
             android:forceHasOverlappingRendering="false"
             android:hint="Password"
             android:inputType="textPassword"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:singleLine="true"
-            android:textColor="#878787"
+            android:textColor="@android:color/white"
+            android:textColorHint="#FFFFFF"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/loginBtn"
             app:layout_constraintEnd_toEndOf="parent"
@@ -65,11 +69,12 @@
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/login_button2"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/login_button3"
+            android:foreground="?android:attr/selectableItemBackground"
             android:text="Login"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
@@ -103,7 +108,7 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="2dp"
-                    android:background="@android:color/white"
+                    android:background="@android:color/transparent"
                     android:foreground="@drawable/kakao_button" />
 
                 <TextView
@@ -111,7 +116,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Kakao"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="#FFC107" />
             </LinearLayout>
 
             <LinearLayout
@@ -134,7 +140,7 @@
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:layout_gravity="center"
-                        android:background="@android:color/white"
+                        android:background="@android:color/transparent"
                         android:foreground="@drawable/googleg_standard_color_18" />
                 </LinearLayout>
 
@@ -143,7 +149,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Google"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
         </LinearLayout>
 
@@ -170,8 +177,9 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:text="or login with"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

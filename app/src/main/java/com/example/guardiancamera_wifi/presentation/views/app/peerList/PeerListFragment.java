@@ -1,5 +1,6 @@
 package com.example.guardiancamera_wifi.presentation.views.app.peerList;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mView
         static int INDEX_PROFILE_PICTURE = 0;
         static int INDEX_PERSONAL_INFO = 1;
         static int INDEX_NAME = 0;
-        static int INDEX_SERVER_ADDRESS = 1;
+        static int INDEX_USER_ID = 1;
 
         View userInfoView;
 
@@ -97,6 +98,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mView
      * @param holder   - view holder for recyclerview
      * @param position - list position of item to be changed
      */
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull mViewHolder holder, int position) {
         LinearLayout personalInfoArea = (LinearLayout) ((ViewGroup) holder.userInfoView).getChildAt(mViewHolder.INDEX_PERSONAL_INFO);
@@ -104,10 +106,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mView
         ImageView profilePicture = (ImageView) ((ViewGroup) holder.userInfoView).getChildAt(mViewHolder.INDEX_PROFILE_PICTURE);
 
         TextView name = (TextView) personalInfoArea.getChildAt(mViewHolder.INDEX_NAME);
-        TextView serverAddress = (TextView) personalInfoArea.getChildAt(mViewHolder.INDEX_SERVER_ADDRESS);
+        TextView userID = (TextView) personalInfoArea.getChildAt(mViewHolder.INDEX_USER_ID);
+
+        User user = dataset.get(position);
 
         Picasso.get().load(dataset.get(position).getProfileImageUrl()).into(profilePicture);
         name.setText(dataset.get(position).getUsername());
+        userID.setText("ID: " + String.valueOf(dataset.get(position).getUid()));
         //serverAddress.setText(dataset.get(position).streamAddress);
     }
 }

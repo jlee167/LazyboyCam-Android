@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
@@ -35,13 +37,19 @@ public class HomeFragment extends Fragment {
 
     ConstraintLayout streamingServiceBtn;
     TextView streamingServiceText;
+    TextView camBtnText;
 
 
     TextView userStatusView;
     TextView cameraStatusView;
     TextView streamStatusView;
 
+    CardView userStatusCard;
+    CardView cameraStatusCard;
+    CardView streamStatusCard;
+
     int defaultTextColor;
+    int blackTextColor;
 
 
     public void updateStreamingServiceUI() {
@@ -53,15 +61,27 @@ public class HomeFragment extends Fragment {
     }
 
     public void initUI() {
+
+        defaultTextColor = Color.rgb(255, 0,0);
+
         streamingServiceBtn = activity.findViewById(R.id.captureStartBtn);
         streamingServiceText = activity.findViewById(R.id.captureBtnText);
+        camBtnText = activity.findViewById(R.id.camBtnText);
 
         userStatusView = activity.findViewById(R.id.userStatusView);
+        userStatusCard = activity.findViewById(R.id.userStatusCard);
         cameraStatusView = activity.findViewById(R.id.cameraStatusView);
+        cameraStatusCard = activity.findViewById(R.id.cameraStatusCard);
         streamStatusView = activity.findViewById(R.id.streamStatusView);
-        defaultTextColor = userStatusView.getCurrentTextColor();
+        streamStatusCard = activity.findViewById(R.id.streamStatusCard);
+
+        userStatusView.setTextColor(defaultTextColor);
+        cameraStatusView.setTextColor(defaultTextColor);
+        streamStatusView.setTextColor(defaultTextColor);
 
         streamingServiceText.setText(R.string.MENU_START_CAPTURE);
+        camBtnText.setText(R.string.MENU_CONNECT_CAMERA);
+        camBtnText.setTextColor(Color.rgb(255, 255,255));
 
         this.onCameraDisconnected();
         this.onStreamStop();
@@ -80,11 +100,6 @@ public class HomeFragment extends Fragment {
         AssetManager assetManager = getResources().getAssets();
         InputStream imgInputStream;
         try {
-            ImageView serverImage = activity.findViewById(R.id.serverImage);
-            imgInputStream = assetManager.open("flat-icons/icons8-server-48.png");
-            serverImage.setImageBitmap(BitmapFactory.decodeStream(imgInputStream));
-            imgInputStream.close();
-
             ImageView guardianImage = activity.findViewById(R.id.guardianImage);
             imgInputStream = assetManager.open("flat-icons/icons8-operator-58.png");
             guardianImage.setImageBitmap(BitmapFactory.decodeStream(imgInputStream));
@@ -106,7 +121,8 @@ public class HomeFragment extends Fragment {
 
     public void onStreamStart() {
         streamStatusView.setText(R.string.STREAM_STATUS_ACTIVE);
-        streamStatusView.setTextColor(Color.rgb(0, 151, 136));
+        streamStatusView.setTextColor(Color.rgb(0, 255, 0));
+        streamStatusCard.setCardBackgroundColor(Color.argb(100,0,255,0));
         updateStreamingServiceUI();
     }
 
@@ -114,6 +130,7 @@ public class HomeFragment extends Fragment {
     public void onStreamStop() {
         streamStatusView.setText(R.string.STREAM_STATUS_INACTIVE);
         streamStatusView.setTextColor(this.defaultTextColor);
+        streamStatusCard.setCardBackgroundColor(Color.rgb(45,46,67));
         updateStreamingServiceUI();
     }
 
@@ -126,19 +143,22 @@ public class HomeFragment extends Fragment {
 
     public void onEmergencyStop() {
         userStatusView.setText(R.string.USER_STATUS_FINE);
-        userStatusView.setTextColor(Color.rgb(0, 151, 136));
+        userStatusView.setTextColor(Color.rgb(0, 255, 0));
+        userStatusCard.setCardBackgroundColor(Color.argb(100,0,255,0));
     }
 
 
     public void onCameraConnected() {
         cameraStatusView.setText(R.string.CAMERA_STATUS_CONNECTED);
-        cameraStatusView.setTextColor(Color.rgb(0, 151, 136));
+        cameraStatusView.setTextColor(Color.rgb(0, 255, 0));
+        cameraStatusCard.setCardBackgroundColor(Color.argb(100,0,255,0));
     }
 
 
     public void onCameraDisconnected() {
         cameraStatusView.setText(R.string.CAMERA_STATUS_DISCONNECTED);
         cameraStatusView.setTextColor(this.defaultTextColor);
+        cameraStatusCard.setCardBackgroundColor(Color.rgb(45,46,67));
     }
 
 
@@ -164,16 +184,14 @@ public class HomeFragment extends Fragment {
         TextView username = activity.findViewById(R.id.username);
         username.setText(MyApplication.currentUser.getUsername());
 
-        TextView serverAddressView = activity.findViewById(R.id.serverAddressView);
-        serverAddressView.setText(Env.STREAMING_SERVER_IP);
 
         TextView protectedsCountView = activity.findViewById(R.id.protectedsCountView);
         String protectedsCount = Integer.toString(MyApplication.peers.getProtecteds().length);
-        protectedsCountView.setText("You have " + protectedsCount + " protecteds");
+        protectedsCountView.setText(protectedsCount + " protecteds");
 
         TextView guardiansCountView = activity.findViewById(R.id.guardiansCountView);
         String guardiansCount = Integer.toString(MyApplication.peers.getGuardians().length);
-        guardiansCountView.setText("You have " + guardiansCount + " guardians");
+        guardiansCountView.setText(guardiansCount + " guardians");
 
 
         onCameraDisconnected();
