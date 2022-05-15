@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.HttpCookie;
@@ -86,13 +87,21 @@ public class MainServer extends HttpConnection implements UserApiInterface{
         }
 
         response.setCode(httpConn.getResponseCode());
-        byte[] responseBody = new byte[5000];
+        byte[] responseBody;
+        ByteArrayOutputStream bufStream =  new ByteArrayOutputStream();
+
         try {
             inputStream = new BufferedInputStream(httpConn.getInputStream());
-            inputStream.read(responseBody);
-            response.setBody(responseBody);
+            int contentLength = httpConn.getContentLength();
+            while (bufStream.size() < contentLength) {
+                responseBody = new byte[contentLength];
+                inputStream.read(responseBody);
+                bufStream.write(responseBody);
+            }
+            response.setBody(bufStream.toByteArray());
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
+            throw e;
         }
 
 
