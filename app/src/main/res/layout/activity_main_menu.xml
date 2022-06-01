@@ -74,6 +74,7 @@
         android:id="@+id/contentsFrame"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/MainMenu"
         app:layout_constraintEnd_toEndOf="parent"
