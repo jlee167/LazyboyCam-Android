@@ -2,33 +2,8 @@
 
     <!-- Base application theme. -->
     <!--style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"-->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="loginTextInput">
-        <item name="android:textColorHint">@android:color/white</item>
-        <item name="android:textSize">20sp</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">@android:color/white</item>
-        <item name="colorControlActivated">@android:color/white</item>
-    </style>
-
-    <style name="NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="LoginEditText" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorControlNormal">#CAC9C9</item>
-        <item name="colorControlActivated">#FF9800</item>
-        <item name="colorControlHighlight">#FF9800</item>
+    <style name="AppNight" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="textColorAlertDialogListItem">#ffffff</item>
     </style>
 
 </resources>

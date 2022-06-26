@@ -143,10 +143,6 @@ public class LoginPresenter {
     /**
      * Get user's Google OAuth account and attempt authentication with
      * authentication server
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
      */
     public void handleActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == RC_GOOGLE_SIGN_IN) {
@@ -158,7 +154,10 @@ public class LoginPresenter {
         }
     }
 
-
+    /**
+     *  Get LoginRequest object for use in login usecase.
+     *  Authentication method: Kakao OAuth
+     */
     private LoginRequest getKakaoUserLoginRequest() {
         LoginRequest request = new LoginRequest();
         request.setMainServerConn(MyApplication.mainServerConn);
@@ -170,6 +169,10 @@ public class LoginPresenter {
     }
 
 
+    /**
+     *  Get LoginRequest object for use in login usecase.
+     *  Authentication method: Google OAuth
+     */
     private LoginRequest getGoogleUserLoginRequest() {
         GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(applicationContext);
         assert googleAccount != null;
@@ -182,6 +185,10 @@ public class LoginPresenter {
     }
 
 
+    /**
+     *  Get LoginRequest object for use in login usecase.
+     *  Authentication method: Username and Password
+     */
     public LoginRequest getNonSocialLoginRequest(String username, String password) {
         LoginRequest request = new LoginRequest();
         request.setMainServerConn(MyApplication.mainServerConn);
@@ -194,8 +201,10 @@ public class LoginPresenter {
 
     public void login(LoginRequest request) {
         try {
-            authUser(request);
-            updateUserData();
+            loginUseCase.execute(request);
+            MyApplication.currentUser =  getUserProfileUseCase.execute();
+            MyApplication.peers = getPeersUseCase.execute();
+            MyApplication.currentUser.setStreamAccessToken(getMyJwtUseCase.execute());
         } catch (AuthFailed e) {
             Toast.makeText(activity,"Authentication Failed. Check your password.",
                     Toast.LENGTH_LONG).show();
@@ -212,20 +221,6 @@ public class LoginPresenter {
 
     private void onLoginSuccess() {
         activity.startActivity(this.mainMenuIntent);
-    }
-
-
-    private void authUser(LoginRequest request)
-            throws InterruptedException, ExecutionException, JSONException, AuthFailed {
-        loginUseCase.execute(request);
-    }
-
-
-    private void updateUserData() throws UserNotFoundException,
-            ExecutionException, JSONException, InterruptedException {
-        MyApplication.currentUser =  getUserProfileUseCase.execute();
-        MyApplication.peers = getPeersUseCase.execute();
-        MyApplication.currentUser.setStreamAccessToken(getMyJwtUseCase.execute());
     }
 
 

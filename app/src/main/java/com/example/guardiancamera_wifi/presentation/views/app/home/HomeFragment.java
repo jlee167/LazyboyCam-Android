@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,9 @@ public class HomeFragment extends Fragment {
     CardView cameraStatusCard;
     CardView streamStatusCard;
 
+    ProgressBar batteryMeter;
+    ProgressBar tempMeter;
+
     int defaultTextColor;
     int blackTextColor;
 
@@ -74,6 +78,9 @@ public class HomeFragment extends Fragment {
         cameraStatusCard = activity.findViewById(R.id.cameraStatusCard);
         streamStatusView = activity.findViewById(R.id.streamStatusView);
         streamStatusCard = activity.findViewById(R.id.streamStatusCard);
+
+        batteryMeter = activity.findViewById(R.id.batteryMeter);
+        tempMeter = activity.findViewById(R.id.tempMeter);
 
         userStatusView.setTextColor(defaultTextColor);
         cameraStatusView.setTextColor(defaultTextColor);
@@ -112,6 +119,11 @@ public class HomeFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        batteryMeter.setIndeterminate(false);
+        tempMeter.setIndeterminate(false);
+        batteryMeter.setProgress(80);
+        tempMeter.setProgress(30);
     }
 
 
@@ -161,6 +173,13 @@ public class HomeFragment extends Fragment {
         cameraStatusCard.setCardBackgroundColor(Color.rgb(45,46,67));
     }
 
+    public void onTempUpdate(int temp) {
+        tempMeter.setProgress(temp);
+    }
+
+    public void onBatteryUpdate(int remaining) {
+        batteryMeter.setProgress(remaining);
+    }
 
     @Nullable
     @Override

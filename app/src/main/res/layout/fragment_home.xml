@@ -160,7 +160,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="0dp"
-        android:layout_height="235dp"
+        android:layout_height="210dp"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -260,19 +260,19 @@
 
         <TextView
             android:id="@+id/captureBtnText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="83dp"
+            android:layout_height="38dp"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="25dp"
             android:layout_marginEnd="15dp"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:text="@string/MENU_START_CAPTURE"
-            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/captureBtnIcon" />
 
         <ImageView
             android:id="@+id/captureBtnIcon"
@@ -283,6 +283,7 @@
             app:layout_constraintBottom_toTopOf="@+id/captureBtnText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/icon_play" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -300,15 +301,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="25dp"
             android:layout_marginEnd="15dp"
             android:gravity="center_horizontal"
             android:text="@string/MENU_CONNECT_CAMERA"
-            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/camBtnIcon" />
 
         <ImageView
             android:id="@+id/camBtnIcon"
@@ -317,18 +318,69 @@
             app:layout_constraintBottom_toTopOf="@+id/camBtnText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/icon_ip_camera" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/logView"
-        android:layout_width="254dp"
-        android:layout_height="289dp"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginEnd="30dp"
         android:background="#2D2E43"
         android:textColor="#00BF18"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/captureStartBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/streamStatusCard" />
+        app:layout_constraintTop_toBottomOf="@+id/tempMeter" />
+
+    <ProgressBar
+        android:id="@+id/batteryMeter"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="30dp"
+        android:progressDrawable="@drawable/progressbar_red"
+        android:max="100"
+        app:layout_constraintEnd_toStartOf="@+id/tempMeter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cameraStatusCard" />
+
+    <ProgressBar
+        android:id="@+id/tempMeter"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="30dp"
+        android:progressDrawable="@drawable/progressbar_green"
+        android:max="100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/batteryMeter"
+        app:layout_constraintTop_toBottomOf="@+id/cameraStatusCard" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:text="Battery"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/batteryMeter"
+        app:layout_constraintStart_toStartOf="@+id/batteryMeter" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:text="Temp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/tempMeter"
+        app:layout_constraintStart_toStartOf="@+id/tempMeter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,8 +10,9 @@
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
-    <PreferenceCategory app:title="Video">
-
+    <PreferenceCategory
+        android:foregroundTint="#FFFFFF"
+        app:title="Video">
 
 
         <SwitchPreference
@@ -24,7 +25,7 @@
             android:entryValues="@array/WIFI_VIDEO_RESOLUTIONS"
             android:key="resolution"
             android:summary="%s"
-            android:theme="@style/LightText"
+            android:theme="@style/AppNight"
             android:title="Video Resolution"
             app:defaultValue="false" />
         <ListPreference

@@ -1,20 +1,5 @@
 <resources>
     <string name="app_name">guardiancamera_wifi</string>
-    <string name="currentUser"> </string>
-
-    <string name="TITLE_APP"> Lazyboy\'s\nGuardianCam </string>
-    <string name="STAT_CAM_CONNECTED"> Camera Connected </string>
-    <string name="STAT_CAM_DISCONNECTED"> Camera Disconnected </string>
-    <string name="STAT_SERVER_CONNECTED"> Server\nConnected </string>
-    <string name="STAT_SERVER_DISCONNECTED"> Server\nDisconnected </string>
-    <string name="STAT_CAM_RECORDING"> Idle </string>
-    <string name="STAT_CAM_IDLE"> Recording </string>
-    <string name="STAT_EXT_CAM"> Wifi\nCamera</string>
-    <string name="STAT_PHONE"> Phone\nCamera</string>
-
-    <string name="INDEX_LOGIN_METHOD"> Login Method </string>
-    <string name="LOGIN_GOOGLE"> GOOGLE </string>
-    <string name="LOGIN_KAKAO"> KAKAO </string>
 
     <string name="MENU_START_CAPTURE"> Start Streaming </string>
     <string name="MENU_CONNECT_CAMERA"> Connect Camera </string>
@@ -24,14 +9,6 @@
     <string name="MENU_LIST_PEERS"> Friends</string>
     <string name="MENU_SETTINGS"> Settings </string>
 
-    <string name="FORMAT_LABEL"> Formats </string>
-    <string name="SAVE_SETTING_LABEL"> SAVE </string>
-
-    <string name="MODE_LABEL"> Capture \n Mode </string>
-    <string name="MODE_EXTERNAL"> External Camera </string>
-    <string name="MODE_PHONE"> Phone </string>
-
-    <string name="LOGS_LABEL"> Logs </string>
     <string name="WATCH_STREAM_LABEL"> Watch </string>
 
 
@@ -57,45 +34,19 @@
     <string name="STREAM_STATUS_ACTIVE"> Active </string>
     <string name="STREAM_STATUS_INACTIVE"> Inactive </string>
 
-    <string name="OPEN_LOG"> Open Log </string>
-    <string name="CLOSE_LOG"> Close Log </string>
-
-
-
-    <string-array name="WIFI_VIDEO_SOURCES">
-        <item>Guardian Camera</item>
-        <item>Phone Camera</item>
-    </string-array>
-    <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">
-        Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_rtmp_test">RtmpTest</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="hello_world">Hello Square World!</string>
 
 </resources>

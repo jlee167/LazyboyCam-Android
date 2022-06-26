@@ -13,16 +13,37 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/profilePicture"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:clickable="false"
-        android:paddingStart="15dp"
-        android:paddingTop="15dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="15dp"
-        app:srcCompat="@drawable/btn_x" />
+        android:background="@android:color/transparent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_background"
+                android:clickable="false"
+                app:srcCompat="@drawable/btn_x" />
+
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <LinearLayout
         android:layout_width="0dp"
@@ -32,26 +53,26 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-        <TextView
             android:id="@+id/userID"
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:gravity="center_vertical"
             android:textColor="#9E9E9E" />
 
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
     </LinearLayout>
 
     <Button
         android:id="@+id/watchStreamBtn"
-        android:layout_width="25dp"
-        android:layout_height="50dp"
+        android:layout_width="20dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="15dp"
         android:layout_weight="1"
         android:background="@drawable/border"

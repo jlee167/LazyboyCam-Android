@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.example.guardiancamera_wifi.broadcast.ServiceMsgBroadcast;
+import com.example.guardiancamera_wifi.broadcast.headers.CameraMessages;
 import com.example.guardiancamera_wifi.domain.model.EmergencyMessages;
 import com.example.guardiancamera_wifi.service.EmergencyService;
 import com.example.guardiancamera_wifi.service.exceptions.InEmergencyException;
@@ -45,6 +46,8 @@ public class HomePresenter {
         filter.addAction(EmergencyMessages.CAMERA_DISCONNECTED);
         filter.addAction(EmergencyMessages.EMERGENCY_STARTED);
         filter.addAction(EmergencyMessages.EMERGENCY_STOPPED);
+        filter.addAction(CameraMessages.CAMERA_BATTERY_STATE);
+        filter.addAction(CameraMessages.CAMERA_TEMP);
 
         serviceMsgReceiver = new ServiceMsgBroadcast() {
             @Override
@@ -75,6 +78,16 @@ public class HomePresenter {
             @Override
             public void onCameraDisconnected() {
                 fragment.onCameraDisconnected();
+            }
+
+            @Override
+            public void onBatteryUpdate(int remaining) {
+                fragment.onBatteryUpdate(remaining);
+            }
+
+            @Override
+            public void onTempUpdate(int temp) {
+                fragment.onTempUpdate(temp);
             }
         };
         fragment.requireActivity().registerReceiver(serviceMsgReceiver, filter);
