@@ -82,6 +82,14 @@ public class MainMenuPresenter {
             @Override
             public void onCameraDisconnected() {
             }
+
+            @Override
+            public void onBatteryUpdate(int remaining) {
+            }
+
+            @Override
+            public void onTempUpdate(int temp) {
+            }
         };
         activity.registerReceiver(serviceMsgReceiver, filter);
     }
