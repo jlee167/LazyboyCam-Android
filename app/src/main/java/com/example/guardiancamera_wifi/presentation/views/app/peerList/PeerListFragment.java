@@ -1,16 +1,21 @@
 package com.example.guardiancamera_wifi.presentation.views.app.peerList;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +31,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 
@@ -63,10 +69,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mView
     static class mViewHolder extends RecyclerView.ViewHolder {
 
         // Child indexes of views within corresponding layouts.
+        static int INDEX_PICTURE_LAYOUT = 0;
+        static int INDEX_PICTURE_CONTAINER = 0;
         static int INDEX_PROFILE_PICTURE = 0;
         static int INDEX_PERSONAL_INFO = 1;
-        static int INDEX_NAME = 0;
-        static int INDEX_USER_ID = 1;
+        static int INDEX_WATCH_BUTTON = 2;
+        static int INDEX_NAME = 1;
+        static int INDEX_USER_ID = 0;
+
 
         View userInfoView;
 
@@ -103,17 +113,29 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mView
     public void onBindViewHolder(@NonNull mViewHolder holder, int position) {
         LinearLayout personalInfoArea = (LinearLayout) ((ViewGroup) holder.userInfoView).getChildAt(mViewHolder.INDEX_PERSONAL_INFO);
 
-        ImageView profilePicture = (ImageView) ((ViewGroup) holder.userInfoView).getChildAt(mViewHolder.INDEX_PROFILE_PICTURE);
+        ConstraintLayout profilePictureLayout = (ConstraintLayout) ((ViewGroup) holder.userInfoView).getChildAt(mViewHolder.INDEX_PICTURE_LAYOUT);
+        CardView profilePictureContainer = (CardView) profilePictureLayout.getChildAt(mViewHolder.INDEX_PICTURE_CONTAINER);
+        ImageView profilePicture = (ImageView)  profilePictureContainer.getChildAt(mViewHolder.INDEX_PROFILE_PICTURE);
+
+        Button watchBtn = (Button) ((ViewGroup) holder.userInfoView).getChildAt(mViewHolder.INDEX_WATCH_BUTTON);
 
         TextView name = (TextView) personalInfoArea.getChildAt(mViewHolder.INDEX_NAME);
         TextView userID = (TextView) personalInfoArea.getChildAt(mViewHolder.INDEX_USER_ID);
 
         User user = dataset.get(position);
+        if (user.getStreamAddress() == null || user.getStreamAddress().isEmpty() ) {
+            watchBtn.setVisibility(View.INVISIBLE);
+        }
+
+        /*try {
+            profilePicture.setImageURI(Uri.parse(user.getProfileImageUrl()));
+        } catch(Exception e) {
+            Log.e("Profile image", Objects.requireNonNull(e.getMessage()));
+        }*/
 
         Picasso.get().load(dataset.get(position).getProfileImageUrl()).into(profilePicture);
         name.setText(dataset.get(position).getUsername());
-        userID.setText("ID: " + String.valueOf(dataset.get(position).getUid()));
-        //serverAddress.setText(dataset.get(position).streamAddress);
+        userID.setText("ID: " + dataset.get(position).getUid());
     }
 }
 
