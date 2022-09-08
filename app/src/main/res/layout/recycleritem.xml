@@ -39,6 +39,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/rounded_background"
                 android:clickable="false"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/btn_x" />
 
         </androidx.cardview.widget.CardView>
