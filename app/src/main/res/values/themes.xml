@@ -2,7 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="LightText">
         <item name="android:colorPrimary">#ffffff</item>
-        <item name="android:textColorSecondary">#00FF0A</item>
+        <item name="android:textColorSecondary">#00E1FF</item>
         <item name="android:textColor">#ffffff</item>
     </style>
 </resources>

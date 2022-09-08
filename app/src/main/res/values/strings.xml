@@ -49,4 +49,12 @@
     values-round/strings.xml for round devices.
     -->
 
+    <string name="METER_LEVEL_DISCONNECTED">Disconnected</string>
+
+    <string name="LABEL_GUARDIANS">Guardians</string>
+    <string name="LABEL_PROTECTEDS">Protecteds</string>
+    <string name="LABEL_STATUS">Status</string>
+    <string name="LABEL_CAMERA">Camera</string>
+    <string name="LABEL_STREAM">Stream</string>
+
 </resources>

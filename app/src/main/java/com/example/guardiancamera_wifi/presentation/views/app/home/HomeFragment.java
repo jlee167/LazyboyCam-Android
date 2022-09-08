@@ -2,10 +2,7 @@ package com.example.guardiancamera_wifi.presentation.views.app.home;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.res.AssetManager;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +17,12 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.R;
 import com.example.guardiancamera_wifi.service.EmergencyService;
 import com.example.guardiancamera_wifi.service.exceptions.InEmergencyException;
 import com.example.guardiancamera_wifi.service.exceptions.TimeoutException;
 import com.squareup.picasso.Picasso;
-
-import java.io.InputStream;
 
 
 public class HomeFragment extends Fragment {
@@ -49,8 +43,10 @@ public class HomeFragment extends Fragment {
     CardView cameraStatusCard;
     CardView streamStatusCard;
 
-    ProgressBar batteryMeter;
-    ProgressBar tempMeter;
+    TextView batteryMeterText;
+    TextView tempMeterText;
+    ProgressBar batteryMeterBar;
+    ProgressBar tempMeterBar;
 
     int defaultTextColor;
     int blackTextColor;
@@ -63,6 +59,21 @@ public class HomeFragment extends Fragment {
             streamingServiceText.setText(R.string.MENU_START_CAPTURE);
         }
     }
+
+
+    public void updateTempMeter(int temp) {
+        tempMeterText.setText(temp + "%");
+        tempMeterBar.setIndeterminate(false);
+        tempMeterBar.setProgress(temp);
+    }
+
+
+    public void updateBatteryMeter(int remaining){
+        batteryMeterText.setText(remaining + "%");
+        batteryMeterBar.setIndeterminate(false);
+        batteryMeterBar.setProgress(remaining);
+    }
+
 
     public void initUI() {
 
@@ -79,8 +90,12 @@ public class HomeFragment extends Fragment {
         streamStatusView = activity.findViewById(R.id.streamStatusView);
         streamStatusCard = activity.findViewById(R.id.streamStatusCard);
 
-        batteryMeter = activity.findViewById(R.id.batteryMeter);
-        tempMeter = activity.findViewById(R.id.tempMeter);
+        batteryMeterBar = activity.findViewById(R.id.batteryMeter);
+        tempMeterBar = activity.findViewById(R.id.tempMeter);
+        batteryMeterText = activity.findViewById(R.id.batteryMeterText);
+        tempMeterText = activity.findViewById(R.id.tempMeterText);
+        batteryMeterText.setTextColor(Color.rgb(0x00, 0xa8, 0x2b));
+        tempMeterText.setTextColor(Color.rgb(0xff, 0x48, 0x48));
 
         userStatusView.setTextColor(defaultTextColor);
         cameraStatusView.setTextColor(defaultTextColor);
@@ -104,7 +119,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        AssetManager assetManager = getResources().getAssets();
+        /*AssetManager assetManager = getResources().getAssets();
         InputStream imgInputStream;
         try {
             ImageView guardianImage = activity.findViewById(R.id.guardianImage);
@@ -118,12 +133,17 @@ public class HomeFragment extends Fragment {
             imgInputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
-        batteryMeter.setIndeterminate(false);
-        tempMeter.setIndeterminate(false);
-        batteryMeter.setProgress(80);
-        tempMeter.setProgress(30);
+        updateTempMeter(25);
+        updateBatteryMeter(100);
+
+        batteryMeterText.setText(R.string.METER_LEVEL_DISCONNECTED);
+        batteryMeterBar.setIndeterminate(false);
+        batteryMeterBar.setProgress(0);
+        tempMeterText.setText(R.string.METER_LEVEL_DISCONNECTED);
+        tempMeterBar.setIndeterminate(false);
+        tempMeterBar.setProgress(0);
     }
 
 
@@ -174,11 +194,11 @@ public class HomeFragment extends Fragment {
     }
 
     public void onTempUpdate(int temp) {
-        tempMeter.setProgress(temp);
+        tempMeterBar.setProgress(temp);
     }
 
     public void onBatteryUpdate(int remaining) {
-        batteryMeter.setProgress(remaining);
+        batteryMeterBar.setProgress(remaining);
     }
 
     @Nullable
@@ -206,11 +226,11 @@ public class HomeFragment extends Fragment {
 
         TextView protectedsCountView = activity.findViewById(R.id.protectedsCountView);
         String protectedsCount = Integer.toString(MyApplication.peers.getProtecteds().length);
-        protectedsCountView.setText(protectedsCount + " protecteds");
+        protectedsCountView.setText(protectedsCount);
 
         TextView guardiansCountView = activity.findViewById(R.id.guardiansCountView);
         String guardiansCount = Integer.toString(MyApplication.peers.getGuardians().length);
-        guardiansCountView.setText(guardiansCount + " guardians");
+        guardiansCountView.setText(guardiansCount);
 
 
         onCameraDisconnected();

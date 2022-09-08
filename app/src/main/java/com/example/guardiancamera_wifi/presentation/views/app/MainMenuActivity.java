@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -13,22 +14,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.R;
 import com.example.guardiancamera_wifi.broadcast.EmergencyBroadcast;
 import com.example.guardiancamera_wifi.presentation.views.app.home.HomeFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.peerList.PeerListFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.setting.SettingsFragment;
 import com.example.guardiancamera_wifi.presentation.views.app.watch.WatchStreamFragment;
+import com.squareup.picasso.Picasso;
 
 
 public class MainMenuActivity extends AppCompatActivity {
 
     MainMenuPresenter presenter;
 
-    TextView viewVideoBtn;
+    ImageView viewVideoBtn;
     TextView peerListBtn;
     TextView settingBtn;
-    TextView homeBtn;
+    ImageView homeBtn;
 
     Fragment homeFragment;
     Fragment watchStreamFragment;
@@ -63,6 +66,9 @@ public class MainMenuActivity extends AppCompatActivity {
         peerListBtn.setOnClickListener(v -> changeFragment(peerListFragment));
         settingBtn.setOnClickListener(v -> changeFragment(settingsFragment));
         homeBtn.setOnClickListener(v -> changeFragment(homeFragment));
+
+        ImageView profilePicture = findViewById(R.id.userProfileImage);
+        Picasso.get().load(MyApplication.currentUser.getProfileImageUrl()).into(profilePicture);
     }
 
 
@@ -119,6 +125,6 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
+        //presenter.onDestroy();
     }
 }
