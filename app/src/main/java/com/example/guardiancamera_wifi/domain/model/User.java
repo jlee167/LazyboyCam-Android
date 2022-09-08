@@ -18,22 +18,18 @@ import static com.example.guardiancamera_wifi.Env.MAIN_SERVER_URL;
 public class User {
 
     private int uid;
-    private String firstname;
-    private String lastname;
     private String username;
     private String email;
-    private String cell;
     private String authProvider;
     private String privateKey;
     private String streamAddress;
     private String status;
     private String profileImageUrl;
-    private Bitmap profileImage;
     private String streamAccessToken;
 
 
     public User(JSONObject user) throws JSONException {
-        this.profileImageUrl = "http://" + MAIN_SERVER_URL + (String) user.get("image_url");
+        this.profileImageUrl = (String) user.get("image_url");
         this.uid        = (int) user.get("id");
         this.username   = user.get("username").toString();
         this.email      = user.get("email").toString();
@@ -57,10 +53,10 @@ public class User {
         this.uid        = (int) user.get("id");
         this.username   = user.get("username").toString();
         this.email      = user.get("email").toString();
-        this.cell       = user.get("cell").toString();
-        this.profileImageUrl = "http://" + MAIN_SERVER_URL + user.get("image_url").toString();
-        if (user.has("stream_id")) {
-            this.streamAddress  = user.get("stream_id").toString();
+        this.profileImageUrl = user.get("image_url").toString();
+        if (user.has("streamID")) {
+            if (!user.isNull("streamID"))
+                this.streamAddress  = user.get("streamID").toString();
             this.status = user.get("status").toString();
         }
     }
@@ -100,5 +96,9 @@ public class User {
 
     public String getStreamAccessToken() {
         return streamAccessToken;
+    }
+
+    public String getStreamAddress() {
+        return streamAddress;
     }
 }
