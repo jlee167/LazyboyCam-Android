@@ -3,6 +3,7 @@ package com.example.guardiancamera_wifi.presentation.views.app;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.FrameLayout;
@@ -23,20 +24,48 @@ import com.example.guardiancamera_wifi.presentation.views.app.setting.SettingsFr
 import com.example.guardiancamera_wifi.presentation.views.app.watch.WatchStreamFragment;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
+class FragmentSelectButton {
+    public ImageView icon;
+    public TextView label;
+
+    FragmentSelectButton(ImageView icon, TextView label) {
+        this.icon = icon;
+        this.label = label;
+    }
+
+    public ImageView getIcon() {
+        return icon;
+    }
+
+    public TextView getLabel() {
+        return label;
+    }
+}
+
 
 public class MainMenuActivity extends AppCompatActivity {
 
     MainMenuPresenter presenter;
 
-    ImageView viewVideoBtn;
-    TextView peerListBtn;
-    TextView settingBtn;
-    ImageView homeBtn;
+    ImageView viewVideoIcon;
+    ImageView peerListIcon;
+    ImageView settingIcon;
+    ImageView homeIcon;
+    TextView viewVideoLabel;
+    TextView peerListLabel;
+    TextView settingLabel;
+    TextView homeLabel;
 
     Fragment homeFragment;
     Fragment watchStreamFragment;
     Fragment peerListFragment;
     Fragment settingsFragment;
+
+    HashMap<Fragment, FragmentSelectButton> viewToBtnMapper;
 
     private void changeFragment(Fragment newFragment) {
         FrameLayout container = findViewById(R.id.contentsFrame);
@@ -44,6 +73,16 @@ public class MainMenuActivity extends AppCompatActivity {
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.contentsFrame, newFragment);
         transaction.commit();
+
+        for (Map.Entry<Fragment, FragmentSelectButton> elem : viewToBtnMapper.entrySet()) {
+            if (elem.getKey() == newFragment) {
+                elem.getValue().getIcon().setColorFilter(Color.rgb(0,170,250));
+                elem.getValue().getLabel().setTextColor(Color.rgb(0,170,250));
+            } else {
+                elem.getValue().getIcon().setColorFilter(Color.WHITE);
+                elem.getValue().getLabel().setTextColor(Color.WHITE);
+            }
+        }
     }
 
 
@@ -51,24 +90,44 @@ public class MainMenuActivity extends AppCompatActivity {
      * Create activity intents and initialize control buttons' UI.
      * Connect respective buttons to corresponding services and activities.
      */
-    private void initUI() {
-        viewVideoBtn = findViewById(R.id.videoViewBtn);
-        peerListBtn = findViewById(R.id.peerListBtn);
-        settingBtn = findViewById(R.id.settingBtn);
-        homeBtn = findViewById(R.id.homeBtn);
+    private void initViewObjects() {
+        viewVideoIcon = findViewById(R.id.videoViewBtn);
+        viewVideoLabel = findViewById(R.id.videoViewLabel);
+
+        peerListIcon = findViewById(R.id.peersViewBtn);
+        peerListLabel = findViewById(R.id.peersViewLabel);
+
+        settingIcon = findViewById(R.id.settingsViewBtn);
+        settingLabel = findViewById(R.id.settingsViewLabel);
+
+        homeIcon = findViewById(R.id.homeViewBtn);
+        homeLabel = findViewById(R.id.homeViewLabel);
 
         homeFragment = new HomeFragment();
         watchStreamFragment = new WatchStreamFragment();
         peerListFragment = new PeerListFragment();
         settingsFragment = new SettingsFragment();
 
-        viewVideoBtn.setOnClickListener(v -> changeFragment(watchStreamFragment));
-        peerListBtn.setOnClickListener(v -> changeFragment(peerListFragment));
-        settingBtn.setOnClickListener(v -> changeFragment(settingsFragment));
-        homeBtn.setOnClickListener(v -> changeFragment(homeFragment));
+        viewVideoIcon.setOnClickListener(v -> changeFragment(watchStreamFragment));
+        viewVideoLabel.setOnClickListener(v -> changeFragment(watchStreamFragment));
+        peerListIcon.setOnClickListener(v -> changeFragment(peerListFragment));
+        peerListLabel.setOnClickListener(v -> changeFragment(peerListFragment));
+        settingIcon.setOnClickListener(v -> changeFragment(settingsFragment));
+        settingLabel.setOnClickListener(v -> changeFragment(settingsFragment));
+        homeIcon.setOnClickListener(v -> changeFragment(homeFragment));
+        homeLabel.setOnClickListener(v -> changeFragment(homeFragment));
 
         ImageView profilePicture = findViewById(R.id.userProfileImage);
         Picasso.get().load(MyApplication.currentUser.getProfileImageUrl()).into(profilePicture);
+    }
+
+
+    private void mapButtonsToFragments() {
+        viewToBtnMapper = new HashMap<>();
+        viewToBtnMapper.put(homeFragment, new FragmentSelectButton(homeIcon, homeLabel));
+        viewToBtnMapper.put(peerListFragment, new FragmentSelectButton(peerListIcon, peerListLabel));
+        viewToBtnMapper.put(watchStreamFragment, new FragmentSelectButton(viewVideoIcon, viewVideoLabel));
+        viewToBtnMapper.put(settingsFragment, new FragmentSelectButton(settingIcon, settingLabel));
     }
 
 
@@ -78,13 +137,13 @@ public class MainMenuActivity extends AppCompatActivity {
         setTheme(R.style.LightText);
         setContentView(R.layout.activity_main_menu);
 
-
         presenter = new MainMenuPresenter(getApplicationContext(), this);
         presenter.getPermission();
         presenter.startServiceMessageReceiver();
         presenter.startSMSReceiver();
 
-        initUI();
+        initViewObjects();
+        mapButtonsToFragments();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Lazyboy Notification Channel";
@@ -100,13 +159,14 @@ public class MainMenuActivity extends AppCompatActivity {
         filter.addAction("android.provider.Telephony.SMS_RECEIVED");
         EmergencyBroadcast emergencyBroadcast = new EmergencyBroadcast();
         registerReceiver(emergencyBroadcast, filter);
+
+        changeFragment(homeFragment);
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
 
@@ -125,6 +185,6 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //presenter.onDestroy();
+        presenter.onDestroy();
     }
 }
