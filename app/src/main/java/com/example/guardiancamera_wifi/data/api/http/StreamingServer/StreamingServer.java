@@ -5,7 +5,7 @@ import android.util.Log;
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.data.exceptions.RequestDeniedException;
-import com.example.guardiancamera_wifi.data.utils.HttpConnection;
+import com.example.guardiancamera_wifi.data.api.http.HttpConnection;
 import com.example.guardiancamera_wifi.data.utils.StreamingURI;
 import com.example.guardiancamera_wifi.data.utils.VideoConfig;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;

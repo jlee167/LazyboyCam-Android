@@ -1,5 +1,6 @@
-package com.example.guardiancamera_wifi.data.utils;
+package com.example.guardiancamera_wifi.data.api.http;
 
+import com.example.guardiancamera_wifi.data.utils.URI;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 
 import org.json.JSONException;

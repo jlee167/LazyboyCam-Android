@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.guardiancamera_wifi.Env;
-import com.example.guardiancamera_wifi.data.utils.HttpConnection;
+import com.example.guardiancamera_wifi.data.api.http.HttpConnection;
 import com.example.guardiancamera_wifi.data.utils.LazyWebURI;
 import com.example.guardiancamera_wifi.data.utils.URI;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
