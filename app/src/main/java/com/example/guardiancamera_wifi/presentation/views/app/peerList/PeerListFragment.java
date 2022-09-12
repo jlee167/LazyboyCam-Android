@@ -1,9 +1,7 @@
 package com.example.guardiancamera_wifi.presentation.views.app.peerList;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +29,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 
@@ -123,7 +120,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.mView
         TextView userID = (TextView) personalInfoArea.getChildAt(mViewHolder.INDEX_USER_ID);
 
         User user = dataset.get(position);
-        if (user.getStreamAddress() == null || user.getStreamAddress().isEmpty() ) {
+        if (user.getStreamID() == null || user.getStreamID().isEmpty() ) {
             watchBtn.setVisibility(View.INVISIBLE);
         }
 

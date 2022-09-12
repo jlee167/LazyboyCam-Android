@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static com.example.guardiancamera_wifi.Env.MAIN_SERVER_URL;
-
 
 /**
  *      Container class for user information.
@@ -22,7 +20,7 @@ public class User {
     private String email;
     private String authProvider;
     private String privateKey;
-    private String streamAddress;
+    private String streamID;
     private String status;
     private String profileImageUrl;
     private String streamAccessToken;
@@ -33,18 +31,9 @@ public class User {
         this.uid        = (int) user.get("id");
         this.username   = user.get("username").toString();
         this.email      = user.get("email").toString();
-        //this.cell       = user.get("cell").toString();
-        try {
-            this.authProvider   = (String) user.get("auth_provider");
-        } catch (Exception e) {
-            //@Todo
-        }
+        this.authProvider   = (String) user.get("auth_provider");
         this.status         = (String) user.get("status");
-        try {
-            this.privateKey = (String) user.get("stream_key");
-        } catch (Exception e) {
-            //@Todo
-        }
+        this.privateKey = (String) user.get("stream_key");
     }
 
     public User(){};
@@ -56,7 +45,7 @@ public class User {
         this.profileImageUrl = user.get("image_url").toString();
         if (user.has("streamID")) {
             if (!user.isNull("streamID"))
-                this.streamAddress  = user.get("streamID").toString();
+                this.streamID = user.get("streamID").toString();
             this.status = user.get("status").toString();
         }
     }
@@ -98,7 +87,7 @@ public class User {
         return streamAccessToken;
     }
 
-    public String getStreamAddress() {
-        return streamAddress;
+    public String getStreamID() {
+        return streamID;
     }
 }
