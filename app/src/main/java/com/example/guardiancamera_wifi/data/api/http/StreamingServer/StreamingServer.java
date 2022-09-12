@@ -1,6 +1,5 @@
-package com.example.guardiancamera_wifi.data.api.http;
+package com.example.guardiancamera_wifi.data.api.http.StreamingServer;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.example.guardiancamera_wifi.Env;

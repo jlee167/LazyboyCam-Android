@@ -23,7 +23,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
-import com.example.guardiancamera_wifi.data.api.http.StreamingServer;
+import com.example.guardiancamera_wifi.data.api.http.StreamingServer.StreamingServer;
 import com.example.guardiancamera_wifi.data.exceptions.RequestDeniedException;
 import com.example.guardiancamera_wifi.data.utils.VideoConfig;
 import com.example.guardiancamera_wifi.data.utils.WifiCameraProtocol;

@@ -1,6 +1,6 @@
 package com.example.guardiancamera_wifi.domain.usecase.login;
 
-import com.example.guardiancamera_wifi.data.api.http.MainServer;
+import com.example.guardiancamera_wifi.data.api.http.MainServer.MainServer;
 import com.example.guardiancamera_wifi.domain.model.Types;
 
 public class LoginRequest {

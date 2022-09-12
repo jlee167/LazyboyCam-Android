@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.data.api.http;
+package com.example.guardiancamera_wifi.data.api.http.MainServer;
 
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 import com.example.guardiancamera_wifi.domain.model.Peers;
