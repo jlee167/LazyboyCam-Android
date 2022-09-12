@@ -48,8 +48,8 @@ public class MainMenuPresenter {
     }
 
     public void onDestroy() {
-        if (EmergencyService.isServiceRunning())
-            activity.stopService(new Intent(activity, EmergencyService.class));
+        //if (EmergencyService.isServiceRunning())
+        //    activity.stopService(new Intent(activity, EmergencyService.class));
     }
 
 
