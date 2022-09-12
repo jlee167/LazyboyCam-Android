@@ -5,7 +5,7 @@ import android.util.Log;
 import com.example.guardiancamera_wifi.Env;
 import com.example.guardiancamera_wifi.MyApplication;
 import com.example.guardiancamera_wifi.data.exceptions.RequestDeniedException;
-import com.example.guardiancamera_wifi.data.api.http.HttpConnection;
+import com.example.guardiancamera_wifi.data.api.http.RestApiConnection;
 import com.example.guardiancamera_wifi.data.utils.StreamingURI;
 import com.example.guardiancamera_wifi.data.utils.VideoConfig;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.Arrays;
 
 
-public class StreamingServer extends HttpConnection implements StreamApiInterface {
+public class StreamingServer extends RestApiConnection implements StreamApiInterface {
 
     public JSONObject startStream(VideoConfig videoConfig) throws IOException, JSONException, RequestDeniedException {
         JSONObject body = new JSONObject();
@@ -34,7 +34,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.currentUser.getUid();
 
-        HttpResponse response = sendHttpRequest(url, header, body, HttpConnection.POST);
+        HttpResponse response = __sendJSON(url, header, body, RestApiConnection.POST);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result")) {
             MyApplication.clientStream.setId(responseBody.getInt("id"));
@@ -55,7 +55,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
 
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.clientStream.getId();
-        HttpResponse response = sendHttpRequest(url, header, new JSONObject(), HttpConnection.DELETE);
+        HttpResponse response = __sendJSON(url, header, new JSONObject(), RestApiConnection.DELETE);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
@@ -73,7 +73,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
 
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY + '/'
                 + MyApplication.clientStream.getId();
-        HttpResponse response = sendHttpRequest(url, header, sendData, HttpConnection.POST);
+        HttpResponse response = __sendJSON(url, header, sendData, RestApiConnection.POST);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
@@ -92,7 +92,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
 
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY
                 + MyApplication.clientStream.getId();
-        HttpResponse response = sendHttpRequest(url, header, sendData, HttpConnection.DELETE);
+        HttpResponse response = __sendJSON(url, header, sendData, RestApiConnection.DELETE);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
@@ -111,7 +111,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
         httpConn = (HttpURLConnection) url.openConnection();
 
         httpConn.setRequestProperty("Content-Type", "application/json");//""application/octet-stream");
-        httpConn.setRequestMethod(HttpConnection.POST);
+        httpConn.setRequestMethod(RestApiConnection.POST);
 
         httpConn.setDoOutput(true);
         httpConn.setDoInput(true);
@@ -149,7 +149,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
         header.put("webToken", MyApplication.currentUser.getStreamAccessToken());
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.clientStream.getId() + "/geo";
-        HttpResponse response = sendHttpRequest(url, header, location, HttpConnection.POST);
+        HttpResponse response = __sendJSON(url, header, location, RestApiConnection.POST);
         if (response.getCode() != 200)
             throw new RequestDeniedException();
     }

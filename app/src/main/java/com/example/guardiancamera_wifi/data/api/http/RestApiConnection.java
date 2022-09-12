@@ -13,19 +13,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Iterator;
 
-public class HttpConnection {
+public class RestApiConnection {
     public static String GET    = "GET";
     public static String POST   = "POST";
     public static String PUT    = "PUT";
     public static String DELETE = "DELETE";
 
     /**
-     * @param body
-     * @param method
-     * @return
-     * @throws IOException
+     *     Send HTTP based REST API request with JSON body
      */
-    public HttpResponse sendHttpRequest(String url, JSONObject header, JSONObject body, String method)
+    public HttpResponse __sendJSON(String url, JSONObject header, JSONObject body, String method)
             throws IOException, JSONException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;
