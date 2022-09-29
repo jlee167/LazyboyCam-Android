@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.data.api.http;
+package com.example.guardiancamera_wifi.data.net.http;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -51,7 +51,7 @@ public class MainServer extends HttpConnection implements UserApiInterface{
     }
 
     @Override
-    public HttpResponse sendHttpRequest(String url, JSONObject header, JSONObject body, String method)
+    public HttpResponse __sendHttpRequest(String url, JSONObject header, JSONObject body, String method)
             throws IOException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;
@@ -139,7 +139,7 @@ public class MainServer extends HttpConnection implements UserApiInterface{
             @Override
             public void run() {
                 try {
-                    sendHttpRequest(url, new JSONObject(), new JSONObject(), method);
+                    __sendHttpRequest(url, new JSONObject(), new JSONObject(), method);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -193,7 +193,7 @@ public class MainServer extends HttpConnection implements UserApiInterface{
                 try {
                     String uri = getAuthUrl(authProvider);
                     JSONObject credential = getOAuthToken(mAccessToken);
-                    return sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
+                    return __sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                     throw e;
@@ -212,7 +212,7 @@ public class MainServer extends HttpConnection implements UserApiInterface{
         Callable<HttpResponse> task = () -> {
             String uri = getAuthUrl(Types.OAuthProvider.AUTHENTICATOR_NONSOCIAL);
             JSONObject credential = getCredentials(username, password);
-            return sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
+            return __sendHttpRequest(uri, new JSONObject(), credential, HttpConnection.POST);
         };
 
         Future<HttpResponse> future = executor.submit(task);
@@ -235,15 +235,15 @@ public class MainServer extends HttpConnection implements UserApiInterface{
         HttpResponse getProtectedsResponse;
 
         Callable<HttpResponse[]> guardianRequestTask = new Callable<HttpResponse[]>() {
-            String uri_guardian = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_GUARDIAN();
-            String uri_protected = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_PROTECTED();
+            String guardianApiUri = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_GUARDIAN() + "/20/1";
+            String protectedApiUri = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_PROTECTED() + "/20/1";
             String method = HttpConnection.GET;
 
             @Override
             public HttpResponse[] call() throws Exception {
                 return new HttpResponse[]{
-                        sendHttpRequest(uri_guardian, new JSONObject(), new JSONObject(), method),
-                        sendHttpRequest(uri_protected, new JSONObject(), new JSONObject(), method)
+                        __sendHttpRequest(guardianApiUri, new JSONObject(), new JSONObject(), method),
+                        __sendHttpRequest(protectedApiUri, new JSONObject(), new JSONObject(), method)
                 };
             }
         };
@@ -288,7 +288,7 @@ public class MainServer extends HttpConnection implements UserApiInterface{
         Callable<JSONObject> task = () -> {
             String uri = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_SELF_PROFILE();
             try {
-                HttpResponse result = sendHttpRequest(uri, new JSONObject(), new JSONObject(), HttpConnection.GET);
+                HttpResponse result = __sendHttpRequest(uri, new JSONObject(), new JSONObject(), HttpConnection.GET);
                 String body = new String(result.getBody());
                 JSONObject jsonData = new JSONObject(body);
                 return jsonData;
@@ -307,7 +307,7 @@ public class MainServer extends HttpConnection implements UserApiInterface{
         Callable<String> task = () -> {
             String uri = URI.PREFIX_HTTP + Env.MAIN_SERVER_IP + LazyWebURI.URI_MY_TOKEN();
             try {
-                HttpResponse result = sendHttpRequest(uri, new JSONObject(), new JSONObject(), HttpConnection.GET);
+                HttpResponse result = __sendHttpRequest(uri, new JSONObject(), new JSONObject(), HttpConnection.GET);
                 JSONObject resp = new JSONObject(new String(result.getBody()));
                 String token = resp.getString("token");
                 return token;

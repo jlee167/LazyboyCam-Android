@@ -1,6 +1,6 @@
 package com.example.guardiancamera_wifi.data.repository.user;
 
-import com.example.guardiancamera_wifi.data.api.http.MainServer;
+import com.example.guardiancamera_wifi.data.net.http.MainServer;
 import com.example.guardiancamera_wifi.data.exceptions.auth.AuthFailed;
 import com.example.guardiancamera_wifi.data.repository.user.remote.UserDataSource;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;

@@ -24,7 +24,7 @@ public class HttpConnection {
      * @return
      * @throws IOException
      */
-    public HttpResponse sendHttpRequest(String url, JSONObject header, JSONObject body, String method)
+    public HttpResponse __sendHttpRequest(String url, JSONObject header, JSONObject body, String method)
             throws IOException, JSONException {
         BufferedOutputStream outputStream;
         BufferedInputStream inputStream;

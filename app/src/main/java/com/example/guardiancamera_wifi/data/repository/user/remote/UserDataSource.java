@@ -1,6 +1,6 @@
 package com.example.guardiancamera_wifi.data.repository.user.remote;
 
-import com.example.guardiancamera_wifi.data.api.http.UserApiInterface;
+import com.example.guardiancamera_wifi.data.net.http.UserApiInterface;
 import com.example.guardiancamera_wifi.domain.model.HttpResponse;
 import com.example.guardiancamera_wifi.domain.model.Peers;
 import com.example.guardiancamera_wifi.domain.model.Types;

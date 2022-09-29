@@ -1,4 +1,4 @@
-package com.example.guardiancamera_wifi.data.api.http;
+package com.example.guardiancamera_wifi.data.net.http;
 
 import com.example.guardiancamera_wifi.data.exceptions.RequestDeniedException;
 import com.example.guardiancamera_wifi.data.utils.VideoConfig;

@@ -1,6 +1,5 @@
-package com.example.guardiancamera_wifi.data.api.http;
+package com.example.guardiancamera_wifi.data.net.http;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.example.guardiancamera_wifi.Env;
@@ -35,7 +34,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.currentUser.getUid();
 
-        HttpResponse response = sendHttpRequest(url, header, body, HttpConnection.POST);
+        HttpResponse response = __sendHttpRequest(url, header, body, HttpConnection.POST);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result")) {
             MyApplication.clientStream.setId(responseBody.getInt("id"));
@@ -56,7 +55,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
 
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.clientStream.getId();
-        HttpResponse response = sendHttpRequest(url, header, new JSONObject(), HttpConnection.DELETE);
+        HttpResponse response = __sendHttpRequest(url, header, new JSONObject(), HttpConnection.DELETE);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
@@ -74,7 +73,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
 
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY + '/'
                 + MyApplication.clientStream.getId();
-        HttpResponse response = sendHttpRequest(url, header, sendData, HttpConnection.POST);
+        HttpResponse response = __sendHttpRequest(url, header, sendData, HttpConnection.POST);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
@@ -93,7 +92,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
 
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_EMERGENCY
                 + MyApplication.clientStream.getId();
-        HttpResponse response = sendHttpRequest(url, header, sendData, HttpConnection.DELETE);
+        HttpResponse response = __sendHttpRequest(url, header, sendData, HttpConnection.DELETE);
         JSONObject responseBody = new JSONObject(new String(response.getBody()));
         if (responseBody.getBoolean("result"))
             return responseBody;
@@ -150,7 +149,7 @@ public class StreamingServer extends HttpConnection implements StreamApiInterfac
         header.put("webToken", MyApplication.currentUser.getStreamAccessToken());
         String url = Env.STREAMING_SERVER_IP + StreamingURI.URI_STREAM + '/'
                 + MyApplication.clientStream.getId() + "/geo";
-        HttpResponse response = sendHttpRequest(url, header, location, HttpConnection.POST);
+        HttpResponse response = __sendHttpRequest(url, header, location, HttpConnection.POST);
         if (response.getCode() != 200)
             throw new RequestDeniedException();
     }
