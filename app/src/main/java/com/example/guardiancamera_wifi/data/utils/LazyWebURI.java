@@ -51,19 +51,19 @@ public class LazyWebURI {
     }
 
     public static String URI_GUARDIAN(String uid) {
-        return URI_PREFIX_GUARDIAN;
+        return URI_PREFIX_GUARDIAN + '/' + uid;
     }
 
     public static String URI_GUARDIAN() {
-        return URI_PREFIX_GUARDIAN;
+        return URI_PREFIX_GUARDIAN + UID_ALL;
     }
 
     public static String URI_PROTECTED(String uid) {
-        return URI_PREFIX_PROTECTED ;
+        return URI_PREFIX_PROTECTED + '/' + uid;
     }
 
     public static String URI_PROTECTED() {
-        return URI_PREFIX_PROTECTED;
+        return URI_PREFIX_PROTECTED + UID_ALL;
     }
 
     public static String URI_MY_TOKEN() {

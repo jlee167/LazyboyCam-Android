@@ -52,7 +52,7 @@ public class WatchStreamPresenter {
             public void run() {
                 while (streamActive) {
                     try {
-                        HttpResponse geoDataQueryResult = conn.__sendHttpRequest(
+                        HttpResponse geoDataQueryResult = conn.sendHttpRequest(
                                 Env.STREAMING_SERVER_IP +PeerStreamData.getGeoSrcUrl(),
                                 null,
                                 null,
@@ -74,7 +74,7 @@ public class WatchStreamPresenter {
                 while (streamActive & !isAudioPlayedOnWebView()) {
                     try {
                        byte [] audioInput =
-                            conn.__sendHttpRequest(
+                            conn.sendHttpRequest(
                                     Env.STREAMING_SERVER_IP +PeerStreamData.getAudioSrcUrl(),
                                     null,
                                     null,
